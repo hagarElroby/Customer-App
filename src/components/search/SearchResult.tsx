@@ -33,6 +33,10 @@ const SearchResult: React.FC<SearchResultProps> = ({
   const searchTermParams = searchParams.get("term") || "Search Results";
   const [sortPopup, setSortPopup] = useState(false);
   const [filterPopup, setFilterPopup] = useState(false);
+  const [selectedValues, setSelectedValues] = useState<
+    Record<string, string[]>
+  >({});
+
   const [selections, setSelections] = useState<
     {
       propertyId: string;
@@ -40,26 +44,33 @@ const SearchResult: React.FC<SearchResultProps> = ({
       valueName: string;
     }[]
   >([]);
-  const [selectedNames, setSelectedNames] = useState<string[]>([]);
+  // const [selectedNames, setSelectedNames] = useState<string[]>([]);
 
   //get filter prop names from filter popup to display in tags filter
   const handleSelectedValueNames = (
     newList: { propertyId: string; valueId: string; valueName: string }[],
   ) => {
-    setSelectedNames(newList.map((item) => item.valueName));
-    onApplyFilters(
-      newList.map((item) => item.propertyId),
-      newList.map((item) => item.valueId),
-    );
+    // setSelectedNames(newList.map((item) => item.valueName));
     setSelections(newList);
   };
 
   const handleTagClose = (valueId: string) => {
-    const filtered = selections.filter((s) => s.valueId !== valueId);
-    // handleSelectedValuesChange(filtered);
+    const updatedSelections = selections.filter((s) => s.valueId !== valueId);
+    setSelections(updatedSelections);
+    // setSelectedNames(updatedSelections.map((item) => item.valueName));
+    // handleSelectedValuesChange(updatedSelections);
+    // Update selectedValues to remove this valueId
+    const updatedSelectedValues: Record<string, string[]> = {};
+    updatedSelections.forEach((item) => {
+      if (!updatedSelectedValues[item.propertyId]) {
+        updatedSelectedValues[item.propertyId] = [];
+      }
+      updatedSelectedValues[item.propertyId].push(item.valueId);
+    });
+    setSelectedValues(updatedSelectedValues);
     onApplyFilters(
-      filtered.map((item) => item.propertyId),
-      filtered.map((item) => item.valueId),
+      updatedSelections.map((item) => item.propertyId),
+      updatedSelections.map((item) => item.valueId),
     );
   };
 
@@ -157,8 +168,9 @@ const SearchResult: React.FC<SearchResultProps> = ({
           onApplyFilters={onApplyFilters}
           onApplyPriceFilter={onApplyPriceFilter}
           onApplyRating={onApplyRating}
-          // onSelectedValueNames={handleSelectedValueNames}
           onSelectedValuesChange={handleSelectedValueNames}
+          selectedValues={selectedValues}
+          setSelectedValues={setSelectedValues}
         />
       </Drawer>
     </div>

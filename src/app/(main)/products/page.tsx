@@ -43,6 +43,27 @@ const ProductsPage = () => {
   const [filterPopup, setFilterPopup] = useState(false);
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
 
+  const [selectedValues, setSelectedValues] = useState<
+    Record<string, string[]>
+  >({});
+
+  const [selections, setSelections] = useState<
+    {
+      propertyId: string;
+      valueId: string;
+      valueName: string;
+    }[]
+  >([]);
+  // const [selectedNames, setSelectedNames] = useState<string[]>([]);
+
+  //get filter prop names from filter popup to display in tags filter
+  const handleSelectedValueNames = (
+    newList: { propertyId: string; valueId: string; valueName: string }[],
+  ) => {
+    // setSelectedNames(newList.map((item) => item.valueName));
+    setSelections(newList);
+  };
+
   const previousParamsRef = useRef<Record<string, any>>({});
 
   const { handleNext, handlePrev, handlePageClick } = usePagination(
@@ -155,8 +176,24 @@ const ProductsPage = () => {
     handleApply({ rateFrom });
   };
 
-  const handleSelectedValueNames = (selectedNames: string[]) => {
-    setSelectedNames(selectedNames);
+  const handleTagClose = (valueId: string) => {
+    const updatedSelections = selections.filter((s) => s.valueId !== valueId);
+    setSelections(updatedSelections);
+    // setSelectedNames(updatedSelections.map((item) => item.valueName));
+    // handleSelectedValuesChange(updatedSelections);
+    // Update selectedValues to remove this valueId
+    const updatedSelectedValues: Record<string, string[]> = {};
+    updatedSelections.forEach((item) => {
+      if (!updatedSelectedValues[item.propertyId]) {
+        updatedSelectedValues[item.propertyId] = [];
+      }
+      updatedSelectedValues[item.propertyId].push(item.valueId);
+    });
+    setSelectedValues(updatedSelectedValues);
+    handleApplyFilters(
+      updatedSelections.map((item) => item.propertyId),
+      updatedSelections.map((item) => item.valueId),
+    );
   };
 
   return (
@@ -179,7 +216,7 @@ const ProductsPage = () => {
               onClick={() => setFilterPopup(true)}
             />
           </SectionTitle>
-          {!!selectedNames.length && (
+          {/* {!!selectedNames.length && (
             <>
               <HrLine className="border-lightMain1" />
               <div className="bg-white h-[58px] p-4 flex items-center gap-4 rounded-br-lg rounded-bl-lg">
@@ -193,6 +230,29 @@ const ProductsPage = () => {
                   >
                     <span>
                       {tag.length > 15 ? `${tag.slice(0, 15)}...` : tag}
+                    </span>
+                  </Tag>
+                ))}
+              </div>
+            </>
+          )} */}
+          {!!selections.length && (
+            <>
+              <HrLine className="border-lightMain1" />
+              <div className="bg-white h-[58px] p-4 flex items-center gap-4 rounded-br-lg rounded-bl-lg">
+                <span className="text-sm font-medium text-gray1">Filters</span>
+                <span className="bg-gray1 w-[0.5px] h-7"></span>
+                {selections?.map((tag, index) => (
+                  <Tag
+                    key={tag.valueId}
+                    closable={index !== 0}
+                    onClose={() => handleTagClose(tag.valueId)}
+                    className="rounded-full py-[7px] px-[10px] bg-white"
+                  >
+                    <span>
+                      {tag.valueName.length > 15
+                        ? `${tag.valueName.slice(0, 15)}...`
+                        : tag.valueName}
                     </span>
                   </Tag>
                 ))}
@@ -296,7 +356,9 @@ const ProductsPage = () => {
           onApplyFilters={handleApplyFilters}
           onApplyPriceFilter={handleApplyPriceFilter}
           onApplyRating={handleApplyRating}
-          onSelectedValueNames={handleSelectedValueNames}
+          onSelectedValuesChange={handleSelectedValueNames}
+          selectedValues={selectedValues}
+          setSelectedValues={setSelectedValues}
         />
       </Drawer>
     </main>

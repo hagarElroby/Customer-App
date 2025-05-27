@@ -19,6 +19,10 @@ interface FilterPopupProps {
   onApplyPriceFilter: (min: number, max: number) => void;
   onApplyRating: (rateFrom: number) => void;
   // onSelectedValueNames?: (selectedNames: string[]) => void;
+  selectedValues: Record<string, string[]>;
+  setSelectedValues: React.Dispatch<
+    React.SetStateAction<Record<string, string[]>>
+  >;
   onSelectedValuesChange?: (
     selections: {
       propertyId: string;
@@ -33,6 +37,8 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
   onApplyFilters,
   onApplyPriceFilter,
   onApplyRating,
+  selectedValues,
+  setSelectedValues,
   // onSelectedValueNames,
   onSelectedValuesChange,
 }) => {
@@ -120,10 +126,10 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     );
   };
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
-  const [selectedValues, setSelectedValues] = useState<{
-    [key: string]: string[];
-  }>({});
-  const [selectedName, setSelectedName] = useState<string[]>();
+  // const [selectedValues, setSelectedValues] = useState<{
+  //   [key: string]: string[];
+  // }>({});
+  // const [selectedName, setSelectedName] = useState<string[]>();
   const toggleFeature = (propertyId: string) => {
     setExpandedFeature(expandedFeature === propertyId ? null : propertyId);
   };
@@ -166,6 +172,28 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     // if (selectedName) {
     //   onSelectedValueNames?.(selectedName);
     // }
+
+    const selections: {
+      propertyId: string;
+      valueId: string;
+      valueName: string;
+    }[] = [];
+    features.forEach((feature) => {
+      if (selectedValues[feature.propertyId]) {
+        selectedValues[feature.propertyId].forEach((valueId) => {
+          const foundValue = feature.values.find((v) => v.valueId === valueId);
+          if (foundValue) {
+            selections.push({
+              propertyId: feature.propertyId,
+              valueId: foundValue.valueId,
+              valueName: foundValue.valueName,
+            });
+          }
+        });
+      }
+    });
+    onSelectedValuesChange?.(selections);
+
     onClose();
   };
 
@@ -197,35 +225,35 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     onApplyRating(rateFrom);
   };
 
-  useEffect(() => {
-    // const selectedValueNames: string[] = [];
-    const selections: {
-      propertyId: string;
-      valueId: string;
-      valueName: string;
-    }[] = [];
-    features.forEach((feature) => {
-      if (selectedValues[feature.propertyId]) {
-        selectedValues[feature.propertyId].forEach((valueId) => {
-          const foundValue = feature.values.find((v) => v.valueId === valueId);
-          if (foundValue) {
-            // selectedValueNames.push(foundValue.valueName);
-            selections.push({
-              propertyId: feature.propertyId,
-              valueId: foundValue.valueId,
-              valueName: foundValue.valueName,
-            });
-          }
-        });
-      }
-    });
+  // useEffect(() => {
+  //   // const selectedValueNames: string[] = [];
+  //   const selections: {
+  //     propertyId: string;
+  //     valueId: string;
+  //     valueName: string;
+  //   }[] = [];
+  //   features.forEach((feature) => {
+  //     if (selectedValues[feature.propertyId]) {
+  //       selectedValues[feature.propertyId].forEach((valueId) => {
+  //         const foundValue = feature.values.find((v) => v.valueId === valueId);
+  //         if (foundValue) {
+  //           // selectedValueNames.push(foundValue.valueName);
+  //           selections.push({
+  //             propertyId: feature.propertyId,
+  //             valueId: foundValue.valueId,
+  //             valueName: foundValue.valueName,
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
 
-    // Pass selected value names to parent
-    // if (onSelectedValueNames) {
-    //   setSelectedName(selectedValueNames);
-    // }
-    onSelectedValuesChange?.(selections);
-  }, [selectedValues, features]);
+  //   // Pass selected value names to parent
+  //   // if (onSelectedValueNames) {
+  //   //   setSelectedName(selectedValueNames);
+  //   // }
+  //   onSelectedValuesChange?.(selections);
+  // }, [selectedValues, features]);
 
   return (
     <div className="h-full">
