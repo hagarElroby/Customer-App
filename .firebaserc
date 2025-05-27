@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "default": "dizzly-337bf",
+    "dizzly-337bf ": "dizzly-337bf",
+    "dizzly": "dizzly-337bf",
+    "test": "dizzly-test",
+    "dizzly-337bf": "dizzly-337bf",
+    "customer": "dizzly-337bf"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}

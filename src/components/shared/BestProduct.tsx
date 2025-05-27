@@ -1,0 +1,184 @@
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import SmallRoundedCont from "./SmallRoundedCont";
+import { formatToTwoDecimals } from "@/utils/formatToTwoDecimals";
+import { AllProductsDocs } from "@/types/product";
+import { svgs } from "../icons/svgs";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { addCart, getCarts } from "@/services/cart";
+import { toast } from "sonner";
+import {
+  createFavorite,
+  findAllFavorite,
+  removeFavorite,
+} from "@/services/whishlist";
+import { setWhishlistItems } from "@/redux/whishlistSlice";
+import { setCarts, setOrderSummery } from "@/redux/cartSlice";
+
+const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
+  _id,
+  productName,
+  productCover,
+  seller,
+  rating,
+  groupName,
+  ratingCount,
+  PriceBeforeDiscount,
+  PriceAfterDiscount,
+  inWishlist,
+  inCart,
+  sponsored = false,
+}) => {
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const [isInWishlist, setIsInWishlist] = useState(inWishlist);
+  const [isInCart, setIsInCart] = useState(inCart);
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  const handleClickProduct = () => {
+    if (!_id || !groupName) return;
+    router.push(`/product?id=${_id}&group=${groupName}`);
+  };
+
+  const handleWishlistToggle = async () => {
+    if (!_id || !groupName) return;
+
+    if (isInWishlist) {
+      await removeFavorite({
+        productId: _id,
+        groupName,
+        onSuccess: (data) => {
+          setIsInWishlist(false);
+          toast.success(data);
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
+      });
+    } else {
+      await createFavorite({
+        productId: _id,
+        groupName,
+        onSuccess: (data) => {
+          setIsInWishlist(true);
+          toast.success(data);
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
+      });
+    }
+
+    // refresh wishlist after toggle
+    await findAllFavorite({
+      onSuccess: (data) => {
+        dispatch(setWhishlistItems(data));
+      },
+    });
+  };
+
+  const handleAddToCart = async () => {
+    if (!_id || !groupName) return;
+    if (isInCart === false) {
+      await addCart({
+        productId: _id,
+        groupName,
+        quantity: 1,
+        onSuccess: (data) => {
+          setIsInCart(true);
+          toast.success(data);
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
+      });
+    }
+    await getCarts({
+      onSuccess: (data) => {
+        dispatch(setCarts(data.docs));
+        dispatch(setOrderSummery(data.orderSummary));
+      },
+    });
+  };
+
+  return (
+    <div
+      onClick={handleClickProduct}
+      className="cursor-pointer w-[265px] h-[420px] p-2 bg-white rounded-md flex flex-col gap-4"
+    >
+      <div className="flex items-center justify-between w-[250px]">
+        <SmallRoundedCont isGrayBg={sponsored}>
+          <span className="text-white font-medium text-xs">
+            {sponsored ? "sponsored" : "Best Seller"}
+          </span>
+        </SmallRoundedCont>
+        <SmallRoundedCont className="bg-white h-[23px] w-[86px] shadow-custom-4 gap-[2px]">
+          {svgs.star}
+          <span className="text-main font-semibold text-xs">{rating}</span>
+          <span className="text-main font-medium text-[10px]">
+            ( {ratingCount} )
+          </span>
+        </SmallRoundedCont>
+      </div>
+
+      {/* Image Section */}
+      <div className="relative w-full">
+        <div className="w-full h-[250px] cursor-pointer">
+          <img
+            src={productCover}
+            alt={`${productName} image`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        {user?.role === "USER" && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col gap-2 absolute z-10 right-0 bottom-0"
+          >
+            <button
+              onClick={(e) => {
+                handleWishlistToggle();
+                e.stopPropagation();
+              }}
+            >
+              {isInWishlist ? svgs.redHeart : svgs.whiteHeart}
+            </button>
+            <button
+              onClick={(e) => {
+                handleAddToCart();
+                e.stopPropagation();
+              }}
+            >
+              {isInCart ? svgs.addedToCart : svgs.addCart}
+            </button>
+          </div>
+        )}
+      </div>
+      {/* Text Section */}
+      <div className="flex flex-col items-start gap-2">
+        <span className="text-[10px] text-homeText font-bold uppercase line-clamp-1">
+          {seller?.companyName}
+        </span>
+        <span className="text-[15px] text-homeHeaders font-bold capitalize line-clamp-2">
+          {productName}
+        </span>
+
+        <div className="flex gap-2">
+          {PriceAfterDiscount > 0 && (
+            <span className="text-base text-[#2D8653] font-bold">
+              IQD{formatToTwoDecimals(PriceAfterDiscount)}
+            </span>
+          )}
+          <span
+            className={`text-base  font-bold ${PriceAfterDiscount > 0 ? "line-through text-homeText" : "text-[#2D8653]"}`}
+          >
+            IQD{formatToTwoDecimals(PriceBeforeDiscount)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BestProduct;

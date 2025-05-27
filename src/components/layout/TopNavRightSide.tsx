@@ -1,0 +1,159 @@
+"use client";
+import { svgs } from "../icons/svgs";
+import { Badge, Dropdown, Flex, Image, MenuProps } from "antd";
+import React, { useEffect } from "react";
+import LogoutButton from "./LogoutButton";
+import { useRouter } from "next/navigation";
+import { UserLoginResponse } from "@/types/user";
+import { getCarts } from "@/services/cart";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import { setCarts, setOrderSummery } from "@/redux/cartSlice";
+import { findAllFavorite } from "@/services/whishlist";
+import { setWhishlistItems } from "@/redux/whishlistSlice";
+
+const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { carts } = useSelector((state: RootState) => state.cart);
+  const { whishlistItems } = useSelector((state: RootState) => state.whishlist);
+  const cartItemsCount = carts?.length ?? 0;
+  const whishlistItemsCount = whishlistItems?.length ?? 0;
+
+  const handleClickToLogin = () => {
+    router.push("/auth/login");
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: (
+        <div
+          onClick={() => router.push(`/profile`)}
+          className="flex items-center gap-1 cursor-pointer"
+        >
+          {svgs.profileIcon}
+          <span className="font-semibold text-xs text-meduimBlack">
+            Profile
+          </span>
+        </div>
+      ),
+      key: "0",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: <LogoutButton />,
+      key: "1",
+    },
+  ];
+
+  //fetch items in cart
+  useEffect(() => {
+    const fetchCarts = async () => {
+      if (user) {
+        await getCarts({
+          onSuccess: (data) => {
+            dispatch(setCarts(data.docs));
+            dispatch(setOrderSummery(data.orderSummary));
+          },
+        });
+      }
+    };
+    fetchCarts();
+  }, []);
+
+  useEffect(() => {
+    const fetchWhishlist = async () => {
+      if (user) {
+        await findAllFavorite({
+          onSuccess: (data) => {
+            dispatch(setWhishlistItems(data));
+          },
+        });
+      }
+    };
+    fetchWhishlist();
+  }, []);
+
+  return (
+    <Flex gap={16} align="center" justify="end" className="flex-1">
+      <div className="flex items-center justify-center gap-2 bg-[#858D9D63] rounded-[39px] p-3 w-[85px] h-[38px]">
+        <span>{svgs.langIcon}</span>
+        <span className="text-base font-bold text-[#1C1818]">EN</span>
+      </div>
+      {user && (
+        <Flex gap={16} align="center" justify="center">
+          {/* //TODO: change count based on items length  */}
+          <Badge className="cursor-pointer">
+            <span>{svgs.notification}</span>
+          </Badge>
+          <Badge
+            count={
+              typeof whishlistItemsCount === "number" ? whishlistItemsCount : 0
+            }
+            className="cursor-pointer"
+            onClick={() => router.push("/whishlist")}
+          >
+            {svgs.grayHeart}
+          </Badge>
+          <Badge
+            count={cartItemsCount}
+            className="cursor-pointer"
+            onClick={() => router.push("/cart")}
+          >
+            {svgs.grayCart}
+          </Badge>
+        </Flex>
+      )}
+
+      <div style={{ marginInline: 12 }}>
+        {!user && (
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={handleClickToLogin}
+              className="text-main text-sm font-medium p-2 flex items-center gap-2 outline-none"
+            >
+              {svgs.defaultAvatar}
+              Login / Register
+            </button>
+            <button className="p-2" onClick={handleClickToLogin}>
+              {svgs.grayHeart}
+            </button>
+            <button className="p-2" onClick={handleClickToLogin}>
+              {svgs.grayCart}
+            </button>
+          </div>
+        )}
+
+        {user && (
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <Flex align="center" gap={8} className="cursor-pointer">
+              {user.profilePicture ? (
+                <Image
+                  preview={false}
+                  style={{ borderRadius: "50%" }}
+                  src={user.profilePicture}
+                  alt="user"
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                svgs.defaultAvatar
+              )}
+              <Flex gap={2} justify="center" vertical>
+                <div className="text-[#700C18] text-[14px]">
+                  {user.role === "USER" && "Hi, "}
+                  {user?.firstName}
+                </div>
+              </Flex>
+              {svgs.downArrow}
+            </Flex>
+          </Dropdown>
+        )}
+      </div>
+    </Flex>
+  );
+};
+
+export default TopNavRightSide;
