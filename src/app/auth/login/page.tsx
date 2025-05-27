@@ -82,11 +82,8 @@ const Page = () => {
         onSuccess: (data) => {
           if (typeof window !== "undefined") {
             localStorage.setItem("user", JSON.stringify(data));
-            localStorage.setItem(
-              "jwtRefreshToken",
-              JSON.stringify(data.jwtRefreshToken),
-            );
-            localStorage.setItem("jwtToken", JSON.stringify(data.jwtToken));
+            localStorage.setItem("jwtRefreshToken", data.jwtRefreshToken);
+            localStorage.setItem("jwtToken", data.jwtToken);
             dispatch(setUser(data));
           }
           setLoading(false);

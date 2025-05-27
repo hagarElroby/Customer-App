@@ -91,6 +91,6 @@ export type UserLoginResponse = {
   nidUrl?: string;
   profilePicture?: string;
   siteLocationUrl?: string;
-  jwtRefreshToken?: string;
-  jwtToken?: string;
+  jwtRefreshToken: string;
+  jwtToken: string;
 };
