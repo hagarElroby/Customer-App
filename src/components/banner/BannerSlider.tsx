@@ -5,6 +5,7 @@ import { Banner } from "@/types/banner";
 import { svgs } from "../icons/svgs";
 import Spinner from "../shared/Spinner";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 const BannerSlider = () => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const BannerSlider = () => {
 
   return (
     <div
-      className="relative w-full h-[350px] overflow-hidden cursor-pointer"
+      className="relative w-full h-[155px] md:h-[350px] overflow-hidden cursor-pointer rounded-lg md:rounded-none"
       onClick={() => handleClickBanner(banners[currentSlide]?.link)}
     >
       {loading && <Spinner />}
@@ -52,12 +53,20 @@ const BannerSlider = () => {
             }}
           >
             {banners.slice(0, 7).map((banner, index) => (
-              <img
-                key={index}
-                src={banner?.portalImageUrl}
-                alt={`Banner ${index + 1}`}
-                className="w-full h-full object-cover flex-shrink-0"
-              />
+              <React.Fragment key={index}>
+                <img
+                  src={banner.imageUrl}
+                  alt={`Mobile Banner ${index + 1}`}
+                  className="block lg:hidden w-full h-full object-cover flex-shrink-0"
+                />
+
+                <img
+                  key={index}
+                  src={banner?.portalImageUrl}
+                  alt={`Portal Banner ${index + 1}`}
+                  className="hidden lg:block w-full h-full object-cover flex-shrink-0"
+                />
+              </React.Fragment>
             ))}
           </div>
 

@@ -68,7 +68,7 @@ const PopularCategories = () => {
               <Flex
                 onClick={() => router.push("/categories")}
                 style={{ cursor: "pointer" }}
-                className="text-main pr-1 text-sm"
+                className="text-main pr-1 text-xs lg:text-sm"
                 align="center"
                 gap={8}
               >

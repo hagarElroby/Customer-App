@@ -65,7 +65,7 @@ const NavigationBar = () => {
   };
 
   return (
-    <div className="py-5 border-b-[0.5px] border-[#00000040] w-full flex items-center justify-between gap-[14px] relative h-[76px]">
+    <div className="hidden md:flex py-5 md:border-b-[0.5px] md:border-[#00000040] w-full items-center justify-between gap-[14px] relative h-[76px]">
       {loading && <Spinner />}
       {!loading && !error && (
         <>

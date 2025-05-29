@@ -8,7 +8,7 @@ import AdsBanner from "./AdsBanner";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col bg-homeBg gap-10 pb-7">
+    <div className="flex flex-col bg-homeBg gap-10 pb-7 pt-3 md:pt-0">
       <NavigationBar />
       <div className="flex flex-col gap-10 px-8">
         <BannerSlider />

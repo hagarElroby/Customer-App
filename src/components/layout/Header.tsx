@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <header
-      className={`bg-white py-4 px-14 z-30 w-full h-auto border-b-[0.5px] border-[#00000040] flex flex-col md:flex-row items-center justify-between gap-10`}
+      className={`bg-white py-[10px] px-[10px] lg:py-4 lg:px-14 z-30 w-full h-auto  border-b-[1px] border-main md:border-b-[0.5px] md:border-[#00000040] flex items-center justify-between lg:gap-10`}
     >
       <div className="z-10">
         <TopNavLeftSide />

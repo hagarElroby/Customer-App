@@ -9,12 +9,12 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
   return (
     <div
       style={{ height: height }}
-      className={`flex items-center justify-between h-[70px] bg-white w-full py-[9px] px-[15px] rounded-lg ${className}`}
+      className={`flex items-center justify-between h-[45px] lg:h-[70px] bg-white w-full py-[9px] px-[15px] rounded-lg ${className}`}
     >
       {/* Left section */}
       <div className="flex items-center gap-1">
-        <div className="w-5 h-10 bg-main rounded"></div>
-        <h3 className="text-homeHeaders font-bold text-2xl capitalize">
+        <div className="w-[6px] h-5 lg:w-5 lg:h-10 bg-main rounded"></div>
+        <h3 className="text-homeHeaders font-bold text-sm lg:text-2xl capitalize">
           {title}
         </h3>
         {resultValue && (

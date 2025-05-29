@@ -21,6 +21,7 @@ import {
 } from "@/redux/product";
 import { getTempFile, setTempFile } from "@/utils/fileStorage";
 import SearchHistory from "../search/SearchHistory";
+import SideBar from "../home/SideBar";
 
 const TopNavLeftSide = () => {
   const router = useRouter();
@@ -33,6 +34,11 @@ const TopNavLeftSide = () => {
   const [isImgDropdownOpen, setIsImgDropdownOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const file = getTempFile();
+
+  const [isSideBarOpen, setIsSideBarOpen] = React.useState(false);
+  const toggleSideBar = () => {
+    setIsSideBarOpen(!isSideBarOpen);
+  };
 
   const suggestionsRef = useRef<HTMLDivElement>(null);
   useClickOutside(suggestionsRef, () => setShowSuggestionsPopup(false));
@@ -150,12 +156,15 @@ const TopNavLeftSide = () => {
   }, [pathname]);
 
   return (
-    <div className="flex justify-center items-center gap-10">
-      <ResponsiveLogo width="120px" onClick={() => router.push(`/`)} />
+    <div className="flex justify-center items-center gap-4 lg:gap-10">
+      <button onClick={toggleSideBar} className="block md:hidden">
+        {svgs.sideMenuIcon}
+      </button>
+      <ResponsiveLogo onClick={() => router.push(`/`)} />
       {/* search */}
       <div
-        className={`min-w-48 w-[40vw] flex items-center justify-between relative gap-[2px] md:gap-1 hd:gap-[0.27vw] rounded-[50px]
-            py-1 md:py-2 xxl:py-[0.78vh] px-[6px] md:px-2 xxl:px-3 hd:px-[0.55vw] h-12 border
+        className={`w-[235px] sm:w-[60vw] md:w-[37vw] lg:w-[567px] flex items-center justify-between relative gap-[2px] md:gap-1 rounded-[50px]
+          py-2 md:py-3 px-3 md:px-4 h-12 border
             ${showSuggestionsPopup ? "bg-white border-main" : "bg-bgSearch border-bgSearch"}`}
         onClick={() => {
           if (searchResults.length > 0 || sampleHistory.length > 0) {
@@ -168,7 +177,7 @@ const TopNavLeftSide = () => {
           className="flex items-center justify-center outline-none"
         >
           {file ? (
-            <div className="flex items-center justify-center w-8 h-8 rounded-3xl overflow-hidden border border-main">
+            <div className="flex items-center justify-center w-5 h-5 md:w-8 md:h-8 rounded-3xl overflow-hidden border border-main">
               {imageUrl && (
                 <img
                   src={imageUrl}
@@ -186,7 +195,8 @@ const TopNavLeftSide = () => {
                 }
               }}
             >
-              {svgs.searchIcon}
+              <span className="hidden md:block">{svgs.searchIcon}</span>
+              <span className="block md:hidden">{svgs.searchIconMobile}</span>
             </span>
           )}
         </button>
@@ -205,13 +215,13 @@ const TopNavLeftSide = () => {
             }
           }}
           placeholder="What are you looking for?"
-          className="custom-font14 bg-transparent text-meduimBlack placeholder-searchPlaceholder 
-              w-full h-full ml-1 hd:ml-[0.06vw] outline-none font-normal"
+          className="text-xs md:text-sm md:font-bold bg-transparent text-meduimBlack placeholder-searchPlaceholder 
+              w-full h-full ml-1 outline-none"
         />
         {file && !searchTerm && (
           <button
             onClick={handleClearSearch}
-            className="mr-5 cursor-pointer text-gray-500 hover:text-gray-700"
+            className="mr-2 md:mr-5 cursor-pointer"
           >
             {svgs.closeIconGray}
           </button>
@@ -222,7 +232,8 @@ const TopNavLeftSide = () => {
             e.stopPropagation();
           }}
         >
-          {svgs.camera}
+          <span className="hidden md:block">{svgs.camera}</span>
+          <span className="block md:hidden">{svgs.cameraMobile}</span>
         </button>
 
         <SearchImgPopup
@@ -285,6 +296,7 @@ const TopNavLeftSide = () => {
                 {/* Search history below result list */}
                 <SearchHistory
                   data={sampleHistory}
+                  //TODO: Replace with actual search history data and clear functionality
                   onClear={() => {
                     console.log("Clear history");
                   }}
@@ -297,6 +309,7 @@ const TopNavLeftSide = () => {
             </div>
           )}
       </div>
+      <SideBar isOpen={isSideBarOpen} onClose={toggleSideBar} />
     </div>
   );
 };
