@@ -2,7 +2,7 @@
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/redux/store";
-import { logout } from "@/services/auth";
+import { logout } from "@/services/auth/logout";
 import { clearUser } from "@/redux/authSlice";
 import { toast } from "sonner";
 import { svgs } from "../icons/svgs";
@@ -15,6 +15,8 @@ const LogoutButton = () => {
     await logout({
       onSuccess: (data) => {
         localStorage.removeItem("user");
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("jwtRefreshToken");
         dispatch(clearUser());
         router.push("/");
       },

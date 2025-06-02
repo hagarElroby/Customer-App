@@ -2,13 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import useRecaptcha from "@/hooks/useRecaptcha";
-import {
-  PhoneAuthProvider,
-  signInWithCredential,
-  signInWithPhoneNumber,
-} from "firebase/auth";
-import { auth } from "@/firebase";
 import SignupForm from "@/components/auth/SignupForm";
 import {
   validateEmail,
@@ -17,8 +10,14 @@ import {
   validatePhoneNumber,
 } from "@/utils/validationUtils";
 import VerifyCode from "@/components/auth/page";
-import { useState } from "react";
-import { signup } from "@/services/auth";
+import { useEffect, useRef, useState } from "react";
+import PhoneNumberForm from "@/components/auth/PhoneNumberForm";
+import {
+  completeSignup,
+  initiateSignup,
+  resendSignup,
+  verifySignup,
+} from "@/services/auth/signup";
 
 const Signup = () => {
   const router = useRouter();
@@ -27,16 +26,37 @@ const Signup = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [signupError, setSignupError] = useState<string>();
   const [formData, setFormData] = useState({
     firstName: "",
+    middleName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
     password: "",
     confirmPassword: "",
     termsAccepted: false,
   });
-  useRecaptcha();
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (step === 2 && timer > 0) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(timerRef.current!);
+            setCanResend(true);
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [step]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -47,46 +67,105 @@ const Signup = () => {
     }));
   };
   const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      phoneNumber: e.target.value,
-    }));
+    setPhoneNumber(e.target.value);
+    setSignupError("");
   };
 
-  const sendVerificationCode = async (e: React.FormEvent) => {
-    try {
-      const appVerifier = window.recaptchaVerifier;
-      if (!appVerifier) {
-        console.debug("reCAPTCHA not initialized");
-        return;
-      }
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        formData.phoneNumber,
-        appVerifier,
-      );
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          "verificationId",
-          confirmationResult.verificationId,
-        );
-      }
-      toast.success("SMS sent successfully!");
-      setStep(2);
-    } catch (error: any) {
-      console.error("Verification error:", error.message);
-      toast.error(
-        error.message || "Failed to send verification code. Try again.",
-      );
+  const handleSendPhoneNumber = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!phoneNumber) {
+      toast.error("Please enter your phone number");
+      return;
     }
+    const phoneError = validatePhoneNumber(phoneNumber);
+    if (phoneError) {
+      toast.error(phoneError);
+      return;
+    }
+
+    await initiateSignup({
+      phoneNumber,
+      onSuccess: (data) => {
+        toast.success(data.message || "Verification code sent successfully!");
+        setStep(2);
+      },
+      onError: async (error) => {
+        if (error.flag === "174" || error.flag === "175") {
+          await resendSignup({
+            phoneNumber,
+            onSuccess: (data) => {
+              toast.success(
+                data.message || "Verification code resent successfully!",
+              );
+              setCanResend(true);
+              setStep(2);
+            },
+            onError: (error) => {
+              toast.error(
+                error.description ||
+                  "Failed to resend verification code. Try again.",
+              );
+            },
+          });
+        } else if (error.flag === "101") {
+          toast.error(error.description || "Phone number already exists.");
+          setSignupError("Phone number already exists. Please try logging in.");
+        } else {
+          toast.error(
+            error.description || "Failed to send verification code. Try again.",
+          );
+        }
+      },
+    });
+  };
+
+  const handleCodeChange = (e: any) => {
+    setCode(e);
+  };
+
+  const verifyCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    await verifySignup({
+      phoneNumber,
+      code,
+      onSuccess: (data) => {
+        toast.success(data.message || "Verification successful!");
+        setStep(3);
+        setIsVerifying(false);
+      },
+      onError: (error) => {
+        toast.error(
+          error.description || "Verification failed. Please try again.",
+        );
+        setIsVerifying(false);
+      },
+    });
+  };
+
+  const handleResend = async () => {
+    setCanResend(false);
+    setTimer(60);
+    await resendSignup({
+      phoneNumber,
+      onSuccess: (data) => {
+        toast.success(data.message || "Verification code resent successfully!");
+        setCanResend(true);
+      },
+      onError: (error) => {
+        toast.error(
+          error.description || "Failed to resend verification code. Try again.",
+        );
+      },
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const {
       firstName,
+      middleName,
       lastName,
-      phoneNumber,
       email,
       password,
       termsAccepted,
@@ -94,7 +173,6 @@ const Signup = () => {
     } = formData;
     const firstNameError = validateName(firstName, "First name");
     const lastNameError = validateName(lastName, "Last name");
-    const phoneError = validatePhoneNumber(phoneNumber);
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
     const termsError = termsAccepted
@@ -107,10 +185,6 @@ const Signup = () => {
     }
     if (lastNameError.length > 0) {
       toast.error(lastNameError);
-      return;
-    }
-    if (phoneError) {
-      toast.error(phoneError);
       return;
     }
 
@@ -131,107 +205,31 @@ const Signup = () => {
       toast.error(termsError);
       return;
     }
-    try {
-      await sendVerificationCode(e);
-    } catch (error) {
-      console.debug("Error during form submission:", error);
-      toast.error("There was an error submitting the form, please try again.");
-    }
-    setStep(2);
-  };
 
-  const verifyCode = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsVerifying(true);
-    try {
-      const verificationIdStore = localStorage.getItem("verificationId");
-      const verificationId = window.verificationId || verificationIdStore;
-      if (!verificationId) {
-        toast.error(
-          "Verification ID not found. Please retry the verification process.",
-        );
-        setIsVerifying(false);
+    await completeSignup({
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      onSuccess: (data) => {
+        toast.success(data.message || "Sign-up completed successfully!");
         router.push("/auth/login");
-        return;
-      }
-      const credential = PhoneAuthProvider.credential(verificationId, code);
-      const result = await signInWithCredential(auth, credential);
-      const accessToken = await result?.user?.getIdToken();
-      const { firstName, lastName, phoneNumber, email, password } = formData;
-      const dataToSend = {
-        firstName,
-        lastName,
-        phoneNumber,
-        password,
-        ...(email && { email }),
-        role: "USER",
-      };
-      if (accessToken) {
-        await signup({
-          ...dataToSend,
-          fireBaseToken: accessToken,
-          onSuccess: () => {
-            toast.success("Sign-up successful");
-            router.push("/auth/login");
-          },
-          onError: (e) => {
-            toast.error(`Sign-up failed: ${e.description}`);
-          },
-        });
-      }
-    } catch (error: any) {
-      console.error("Error verifying code:", error);
-      if (error.code === "auth/invalid-verification-code") {
-        toast.error("Invalid verification code. Please try again.");
-      }
-    } finally {
-      setIsVerifying(false);
-      setCode("");
-    }
-  };
-
-  const handleResend = async () => {
-    setCanResend(false);
-    setTimer(60);
-    try {
-      const appVerifier = window.recaptchaVerifier;
-      if (!appVerifier) {
-        console.error("reCAPTCHA not initialized");
-        toast.error("Something went wrong, please try again.");
-        return;
-      }
-      const confirmationResult = await signInWithPhoneNumber(
-        auth,
-        formData.phoneNumber,
-        appVerifier,
-      );
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          "verificationId",
-          confirmationResult.verificationId,
-        );
-      }
-
-      toast.success("SMS sent");
-      router.push("/auth/verifycode");
-    } catch (error) {
-      console.error("Error sending verification code:", error);
-      toast.error("Error sending verification code");
-    }
-  };
-
-  const handleCodeChange = (e: any) => {
-    setCode(e);
+      },
+      onError: (error) => {
+        toast.error(error.description || "Sign-up failed. Please try again.");
+      },
+    });
   };
 
   return (
     <>
       {step === 1 && (
-        <SignupForm
-          formData={formData}
-          onChange={handleInputChange}
+        <PhoneNumberForm
+          phoneNumber={phoneNumber}
           onPhoneChange={handlePhoneInputChange}
-          onSubmit={handleSubmit}
+          onSubmit={handleSendPhoneNumber}
+          error={signupError}
         />
       )}
       {step === 2 && (
@@ -243,6 +241,13 @@ const Signup = () => {
           canResend={canResend}
           timer={timer}
           isVerifying={isVerifying}
+        />
+      )}
+      {step === 3 && (
+        <SignupForm
+          formData={formData}
+          onChange={handleInputChange}
+          onSubmit={handleSubmit}
         />
       )}
     </>

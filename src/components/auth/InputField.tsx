@@ -22,7 +22,6 @@ const InputField: React.FC<InputFieldProps> = ({
   const handlePasswordToggle = () => {
     setShowPassword(!showPassword);
   };
-  console.log("errorrr", error);
   return (
     <div className="w-full relative">
       <div className="flex items-center justify-center relative">

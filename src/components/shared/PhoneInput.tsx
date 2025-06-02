@@ -1,4 +1,5 @@
 "use client";
+import { svgs } from "../icons/svgs";
 import { countryData } from "./countryData";
 import { useState } from "react";
 
@@ -158,15 +159,14 @@ const PhoneInput: React.FC<InputProps> = ({
           />
 
           {error && (
-            <img
-              src="/images/errorIcon.svg"
-              alt="error icon"
-              className="input-icon-mr input-icon-size block absolute top-1/2 
-              transform -translate-y-1/2 right-0 cursor-pointer"
-            />
+            <span className="mr-2 absolute top-1/2 transform -translate-y-1/2 right-0">
+              {svgs.errorIcon}
+            </span>
           )}
         </div>
       </div>
+
+      {error && <span className="text-xs text-red-500 mt-1"> {error} </span>}
 
       {dropDown && (
         <div
