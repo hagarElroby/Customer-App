@@ -44,7 +44,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
         value={editingText}
         onChange={(e) => setEditingText(e.target.value)}
         onKeyDown={handleKeyDown}
-        className="flex-1 p-2  border-0 bg-transparent focus:outline-none"
+        className={`flex-1 p-2 border-0 bg-transparent focus:outline-none ${noEdit ? "text-[#757575]" : "text-[#404553]"}`}
         disabled={!isEditing}
       />
 

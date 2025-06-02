@@ -5,27 +5,24 @@ import Button from "@/components/auth/Button";
 import InputField from "@/components/auth/InputField";
 import CheckboxField from "@/components/auth/CheckboxField";
 import FormContainer from "@/components/auth/FormContainer";
-import PhoneInput from "@/components/shared/PhoneInput";
 
 type SignupFormProps = {
   formData: {
     firstName: string;
+    middleName: string;
     lastName: string;
     email: string;
-    phoneNumber: string;
     password: string;
     confirmPassword: string;
     termsAccepted: boolean;
   };
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
 const SignupForm: React.FC<SignupFormProps> = ({
   formData,
   onChange,
-  onPhoneChange,
   onSubmit,
 }) => {
   const router = useRouter();
@@ -57,21 +54,19 @@ const SignupForm: React.FC<SignupFormProps> = ({
                 onChange={onChange}
               />
               <InputField
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
+                label="Middle Name"
+                name="middleName"
+                value={formData.middleName}
                 onChange={onChange}
               />
             </div>
 
             <div className="w-full flex flex-col md:flex-row justify-between gap-6 hd:gap-[1.66vw] items-center">
-              <PhoneInput
-                isAuthField={true}
-                placeholder="( +964 ) 24-848-125"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={onPhoneChange}
-                label="Phone Number"
+              <InputField
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={onChange}
               />
               <InputField
                 label="Email (Optional)"

@@ -13,7 +13,7 @@ import FormContainer from "@/components/auth/FormContainer";
 
 import PhoneInput from "@/components/shared/PhoneInput";
 import { validatePassword, validatePhoneNumber } from "@/utils/validationUtils";
-import { login } from "@/services/auth";
+import { login } from "@/services/auth/login";
 import { setUser } from "@/redux/authSlice";
 import { UserLoginResponse } from "@/types/user";
 import withAuthRedirect from "@/utils/withAuthRedirect";

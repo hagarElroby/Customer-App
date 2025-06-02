@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { validatePassword, validatePhoneNumber } from "@/utils/validationUtils";
+import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
+import VerifyCode from "@/components/auth/page";
+import SetPasswordForm from "@/components/auth/SetPasswordForm";
 import {
   forgotPasswordSendOtp,
   forgotPasswordVerifyOtp,
   resetPassword,
-} from "@/services/auth";
-import ForgotPasswordForm from "@/components/auth/ForgotPasswordForm";
-import VerifyCode from "@/components/auth/page";
-import SetPasswordForm from "@/components/auth/SetPasswordForm";
+} from "@/services/auth/forgotPassword";
 
 const ForgotPassword = () => {
   const router = useRouter();
@@ -21,10 +21,31 @@ const ForgotPassword = () => {
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
   const [code, setCode] = useState("");
+
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
   });
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (step === 2 && timer > 0) {
+      timerRef.current = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 1) {
+            clearInterval(timerRef.current!);
+            setCanResend(true);
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [step]);
 
   const handlePhoneInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value);
@@ -39,7 +60,6 @@ const ForgotPassword = () => {
     }
     await forgotPasswordSendOtp({
       phoneNumber,
-      role: "USER",
       onSuccess: (data) => {
         toast.success(data.body || "OTP sent successfully");
         setStep(2);
@@ -74,7 +94,16 @@ const ForgotPassword = () => {
   const handleResend = async () => {
     setCanResend(false);
     setTimer(60);
-    //TODO: Resend OTP
+    await forgotPasswordSendOtp({
+      phoneNumber,
+      onSuccess: (data) => {
+        toast.success(data.body || "OTP sent successfully");
+        setStep(2);
+      },
+      onError: (error) => {
+        toast.error(error.description || "An unexpected error occurred");
+      },
+    });
   };
 
   const handleCodeChange = (e: any) => {
@@ -109,7 +138,8 @@ const ForgotPassword = () => {
       password: formData.password,
       onSuccess: (data) => {
         toast.success(data.body || "Password updated successfully");
-        router.push("/");
+        router.push("/auth/login");
+        localStorage.removeItem("forgotPasswordToken");
       },
       onError: (error) => {
         toast.error(error.description || "An unexpected error occurred");

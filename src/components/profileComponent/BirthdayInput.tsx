@@ -88,7 +88,7 @@ const BirthdayInput: React.FC<BirthDateProps> = ({
   };
 
   return (
-    <div className="flex items-center rounded border border-whiteBorder bg-transparent">
+    <div className="flex items-center rounded border border-whiteBorder bg-white">
       <input
         ref={dayRef}
         type="text"
@@ -98,7 +98,7 @@ const BirthdayInput: React.FC<BirthDateProps> = ({
         placeholder="DD"
         disabled={!isEditing}
         onKeyDown={handleKeyDown}
-        className="w-12 p-2 border-r border-whiteBorder text-center bg-transparent text-black placeholder-profileLabel outline-none"
+        className="bg-white w-12 p-2 border-r border-whiteBorder text-center text-black placeholder-profileLabel outline-none"
       />
       <input
         ref={monthRef}
@@ -109,7 +109,7 @@ const BirthdayInput: React.FC<BirthDateProps> = ({
         placeholder="MM"
         disabled={!isEditing}
         onKeyDown={handleKeyDown}
-        className="w-12 p-2 border-r border-whiteBorder text-center bg-transparent text-black placeholder-profileLabel outline-none"
+        className="bg-white w-12 p-2 border-r border-whiteBorder text-center  text-black placeholder-profileLabel outline-none"
       />
       <input
         ref={yearRef}
@@ -120,7 +120,7 @@ const BirthdayInput: React.FC<BirthDateProps> = ({
         placeholder="YYYY"
         disabled={!isEditing}
         onKeyDown={handleKeyDown}
-        className="w-32 p-2 text-center bg-transparent text-black placeholder-profileLabel outline-none"
+        className="bg-white w-32 p-2 text-center text-black placeholder-profileLabel outline-none"
       />
       <button
         type="button"

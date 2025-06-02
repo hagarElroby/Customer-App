@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint",
     "format": "prettier --write .",
     "test": "jest"
@@ -20,7 +21,6 @@
     "browser-image-compression": "^2.0.2",
     "cropperjs": "^1.6.2",
     "date-fns": "^4.1.0",
-    "firebase": "^10.13.2",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.11.9",

@@ -22,7 +22,6 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { sendEmailOtp, updateProfile } from "@/services/profile";
 import { updateUser } from "@/redux/authSlice";
 import showPopup from "../shared/ShowPopup";
-import { text } from "stream/consumers";
 
 const PersonalInfo = () => {
   const router = useRouter();
