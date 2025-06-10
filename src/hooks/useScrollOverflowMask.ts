@@ -3,7 +3,7 @@ import {
   useMotionValue,
   useMotionValueEvent,
   useScroll,
-} from "motion/react";
+} from "framer-motion";
 
 const left = `0%`;
 const right = `100%`;
