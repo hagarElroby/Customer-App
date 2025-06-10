@@ -5,10 +5,14 @@ import { Banner } from "@/types/banner";
 import { svgs } from "../icons/svgs";
 import Spinner from "../shared/Spinner";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 const BannerSlider = () => {
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const currentIndex = useRef(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleClickBanner = (link: string) => {
     router.push(link);
@@ -31,6 +35,32 @@ const BannerSlider = () => {
     6000,
   );
 
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container || banners.length === 0) return;
+
+    const itemWidth = container.firstChild
+      ? (container.firstChild as HTMLElement).offsetWidth + 10 // gap-[10px]
+      : 0;
+
+    const autoScroll = () => {
+      if (!container) return;
+
+      currentIndex.current = (currentIndex.current + 1) % banners.length;
+
+      container.scrollTo({
+        left: currentIndex.current * itemWidth,
+        behavior: "smooth",
+      });
+    };
+
+    intervalRef.current = setInterval(autoScroll, 5000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [banners]);
+
   // Return null if not loading and no banners
   if (!loading && (!banners || banners.length === 0)) {
     return null;
@@ -38,7 +68,7 @@ const BannerSlider = () => {
 
   return (
     <div
-      className="relative w-full h-[155px] md:h-[350px] overflow-hidden cursor-pointer rounded-lg md:rounded-none"
+      className="relative w-[90%] mx-auto md:w-full h-[155px] sm:h-[200px] lg:h-[350px] overflow-hidden md:cursor-pointer"
       onClick={() => handleClickBanner(banners[currentSlide]?.link)}
     >
       {loading && <Spinner />}
@@ -47,33 +77,31 @@ const BannerSlider = () => {
         <>
           {/* Slider Images */}
           <div
-            className="flex transition-transform duration-500 ease-in-out w-full h-full"
+            className="hidden lg:flex transition-transform duration-500 ease-in-out w-full h-full "
             style={{
               transform: `translateX(-${currentSlide * 100}%)`,
             }}
           >
             {banners.slice(0, 7).map((banner, index) => (
-              <React.Fragment key={index}>
-                <img
-                  src={banner.imageUrl}
-                  alt={`Mobile Banner ${index + 1}`}
-                  className="block lg:hidden w-full h-full object-cover flex-shrink-0"
-                />
-
+              <div
+                key={index}
+                className="flex-shrink-0 rounded-lg overflow-hidden w-full"
+                onClick={() => router.push(banner.link)}
+              >
                 <img
                   key={index}
                   src={banner?.portalImageUrl}
                   alt={`Portal Banner ${index + 1}`}
-                  className="hidden lg:block w-full h-full object-cover flex-shrink-0"
+                  className="w-full h-full object-cover"
                 />
-              </React.Fragment>
+              </div>
             ))}
           </div>
 
           {/* Navigation Bullets */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 hidden lg:flex space-x-2"
           >
             {banners.slice(0, 7).map((_, index) => (
               <button
@@ -90,7 +118,7 @@ const BannerSlider = () => {
           </div>
 
           {/* Left Arrow */}
-          <div className="absolute left-[-80px] top-0 bottom-0 w-[120px] h-full bg-arrowGradient rounded-r-full flex items-center justify-end pr-3">
+          <div className="hidden lg:flex absolute left-[-80px] top-0 bottom-0 w-[120px] h-full bg-arrowGradient rounded-r-full items-center justify-end pr-3">
             <button
               onClick={goToPrevious}
               className="text-white flex items-center justify-center"
@@ -100,6 +128,28 @@ const BannerSlider = () => {
           </div>
         </>
       )}
+
+      <motion.div
+        ref={scrollRef}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        className="flex lg:hidden gap-[10px] scrollbar-hide overflow-x-auto snap-x snap-mandatory"
+        style={{ scrollSnapType: "x mandatory" }}
+      >
+        {banners.map((banner) => (
+          <motion.div
+            key={banner._id}
+            onClick={() => handleClickBanner(banner.link)}
+            className="flex-shrink-0 w-[80vw] h-[155px] sm:h-[200px] snap-center rounded-lg overflow-hidden"
+          >
+            <img
+              src={banner.imageUrl}
+              alt={banner.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 };

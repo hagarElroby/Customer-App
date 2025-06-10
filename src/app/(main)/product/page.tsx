@@ -10,8 +10,6 @@ import ProductSlider from "@/components/shared/ProductSlider";
 import { getOneProduct } from "@/services/product";
 import { OneProductResponse } from "@/types/product";
 import PreviouslyBrowsed from "@/components/shared/PreviouslyBrowsed";
-import { BrowseObject } from "@/types/browses";
-import { getPreviouslyBrowsed } from "@/services/browses";
 
 const ProductPage = () => {
   const searchParams = useSearchParams();

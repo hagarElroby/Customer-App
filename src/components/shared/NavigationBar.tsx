@@ -32,7 +32,9 @@ const NavigationBar = () => {
 
   useResponsiveItemsPerPage(setItemsPerPage, {
     768: 4,
-    1024: 8,
+    850: 5,
+    1024: 6,
+    1280: 8,
     1440: 10,
   });
 

@@ -10,6 +10,7 @@ import { svgs } from "../icons/svgs";
 import { SortType } from "@/types/product";
 import useFetchData from "@/hooks/useFetchData";
 import { getAllProducts } from "@/services/product";
+import { motion } from "framer-motion";
 
 interface ProductSliderProps {
   title: string;
@@ -28,9 +29,9 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   const sliderRef = useRef<HTMLDivElement>(null);
 
   useResponsiveItemsPerPage(setItemsPerPage, {
-    540: 2,
+    375: 2,
     850: 3,
-    1024: 4,
+    1200: 4,
     1400: 5,
   });
 
@@ -66,8 +67,10 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
     }
   };
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 w-full">
       <SectionTitle
         title={title}
         children={
@@ -82,7 +85,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           </Flex>
         }
       />
-      <div className="flex items-center justify-center relative w-full">
+      <div className="hidden md:flex items-center justify-center relative w-full">
         {/* Left Arrow */}
         <div
           onClick={handlePrev}
@@ -137,6 +140,27 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
           <ArrowInCircle dir="right" />
         </div>
       </div>
+
+      <motion.div
+        ref={scrollContainerRef}
+        className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide"
+      >
+        <div className="flex gap-[14px] px-2 md:px-8 w-full">
+          {loading ? (
+            <Spinner />
+          ) : (
+            products.map((product, index) => (
+              <BestProduct
+                key={index}
+                {...product}
+                sponsored={sponsored}
+                className="flex-shrink-0"
+                style={{ width: "167px" }}
+              />
+            ))
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };

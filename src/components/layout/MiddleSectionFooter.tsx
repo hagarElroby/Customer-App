@@ -4,7 +4,7 @@ const MiddleSectionFooter = () => {
   return (
     <div className="py-9 flex flex-col md:flex-row justify-between items-center px-20">
       {/* Language and Payment Options */}
-      <div className="flex items-center space-x-6">
+      <div className="flex flex-col md:flex-row items-center space-x-6">
         <div
           className="w-[200px] p-5 text-[15px] text-homeHeaders bg-white border border-inputGray 
           flex items-center justify-between rounded focus:outline-none cursor-pointer"
@@ -23,7 +23,7 @@ const MiddleSectionFooter = () => {
           </div>
         </div>
 
-        <div className="w-[2px] h-14 bg-bgBullets"></div>
+        <div className="w-[2px] h-14 bg-bgBullets hidden md:block"></div>
         <div className="flex flex-col gap-3 items-start">
           <h5 className="text-[13px] font-normal text-homeText">Follow Us:</h5>
           <div className="flex items-center gap-6">

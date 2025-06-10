@@ -7,14 +7,14 @@ const GoToTheAppSection = () => {
       <div className="flex items-center gap-4">
         <span>{svgs.xVectorBold}</span>
         <span>{svgs.sqaureLogo}</span>
-        <p className="text-xs font-bold text-white">
+        <p className="text-[10px] sm:text-xs font-bold text-white">
           Shop easier with Dazzliy App
         </p>
       </div>
       <button
         //TODO: Add onClick handler to navigate to the app link on store
         onClick={() => ""}
-        className="h-[29px] py-2 px-3 border border-white rounded-[20px] flex items-center justify-center text-xs font-bold text-white"
+        className="h-[29px] py-1 sm:py-2 px-2 sm:px-3 border border-white rounded-[20px] flex items-center justify-center text-[10px] sm:text-xs font-bold text-white"
       >
         Go to the App
       </button>

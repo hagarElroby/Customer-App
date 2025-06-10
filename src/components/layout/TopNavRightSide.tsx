@@ -112,7 +112,7 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
           <div className="flex gap-2 items-center">
             <button
               onClick={handleClickToLogin}
-              className="hidden md:flex text-main text-xs lg:text-sm font-medium p-2 items-center gap-2 outline-none"
+              className="hidden md:flex text-main text-xs xl:text-sm font-medium p-2 items-center gap-2 outline-none"
             >
               {svgs.defaultAvatar}
               Login / Register
