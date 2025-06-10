@@ -4,20 +4,14 @@ import BestProduct from "./BestProduct";
 import useResponsiveItemsPerPage from "@/hooks/useResponsiveItemsPerPage";
 import ArrowInCircle from "./ArrowInCircle";
 import Spinner from "./Spinner";
-import { Flex } from "antd";
-import { useRouter } from "next/navigation";
-import { svgs } from "../icons/svgs";
-import { AllProductsDocs, SortType } from "@/types/product";
-import useFetchData from "@/hooks/useFetchData";
-import { getAllProducts } from "@/services/product";
-import { BrowseObject } from "@/types/browses";
+import { AllProductsDocs } from "@/types/product";
 import { getPreviouslyBrowsed } from "@/services/browses";
 
 const PreviouslyBrowsed = () => {
   const [currentOffset, setCurrentOffset] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [browseData, setBrowseData] = useState<BrowseObject[]>([]);
+  const [browseData, setBrowseData] = useState<AllProductsDocs[]>([]);
   const [loadingBrowse, setLoadingBrowse] = useState(false);
 
   useEffect(() => {

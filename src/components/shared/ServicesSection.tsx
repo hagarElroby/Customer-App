@@ -30,18 +30,18 @@ const services: Service[] = [
 
 const ServicesSection = () => {
   return (
-    <div className="bg-white py-11 px-8 h-[264px] rounded-lg flex items-center justify-center gap-24">
+    <div className="bg-white py-4 xxl:py-6 my-auto px-4 lg:px-8 rounded-lg flex flex-col md:flex-row w-full items-start justify-center md:gap-3 lg:gap-24">
       {services.map((service, index) => (
         <div
           key={index}
-          className="w-[25vw] flex flex-col items-center text-center p-6"
+          className="w-full lg:w-[25vw] flex flex-col items-center text-center p-2 lg:p-6"
         >
           <div className="mb-4">{service.icon}</div>
           <div className="flex flex-col items-center text-center">
-            <h3 className="font-bold text-lg text-homeHeaders">
+            <h3 className="font-bold text-base lg:text-lg text-homeHeaders">
               {service.title}
             </h3>
-            <p className="text-base font-normal text-homeHeaders">
+            <p className="text-sm lg:text-base font-normal text-homeHeaders">
               {service.description}
             </p>
           </div>

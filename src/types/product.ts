@@ -19,8 +19,14 @@ export interface PriceRange {
 }
 
 interface Seller {
-  _id: string;
-  companyName: string;
+  _id?: string;
+  companyName?: string;
+}
+
+interface CampaignObject {
+  campaignId: string;
+  isSponsored: boolean;
+  endDate: string;
 }
 
 export interface AllProductsDocs {
@@ -33,9 +39,12 @@ export interface AllProductsDocs {
   PriceBeforeDiscount: number;
   PriceAfterDiscount: number;
   groupName: string;
-  inWishlist: boolean;
-  inCart: boolean;
+  inWishlist?: boolean;
+  inCart?: boolean;
+  campaign?: CampaignObject;
+  qunatityAndPrice?: QuantityPriceItem;
 }
+
 export interface AllProductsBody {
   docs: AllProductsDocs[];
   totalDocs?: number;
@@ -111,6 +120,9 @@ export interface QuantityPriceItem {
   quantityCost: string;
   minimumQuantity: string;
   productImages: string[];
+  isActive?: boolean;
+  _id?: string;
+  haveQuantityCost?: boolean;
 }
 
 export interface OneProductApiResponse {

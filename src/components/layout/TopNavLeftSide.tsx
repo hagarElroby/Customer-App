@@ -163,8 +163,8 @@ const TopNavLeftSide = () => {
       <ResponsiveLogo onClick={() => router.push(`/`)} />
       {/* search */}
       <div
-        className={`w-[235px] sm:w-[60vw] md:w-[37vw] lg:w-[567px] flex items-center justify-between relative gap-[2px] md:gap-1 rounded-[50px]
-          py-2 md:py-3 px-3 md:px-4 h-12 border
+        className={`w-[180px] xs:w-[217px] sm:w-[50vw] md:w-[37vw] lg:w-[567px] h-[37px] md:h-10 lg:h-12 flex items-center justify-between relative gap-[2px] md:gap-1 rounded-[50px]
+          py-2 md:py-3 px-3 md:px-4 border
             ${showSuggestionsPopup ? "bg-white border-main" : "bg-bgSearch border-bgSearch"}`}
         onClick={() => {
           if (searchResults.length > 0 || sampleHistory.length > 0) {
@@ -215,7 +215,7 @@ const TopNavLeftSide = () => {
             }
           }}
           placeholder="What are you looking for?"
-          className="text-xs md:text-sm md:font-bold bg-transparent text-meduimBlack placeholder-searchPlaceholder 
+          className="text-[10px] sm:text-xs md:text-sm md:font-bold bg-transparent text-meduimBlack placeholder-searchPlaceholder 
               w-full h-full ml-1 outline-none"
         />
         {file && !searchTerm && (

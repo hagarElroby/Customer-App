@@ -9,7 +9,7 @@ const ResponsiveLogo: React.FC<ResponsiveLogoProps> = ({
 }) => {
   return (
     <div
-      className="w-[60px] md:w-[100px] relative cursor-pointer"
+      className="w-[60px] md:w-[70px] lg:w-[80px] xl:w-[100px] relative cursor-pointer"
       onClick={onClick}
     >
       <img

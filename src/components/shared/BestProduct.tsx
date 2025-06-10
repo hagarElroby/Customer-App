@@ -16,7 +16,13 @@ import {
 import { setWhishlistItems } from "@/redux/whishlistSlice";
 import { setCarts, setOrderSummery } from "@/redux/cartSlice";
 
-const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
+const BestProduct: React.FC<
+  AllProductsDocs & {
+    sponsored?: boolean;
+    className?: string;
+    style?: React.CSSProperties;
+  }
+> = ({
   _id,
   productName,
   productCover,
@@ -28,7 +34,10 @@ const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
   PriceAfterDiscount,
   inWishlist,
   inCart,
+  qunatityAndPrice,
   sponsored = false,
+  className,
+  style,
 }) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -43,6 +52,11 @@ const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
 
   const handleWishlistToggle = async () => {
     if (!_id || !groupName) return;
+
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
 
     if (isInWishlist) {
       await removeFavorite({
@@ -80,6 +94,12 @@ const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
 
   const handleAddToCart = async () => {
     if (!_id || !groupName) return;
+
+    if (!user) {
+      router.push("/auth/login");
+      return;
+    }
+
     if (isInCart === false) {
       await addCart({
         productId: _id,
@@ -105,9 +125,10 @@ const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
   return (
     <div
       onClick={handleClickProduct}
-      className="cursor-pointer w-[265px] h-[420px] p-2 bg-white rounded-md flex flex-col gap-4"
+      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col md:gap-4 ${className}`}
+      style={style}
     >
-      <div className="flex items-center justify-between w-[250px]">
+      <div className="hidden md:flex items-center justify-between w-full">
         <SmallRoundedCont isGrayBg={sponsored}>
           <span className="text-white font-medium text-xs">
             {sponsored ? "sponsored" : "Best Seller"}
@@ -122,49 +143,78 @@ const BestProduct: React.FC<AllProductsDocs & { sponsored?: boolean }> = ({
         </SmallRoundedCont>
       </div>
 
+      <div className="flex md:hidden items-center justify-between w-full">
+        <SmallRoundedCont className="bg-white h-[23px] w-[86px] shadow-custom-4 gap-[2px]">
+          {svgs.star}
+          <span className="text-main font-semibold text-xs">{rating}</span>
+          <span className="text-main font-medium text-[10px]">
+            ( {ratingCount} )
+          </span>
+        </SmallRoundedCont>
+
+        <button
+          onClick={(e) => {
+            handleWishlistToggle();
+            e.stopPropagation();
+          }}
+          className="block md:hidden"
+        >
+          {isInWishlist ? svgs.mobileRedHeart : svgs.mobileWhiteHeart}
+        </button>
+      </div>
+
       {/* Image Section */}
       <div className="relative w-full">
-        <div className="w-full h-[250px] cursor-pointer">
+        <div className="w-full h-[168px] md:h-[250px] cursor-pointer">
           <img
-            src={productCover}
+            src={qunatityAndPrice?.productImages[0] || productCover}
             alt={`${productName} image`}
             className="w-full h-full object-cover"
           />
         </div>
-        {user?.role === "USER" && (
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="flex flex-col gap-2 absolute z-10 right-0 bottom-0"
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="flex flex-col gap-2 absolute z-10 right-0 bottom-0"
+        >
+          <button
+            onClick={(e) => {
+              handleWishlistToggle();
+              e.stopPropagation();
+            }}
+            className="hidden md:block"
           >
-            <button
-              onClick={(e) => {
-                handleWishlistToggle();
-                e.stopPropagation();
-              }}
-            >
-              {isInWishlist ? svgs.redHeart : svgs.whiteHeart}
-            </button>
-            <button
-              onClick={(e) => {
-                handleAddToCart();
-                e.stopPropagation();
-              }}
-            >
-              {isInCart ? svgs.addedToCart : svgs.addCart}
-            </button>
-          </div>
-        )}
+            {isInWishlist ? svgs.redHeart : svgs.whiteHeart}
+          </button>
+          <button
+            onClick={(e) => {
+              handleAddToCart();
+              e.stopPropagation();
+            }}
+            className="hidden md:block"
+          >
+            {isInCart ? svgs.addedToCart : svgs.addCart}
+          </button>
+          <button
+            onClick={(e) => {
+              handleAddToCart();
+              e.stopPropagation();
+            }}
+            className="md:hidden"
+          >
+            {isInCart ? svgs.mobileAddedToCart : svgs.mobileAddCart}
+          </button>
+        </div>
       </div>
       {/* Text Section */}
-      <div className="flex flex-col items-start gap-2">
+      <div className="flex flex-col items-start md:gap-2">
         <span className="text-[10px] text-homeText font-bold uppercase line-clamp-1">
           {seller?.companyName}
         </span>
-        <span className="text-[15px] text-homeHeaders font-bold capitalize line-clamp-2">
-          {productName}
+        <span className="text-sm md:text-[15px] text-homeHeaders font-bold capitalize line-clamp-3 h-16 md:h-20">
+          {`${productName} ${groupName}`}
         </span>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row md:gap-2">
           {PriceAfterDiscount > 0 && (
             <span className="text-base text-[#2D8653] font-bold">
               IQD{formatToTwoDecimals(PriceAfterDiscount)}

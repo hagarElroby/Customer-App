@@ -1464,6 +1464,78 @@ export const svgs: Record<string, JSX.Element> = {
       </defs>
     </svg>
   ),
+  mobileRedHeart: (
+    <svg
+      width="42"
+      height="43"
+      viewBox="0 0 42 43"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_dd_9311_4642)">
+        <circle cx="22" cy="19" r="16" fill="white" />
+        <path
+          d="M18.87 13.4336C16.7573 13.4336 15.0439 15.1624 15.0439 17.2954C15.0439 19.0172 15.7135 23.1037 22.3043 27.2347C22.4224 27.3079 22.5579 27.3466 22.6961 27.3466C22.8343 27.3466 22.9699 27.3079 23.0879 27.2347C29.6787 23.1037 30.3483 19.0172 30.3483 17.2954C30.3483 15.1624 28.635 13.4336 26.5222 13.4336C24.4094 13.4336 22.6961 15.7741 22.6961 15.7741C22.6961 15.7741 20.9828 13.4336 18.87 13.4336Z"
+          fill="#700C18"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_dd_9311_4642"
+          x="0"
+          y="0"
+          width="42"
+          height="43"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dx="-2" dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.13 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_9311_4642"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="1" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="effect1_dropShadow_9311_4642"
+            result="effect2_dropShadow_9311_4642"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect2_dropShadow_9311_4642"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  ),
   addCart: (
     <svg
       width="56"
@@ -1543,6 +1615,70 @@ export const svgs: Record<string, JSX.Element> = {
       </defs>
     </svg>
   ),
+  mobileAddCart: (
+    <svg
+      width="43"
+      height="42"
+      viewBox="0 0 43 42"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_d_9129_22891)">
+        <circle cx="21.5" cy="17" r="16.5" fill="white" stroke="#EAEAEA" />
+        <g clip-path="url(#clip0_9129_22891)">
+          <path
+            d="M27.828 18.152H22.716V23.336H20.676V18.152H15.588V16.304H20.676V11.096H22.716V16.304H27.828V18.152Z"
+            fill="#B0B0B0"
+          />
+        </g>
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_9129_22891"
+          x="0.5"
+          y="0"
+          width="42"
+          height="42"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_9129_22891"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow_9129_22891"
+            result="shape"
+          />
+        </filter>
+        <clipPath id="clip0_9129_22891">
+          <rect
+            width="24"
+            height="24"
+            fill="white"
+            transform="translate(9.5 5)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  ),
   whiteHeart: (
     <svg
       width="56"
@@ -1615,6 +1751,91 @@ export const svgs: Record<string, JSX.Element> = {
             result="shape"
           />
         </filter>
+      </defs>
+    </svg>
+  ),
+  mobileWhiteHeart: (
+    <svg
+      width="42"
+      height="43"
+      viewBox="0 0 42 43"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_dd_9129_22896)">
+        <circle cx="22" cy="19" r="16" fill="white" />
+        <g clip-path="url(#clip0_9129_22896)">
+          <path
+            d="M18.87 13.4336C16.7573 13.4336 15.0439 15.1624 15.0439 17.2954C15.0439 19.0172 15.7135 23.1037 22.3043 27.2347C22.4224 27.3079 22.5579 27.3466 22.6961 27.3466C22.8343 27.3466 22.9699 27.3079 23.0879 27.2347C29.6787 23.1037 30.3483 19.0172 30.3483 17.2954C30.3483 15.1624 28.635 13.4336 26.5222 13.4336C24.4094 13.4336 22.6961 15.7741 22.6961 15.7741C22.6961 15.7741 20.9828 13.4336 18.87 13.4336Z"
+            stroke="#B0B0B0"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+      </g>
+      <defs>
+        <filter
+          id="filter0_dd_9129_22896"
+          x="0"
+          y="0"
+          width="42"
+          height="43"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dx="-2" dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.13 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_9129_22896"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="1" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="effect1_dropShadow_9129_22896"
+            result="effect2_dropShadow_9129_22896"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect2_dropShadow_9129_22896"
+            result="shape"
+          />
+        </filter>
+        <clipPath id="clip0_9129_22896">
+          <rect
+            width="19.4783"
+            height="19.4783"
+            fill="white"
+            transform="translate(12.957 9.25977)"
+          />
+        </clipPath>
       </defs>
     </svg>
   ),
@@ -2546,6 +2767,80 @@ export const svgs: Record<string, JSX.Element> = {
             mode="normal"
             in="SourceGraphic"
             in2="effect2_dropShadow_379_4964"
+            result="shape"
+          />
+        </filter>
+      </defs>
+    </svg>
+  ),
+  mobileAddedToCart: (
+    <svg
+      width="44"
+      height="45"
+      viewBox="0 0 44 45"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g filter="url(#filter0_dd_9311_4651)">
+        <rect x="6" y="3" width="34" height="34" rx="17" fill="#700C18" />
+      </g>
+      <path
+        d="M16 23.2642L18.8243 26.2369C19.2186 26.6519 19.88 26.6519 20.2743 26.2369L30 16"
+        stroke="white"
+        stroke-width="4"
+        stroke-linecap="round"
+      />
+      <defs>
+        <filter
+          id="filter0_dd_9311_4651"
+          x="0"
+          y="0"
+          width="44"
+          height="45"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="1" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow_9311_4651"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dx="-2" dy="4" />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.13 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="effect1_dropShadow_9311_4651"
+            result="effect2_dropShadow_9311_4651"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect2_dropShadow_9311_4651"
             result="shape"
           />
         </filter>

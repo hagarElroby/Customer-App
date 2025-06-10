@@ -14,7 +14,7 @@ const Footer = () => {
         <MiddleSectionFooter />
 
         {/* Copyright Section */}
-        <div className="text-center text-base font-normal text-[#212121] bg-white p-4">
+        <div className="text-center text-xs md:text-sm lg:text-base font-normal text-[#212121] bg-white p-4">
           <p>&copy; Copyright Dizzly {currentYear}. All rights reserved.</p>
         </div>
       </div>

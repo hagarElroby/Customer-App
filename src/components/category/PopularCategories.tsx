@@ -11,6 +11,7 @@ import { Category, SubCategory } from "@/types/category";
 import { svgs } from "../icons/svgs";
 import { Flex } from "antd";
 import { getCategories } from "@/services/category";
+import { motion } from "framer-motion";
 
 const PopularCategories = () => {
   const router = useRouter();
@@ -18,7 +19,15 @@ const PopularCategories = () => {
   const [currentOffset, setCurrentOffset] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  useResponsiveItemsPerPage(setItemsPerPage, { 768: 4, 1024: 8, 1440: 10 });
+  useResponsiveItemsPerPage(setItemsPerPage, {
+    375: 3,
+    540: 4,
+    768: 5,
+    850: 6,
+    1024: 7,
+    1200: 8,
+    1440: 10,
+  });
   const { data, loading, error } = useFetchData({
     apiFunction: getCategories,
     params: {
@@ -56,8 +65,10 @@ const PopularCategories = () => {
     router.push(`/category?category=${category.name}&id=${category._id}`);
   };
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
       {loading && <Spinner />}
 
       {!loading && !error && (
@@ -68,7 +79,7 @@ const PopularCategories = () => {
               <Flex
                 onClick={() => router.push("/categories")}
                 style={{ cursor: "pointer" }}
-                className="text-main pr-1 text-xs lg:text-sm"
+                className="text-main pr-1 text-sm"
                 align="center"
                 gap={8}
               >
@@ -76,7 +87,7 @@ const PopularCategories = () => {
               </Flex>
             }
           />
-          <div className="flex items-center justify-center relative h-[272px]">
+          <div className="hidden md:flex items-center justify-center relative h-[130px] md:h-[230px]">
             {/* Left Arrow */}
             <div
               onClick={handlePrev}
@@ -129,6 +140,25 @@ const PopularCategories = () => {
               <ArrowInCircle dir="right" />
             </div>
           </div>
+
+          <motion.div
+            ref={scrollContainerRef}
+            className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide"
+          >
+            <div className="flex gap-[14px] px-2 md:px-8 w-full">
+              {categories.map((category, index) => (
+                <CategoryCard
+                  key={category._id}
+                  src={category.icon || category.image}
+                  alt="A stylish watch"
+                  title={category.name}
+                  bgColor={bgColors[index % bgColors.length]}
+                  subCategory={category}
+                  onClick={handleClickCategory}
+                />
+              ))}
+            </div>
+          </motion.div>
         </>
       )}
     </div>
