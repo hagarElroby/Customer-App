@@ -128,13 +128,15 @@ const BannerSlider = () => {
           </div>
         </>
       )}
-
       <motion.div
         ref={scrollRef}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        className="flex lg:hidden gap-[10px] scrollbar-hide overflow-x-auto snap-x snap-mandatory"
-        style={{ scrollSnapType: "x mandatory" }}
+        className="flex lg:hidden gap-[10px] overflow-x-auto scrollbar-hide snap-x snap-mandatory touch-pan-x scroll-pl-4"
+        style={{
+          WebkitOverflowScrolling: "touch",
+          scrollSnapType: "x mandatory",
+        }}
       >
         {banners.map((banner) => (
           <motion.div

@@ -130,8 +130,11 @@ const AdsBanner = () => {
             ref={scrollRef}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            className="flex lg:hidden gap-4 scrollbar-hide overflow-x-auto snap-x snap-mandatory"
-            style={{ scrollSnapType: "x mandatory" }}
+            className="flex lg:hidden gap-4 scrollbar-hide overflow-x-auto snap-x snap-mandatory touch-pan-x pl-4"
+            style={{
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+            }}
           >
             {randomAds?.map((ad) => (
               <motion.div

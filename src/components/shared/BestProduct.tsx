@@ -125,7 +125,7 @@ const BestProduct: React.FC<
   return (
     <div
       onClick={handleClickProduct}
-      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col md:gap-4 ${className}`}
+      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col gap-2 md:gap-4 ${className}`}
       style={style}
     >
       <div className="hidden md:flex items-center justify-between w-full">
@@ -210,7 +210,7 @@ const BestProduct: React.FC<
         <span className="text-[10px] text-homeText font-bold uppercase line-clamp-1">
           {seller?.companyName}
         </span>
-        <span className="text-sm md:text-[15px] text-homeHeaders font-bold capitalize line-clamp-3 h-16 md:h-20">
+        <span className="text-sm md:text-[15px] text-homeHeaders font-bold capitalize line-clamp-3">
           {`${productName} ${groupName}`}
         </span>
 
