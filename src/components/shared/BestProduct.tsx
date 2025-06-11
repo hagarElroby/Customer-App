@@ -34,7 +34,7 @@ const BestProduct: React.FC<
   PriceAfterDiscount,
   inWishlist,
   inCart,
-  qunatityAndPrice,
+  quantityAndPrice,
   sponsored = false,
   className,
   style,
@@ -125,7 +125,7 @@ const BestProduct: React.FC<
   return (
     <div
       onClick={handleClickProduct}
-      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col gap-2 md:gap-4 ${className}`}
+      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col md:gap-2 ${className}`}
       style={style}
     >
       <div className="hidden md:flex items-center justify-between w-full">
@@ -167,7 +167,7 @@ const BestProduct: React.FC<
       <div className="relative w-full">
         <div className="w-full h-[168px] md:h-[250px] cursor-pointer">
           <img
-            src={qunatityAndPrice?.productImages[0] || productCover}
+            src={quantityAndPrice?.productImages[0] || productCover}
             alt={`${productName} image`}
             className="w-full h-full object-cover"
           />
@@ -206,7 +206,7 @@ const BestProduct: React.FC<
         </div>
       </div>
       {/* Text Section */}
-      <div className="flex flex-col items-start md:gap-2">
+      <div className="flex flex-col items-start gap-2">
         <span className="text-[10px] text-homeText font-bold uppercase line-clamp-1">
           {seller?.companyName}
         </span>
@@ -221,7 +221,7 @@ const BestProduct: React.FC<
             </span>
           )}
           <span
-            className={`text-base  font-bold ${PriceAfterDiscount > 0 ? "line-through text-homeText" : "text-[#2D8653]"}`}
+            className={`text-[13px] lg:text-base font-bold ${PriceAfterDiscount > 0 ? "line-through text-homeText" : "text-[#2D8653]"}`}
           >
             IQD{formatToTwoDecimals(PriceBeforeDiscount)}
           </span>

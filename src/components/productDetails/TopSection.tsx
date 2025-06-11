@@ -34,7 +34,7 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const { user, isLoggedIn } = useSelector((state: RootState) => state.auth);
   const [selectedVariation, setSelectedVariation] = useState(
-    product.qunatityAndPrice[0],
+    product.quantityAndPrice[0],
   );
   const [isInWishlist, setIsInWishlist] = useState<boolean>(
     selectedVariation.inWishlist,
@@ -75,7 +75,7 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
     }
   };
   const [qunatityAndPrice, setQunatityAndPrice] = useState(
-    product.qunatityAndPrice,
+    product.quantityAndPrice,
   );
 
   const handleWishlistToggle = async (groupName: string) => {
@@ -251,7 +251,7 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
               title="Availability"
               isGreen
               value={
-                product?.qunatityAndPrice[0]?.stock > 0
+                product?.quantityAndPrice[0]?.stock > 0
                   ? "In Stock"
                   : "Out Of Stock"
               }
@@ -311,7 +311,7 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
         </div>
         {/* bottom  */}
         <VariationList
-          variations={product.qunatityAndPrice}
+          variations={product.quantityAndPrice}
           onVariationClick={(qunatityAndPriceObject) =>
             setSelectedVariation(qunatityAndPriceObject)
           }

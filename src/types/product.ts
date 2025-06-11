@@ -42,7 +42,7 @@ export interface AllProductsDocs {
   inWishlist?: boolean;
   inCart?: boolean;
   campaign?: CampaignObject;
-  qunatityAndPrice?: QuantityPriceItem;
+  quantityAndPrice?: QuantityPriceItem;
 }
 
 export interface AllProductsBody {
@@ -148,7 +148,7 @@ export interface OneProductResponse {
   discount: Discount;
   vatPercentage: number;
   taxPercentage: number;
-  qunatityAndPrice: QuantityAndPrice[];
+  quantityAndPrice: QuantityAndPrice[];
   isActive: boolean;
   rating: number;
   ratingCount: number;

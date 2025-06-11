@@ -19,8 +19,8 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
         </h3>
         {resultValue && (
           <span
-            className="flex items-center justify-center text-xs font-bold ml-2 text-main
-                        min-w-24 h-10 rounded-[64px] bg-white p-4 border-[1px] border-main"
+            className="flex items-center justify-center text-[10px] sm:text-xs md:font-bold ml-2 text-main
+                      w-20 overflow-hidden  md:min-w-24 md:h-10 rounded-[64px] bg-white p-1 md:p-4 border-[1px] border-main"
           >
             {resultValue} results
           </span>

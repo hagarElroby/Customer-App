@@ -31,7 +31,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <img src={src} alt={alt} className="object-cover w-[90%] h-[90%]" />
       </div>
       <h3 className="text-homeHeaders font-medium text-xs md:font-semibold md:text-base overflow-hidden line-clamp-1">
-        {title}
+        {title?.length > 10 ? `${title.slice(0, 10)}...` : title}
       </h3>
     </div>
   );
