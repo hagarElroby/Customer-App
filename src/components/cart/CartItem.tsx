@@ -26,15 +26,15 @@ const CartItem: React.FC<CartProduct> = ({
   productName,
   companyName,
   discountPercentage,
-  qunatityAndPrice,
+  quantityAndPrice,
   inWishlist,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const [quantityValue, setQuantityValue] = useState<number>(quantity);
   const [isInWishlist, setIsInWishlist] = useState<boolean>(inWishlist);
-  const afterDiscount = qunatityAndPrice.priceAfterDiscount;
-  const beforeDiscount = qunatityAndPrice.priceBeforeDiscount;
+  const afterDiscount = quantityAndPrice.priceAfterDiscount;
+  const beforeDiscount = quantityAndPrice.priceBeforeDiscount;
   const discount = beforeDiscount - afterDiscount;
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 

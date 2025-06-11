@@ -148,6 +148,13 @@ const PersonalInfo = () => {
       onSuccess: (data) => {
         showPopup({ text: "Profile updated successfully!", type: "success" });
         dispatch(updateUser(updatedData));
+        // Update localStorage manually
+        const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+        if (storedUser) {
+          const updatedUser = { ...storedUser, ...updatedData };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        }
+
         setLoading(false);
         setShowOTPPopup(false);
         router.back();
@@ -168,6 +175,13 @@ const PersonalInfo = () => {
       onSuccess: (data) => {
         showPopup({ text: "Profile updated successfully!", type: "success" });
         dispatch(updateUser(updatedData));
+        //Update localStorage manually
+        const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+        if (storedUser) {
+          const updatedUser = { ...storedUser, ...updatedData };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        }
+
         setLoading(false);
         setShowOTPPopup(false);
       },

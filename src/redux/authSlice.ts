@@ -23,9 +23,16 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isLoggedIn = true;
     },
+    // updateUser: (state, action: PayloadAction<Partial<UserLoginResponse>>) => {
+    //   if (state.user) {
+    //     state.user = { ...state.user, ...action.payload };
+    //   }
+    // },
     updateUser: (state, action: PayloadAction<Partial<UserLoginResponse>>) => {
-      if (state.user) {
-        state.user = { ...state.user, ...action.payload };
+      if (!state.user) return;
+      for (const key in action.payload) {
+        (state.user as any)[key] =
+          action.payload[key as keyof UserLoginResponse];
       }
     },
     clearUser: (state) => {

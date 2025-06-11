@@ -30,7 +30,7 @@ const AdsBanner = () => {
     if (!container || randomAds.length === 0) return;
 
     const itemWidth = container.firstChild
-      ? (container.firstChild as HTMLElement).offsetWidth + 16 // 16px = gap-4
+      ? (container.firstChild as HTMLElement).offsetWidth + 16
       : 0;
 
     const autoScroll = () => {
@@ -128,9 +128,7 @@ const AdsBanner = () => {
           {/* Mobile View */}
           <motion.div
             ref={scrollRef}
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            className="flex lg:hidden gap-4 scrollbar-hide overflow-x-auto snap-x snap-mandatory touch-pan-x pl-4"
+            className="flex lg:hidden gap-4 scrollbar-hide overflow-x-auto snap-x snap-mandatory touch-pan-x scroll-pl-4"
             style={{
               scrollSnapType: "x mandatory",
               WebkitOverflowScrolling: "touch",

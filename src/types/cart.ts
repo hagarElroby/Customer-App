@@ -7,7 +7,7 @@ export interface CartProduct {
   vatPercentage: number;
   taxPercentage: number;
   discountPercentage: number;
-  qunatityAndPrice: {
+  quantityAndPrice: {
     priceBeforeDiscount: number;
     priceAfterDiscount: number;
   };

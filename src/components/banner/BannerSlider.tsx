@@ -68,7 +68,7 @@ const BannerSlider = () => {
 
   return (
     <div
-      className="relative w-[90%] mx-auto md:w-full h-[155px] sm:h-[200px] lg:h-[350px] overflow-hidden md:cursor-pointer"
+      className="relative w-full h-[155px] sm:h-[200px] lg:h-[350px] overflow-hidden md:cursor-pointer"
       onClick={() => handleClickBanner(banners[currentSlide]?.link)}
     >
       {loading && <Spinner />}

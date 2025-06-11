@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Category, SubCategory } from "@/types/category";
 import { getCategories } from "@/services/category";
 import Spinner from "@/components/shared/Spinner";
+import { motion } from "framer-motion";
 
 const Subcat = () => {
   const router = useRouter();
@@ -70,14 +71,16 @@ const Subcat = () => {
     );
   };
 
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-4 lg:gap-8">
       {loading && <Spinner />}
 
       {!loading && !error && (
         <>
           <SectionTitle title={`${categoryName} Subcategories`} />
-          <div className="flex items-center justify-center relative h-[272px]">
+          <div className="hidden md:flex items-center justify-center relative h-[120px] md:h-[180px] lg:h-[272px]">
             {/* Left Arrow */}
             <div
               onClick={handlePrev}
@@ -130,6 +133,25 @@ const Subcat = () => {
               <ArrowInCircle dir="right" />
             </div>
           </div>
+
+          <motion.div
+            ref={scrollContainerRef}
+            className="md:hidden overflow-x-auto scroll-smooth scrollbar-hide"
+          >
+            <div className="flex gap-[14px] px-2 md:px-8 w-full">
+              {subCategories.map((category, index) => (
+                <CategoryCard
+                  key={category._id}
+                  src={category.image}
+                  alt="A stylish watch"
+                  title={category.name}
+                  bgColor={bgColors[index % bgColors.length]}
+                  subCategory={category}
+                  onClick={handleClickSubCategory}
+                />
+              ))}
+            </div>
+          </motion.div>
         </>
       )}
     </div>
