@@ -2,12 +2,10 @@
 import { svgs } from "../icons/svgs";
 import { Feature, PriceRange, Value } from "@/types/product";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { stars } from "@/constants/stars";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import Loading from "./Loading";
 import { cleanParams } from "@/utils/filterUndefined";
 import { getFeatures, getTotalProductsNumber } from "@/services/product";
@@ -18,7 +16,6 @@ interface FilterPopupProps {
   onApplyFilters: (propertyIds: string[], propertyValueIds: string[]) => void;
   onApplyPriceFilter: (min: number, max: number) => void;
   onApplyRating: (rateFrom: number) => void;
-  // onSelectedValueNames?: (selectedNames: string[]) => void;
   selectedValues: Record<string, string[]>;
   setSelectedValues: React.Dispatch<
     React.SetStateAction<Record<string, string[]>>
@@ -39,7 +36,6 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
   onApplyRating,
   selectedValues,
   setSelectedValues,
-  // onSelectedValueNames,
   onSelectedValuesChange,
 }) => {
   const [features, setFeatures] = useState<Feature[]>([]);
@@ -126,10 +122,6 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     );
   };
   const [expandedFeature, setExpandedFeature] = useState<string | null>(null);
-  // const [selectedValues, setSelectedValues] = useState<{
-  //   [key: string]: string[];
-  // }>({});
-  // const [selectedName, setSelectedName] = useState<string[]>();
   const toggleFeature = (propertyId: string) => {
     setExpandedFeature(expandedFeature === propertyId ? null : propertyId);
   };
@@ -169,9 +161,6 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
 
   const handleViewAll = () => {
     onApplyFilters(propertyIds, propertyValueIds);
-    // if (selectedName) {
-    //   onSelectedValueNames?.(selectedName);
-    // }
 
     const selections: {
       propertyId: string;
@@ -209,11 +198,6 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     onApplyFilters([], []);
     onApplyPriceFilter(priceRange.minPrice, priceRange.maxPrice);
     onApplyRating(0);
-
-    // if (onSelectedValueNames) {
-    //   onSelectedValueNames([]);
-    // }
-
     onClose();
   };
 
@@ -224,36 +208,6 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
     setSelectedRating(ratingIndex);
     onApplyRating(rateFrom);
   };
-
-  // useEffect(() => {
-  //   // const selectedValueNames: string[] = [];
-  //   const selections: {
-  //     propertyId: string;
-  //     valueId: string;
-  //     valueName: string;
-  //   }[] = [];
-  //   features.forEach((feature) => {
-  //     if (selectedValues[feature.propertyId]) {
-  //       selectedValues[feature.propertyId].forEach((valueId) => {
-  //         const foundValue = feature.values.find((v) => v.valueId === valueId);
-  //         if (foundValue) {
-  //           // selectedValueNames.push(foundValue.valueName);
-  //           selections.push({
-  //             propertyId: feature.propertyId,
-  //             valueId: foundValue.valueId,
-  //             valueName: foundValue.valueName,
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-
-  //   // Pass selected value names to parent
-  //   // if (onSelectedValueNames) {
-  //   //   setSelectedName(selectedValueNames);
-  //   // }
-  //   onSelectedValuesChange?.(selections);
-  // }, [selectedValues, features]);
 
   return (
     <div className="h-full">
@@ -445,7 +399,7 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center gap-4 mt-6 mx-6 w-[420px]">
+          <div className="hidden md:flex sm:flex-row items-center gap-4 mt-6 mx-6 w-[420px]">
             <CustomButton
               disabled={!totalProducts}
               borderRadius="64px"
@@ -459,6 +413,27 @@ const FilterPopup: React.FC<FilterPopupProps> = ({
             <CustomButton
               title="Clear all"
               width="200px"
+              borderRadius="64px"
+              bgColor="#F1DEE1"
+              color="#A21F35"
+              className="capitalize"
+              onClick={handleClearFilters}
+            />
+          </div>
+          <div className="flex md:hidden items-center justify-center gap-4 mt-6 mx-3 w-full">
+            <CustomButton
+              disabled={!totalProducts}
+              borderRadius="64px"
+              className="capitalize"
+              onClick={handleViewAll}
+              title={totalProducts ? ` View (${totalProducts})` : "No Results"}
+              width="180px"
+            />
+
+            {/* </CustomButton> */}
+            <CustomButton
+              title="Clear all"
+              width="180px"
               borderRadius="64px"
               bgColor="#F1DEE1"
               color="#A21F35"

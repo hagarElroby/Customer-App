@@ -125,7 +125,7 @@ const BestProduct: React.FC<
   return (
     <div
       onClick={handleClickProduct}
-      className={`cursor-pointer w-[167px] h-[348px] md:w-[265px] md:h-[450px] p-2 bg-white rounded-md flex flex-col md:gap-2 ${className}`}
+      className={`cursor-pointer w-36 h-[320px] xs:w-[167px] xs:h-[348px] md:w-[265px] xl:w-[280px] md:h-[450px] p-2 xl:p-3 bg-white rounded-md flex flex-col md:gap-2 ${className}`}
       style={style}
     >
       <div className="hidden md:flex items-center justify-between w-full">

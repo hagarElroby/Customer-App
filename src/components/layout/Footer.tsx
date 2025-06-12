@@ -5,7 +5,7 @@ import MiddleSectionFooter from "./MiddleSectionFooter";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="bg-homeBg">
+    <footer className="bg-homeBg pb-20 md:pb-0">
       <div className="mx-auto">
         {/* Top Section */}
         <TopSectionFooter />

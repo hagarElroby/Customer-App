@@ -39,7 +39,7 @@ const SortPopup: React.FC<SortPopupProps> = ({ onClose, onSort }) => {
   };
 
   return (
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col h-full justify-between px-10">
       <div className="flex-grow flex flex-col gap-4 mt-3 h-[60vh] overflow-y-auto">
         {sortOptions.map((option) => (
           <div

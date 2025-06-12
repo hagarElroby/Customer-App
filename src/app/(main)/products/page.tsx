@@ -283,7 +283,7 @@ const ProductsPage = () => {
 
         {!loading && !!products.length && (
           <>
-            <div className="flex flex-wrap gap-3 items-center justify-start">
+            <div className="flex flex-wrap gap-3 items-center justify-center">
               {products.map((product, index) => (
                 <BestProduct {...product} key={index} />
               ))}
