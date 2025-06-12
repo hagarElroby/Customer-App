@@ -116,7 +116,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
         )}
       </div>
 
-      <div className="flex items-start justify-start gap-3 flex-wrap p-10 mx-auto">
+      <div className="flex items-start justify-center gap-3 flex-wrap p-10 mx-auto">
         {results.map((result, index) => (
           <BestProduct key={index} {...result} />
         ))}

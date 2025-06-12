@@ -39,24 +39,38 @@ export const addCart = async ({
 
 export const removeCart = async ({
   cartId,
+  productId,
+  groupName,
+  quantityToBeRemoved,
   onSuccess,
   onError,
 }: {
   cartId: string;
+  productId: string;
+  groupName: string;
+  quantityToBeRemoved: number;
   onSuccess?: (data: string) => void;
   onError?: (error: ResponseError) => void;
 }) => {
   try {
     const response = await axiosInstance.delete<BaseResponse<string>>(
       `/cart/remove?cartId=${cartId}`,
+      {
+        data: {
+          productId,
+          groupName,
+          quantityToBeRemoved,
+        },
+      },
     );
+
     const { status, body } = response.data;
 
     if (status === 201) {
       onSuccess?.(body);
       return body;
     } else {
-      throw new Error("failed to remove from cart");
+      throw new Error("Failed to remove from cart");
     }
   } catch (error: any) {
     const typedError = error.response?.data as ResponseError;

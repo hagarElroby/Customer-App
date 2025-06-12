@@ -20,7 +20,7 @@ const CartPage = () => {
     <main className="pb-7 flex flex-col gap-10 w-full flex-grow bg-homeBg">
       <NavigationBar />
       {carts.length ? (
-        <div className="flex justify-between flex-wrap items-start py-7 px-14 gap-7">
+        <div className="flex flex-col lg:flex-row justify-between flex-wrap items-start py-7 px-14 gap-7">
           <div className="flex flex-[1.8] flex-col gap-4">
             <SectionTitle
               title="Cart"

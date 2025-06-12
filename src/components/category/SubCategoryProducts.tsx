@@ -256,7 +256,7 @@ const SubCategoryProducts = () => {
                 </>
               )}
             </>
-            <div className="flex items-center flex-wrap gap-3">
+            <div className="flex items-center justify-center flex-wrap gap-3">
               {products.map((product, index) => (
                 <BestProduct key={index} {...product} />
               ))}
@@ -280,7 +280,7 @@ const SubCategoryProducts = () => {
             closeIcon={false}
             styles={{
               body: {
-                padding: 24,
+                padding: "0 0 27px 0",
                 height: "100vh",
                 display: "flex",
                 flexDirection: "column",
@@ -290,7 +290,10 @@ const SubCategoryProducts = () => {
             <CustomHeaderInModal
               title="Sort By"
               onClose={() => setSortPopup(false)}
+              isPadding16
+              isInCenter
             />
+            <HrLine />
             <SortPopup
               onClose={() => setSortPopup(false)}
               onSort={handleSort}
@@ -301,9 +304,10 @@ const SubCategoryProducts = () => {
             width={500}
             open={filterPopup}
             onClose={() => setFilterPopup(false)}
+            closeIcon={false}
             styles={{
               body: {
-                padding: 24,
+                padding: "0 0 27px 0",
                 height: "100vh",
                 display: "flex",
                 flexDirection: "column",
@@ -312,8 +316,11 @@ const SubCategoryProducts = () => {
           >
             <CustomHeaderInModal
               title="Filter"
-              onClose={() => setSortPopup(false)}
+              onClose={() => setFilterPopup(false)}
+              isPadding16
+              isInCenter
             />
+            <HrLine />
             <FilterPopup
               onClose={() => setFilterPopup(false)}
               onApplyFilters={handleApplyFilters}

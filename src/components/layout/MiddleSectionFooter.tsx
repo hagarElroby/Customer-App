@@ -4,7 +4,7 @@ const MiddleSectionFooter = () => {
   return (
     <div className="py-9 flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-2 px-5 md:px-10 lg:px-20 w-full">
       {/* Language and Payment Options */}
-      <div className="grid grid-cols-1 ssm:grid-cols-3 gap-4 md:gap-6 mx-auto w-full max-w-[960px] items-center text-center">
+      <div className="grid grid-cols-1 ssm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mx-auto w-full max-w-[960px] items-center text-center">
         <div
           className="w-[120px] sm:w-[150px] md:max-w-[240px] h-10 lg:h-[53px] px-5 text-[15px] text-homeHeaders bg-white border border-inputGray 
     flex items-center justify-between rounded cursor-pointer mx-auto"

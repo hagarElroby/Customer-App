@@ -7,10 +7,17 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import RemoveBtn from "./RemoveBtn";
 import { useRouter } from "next/navigation";
-import { getCarts, removeCart, setQuantityCart } from "@/services/cart";
+import {
+  addCart,
+  getCarts,
+  removeCart,
+  setQuantityCart,
+} from "@/services/cart";
 import { toast } from "sonner";
 import {
   removeFromCart,
+  setCarts,
+  setOrderSummery,
   toggleWishlistInCartPage,
   updateQuantity,
 } from "@/redux/cartSlice";
@@ -45,20 +52,23 @@ const CartItem: React.FC<CartProduct> = ({
       clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = setTimeout(async () => {
-      await setQuantityCart({
+      await addCart({
         productId,
         groupName,
         quantity: newQuantity,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           toast.success(data);
+          await getCarts({
+            onSuccess: (data) => {
+              dispatch(setCarts(data.docs));
+              dispatch(setOrderSummery(data.orderSummary));
+            },
+          });
         },
         onError: (err) => {
           toast.error(err.description);
         },
-      }),
-        dispatch(
-          updateQuantity({ productId, groupName, quantity: newQuantity }),
-        );
+      });
     }, 1000);
   };
 
@@ -87,7 +97,7 @@ const CartItem: React.FC<CartProduct> = ({
         productId,
         groupName,
         onSuccess: (data) => {
-          toast.success(data || "Product removed from wish list successfully");
+          toast.success(data || "Product removed from wishlist successfully");
         },
         onError: (e) => {
           toast.error(e.description || "Failed to remove from whishlist");
@@ -109,14 +119,22 @@ const CartItem: React.FC<CartProduct> = ({
     if (!_id || !groupName || !productId) return;
     await removeCart({
       cartId: _id,
-      onSuccess: (data) => {
+      productId,
+      groupName,
+      quantityToBeRemoved: quantityValue,
+      onSuccess: async (data) => {
         toast.success(data);
+        await getCarts({
+          onSuccess: (data) => {
+            dispatch(setCarts(data.docs));
+            dispatch(setOrderSummery(data.orderSummary));
+          },
+        });
       },
       onError: (err) => {
         toast.error(err.description);
       },
     });
-    dispatch(removeFromCart({ productId: _id, groupName }));
   };
 
   const handleClickCartItem = () => {
@@ -124,7 +142,7 @@ const CartItem: React.FC<CartProduct> = ({
   };
 
   return (
-    <div className="flex items-center flex-wrap flex-col md:flex-row justify-between gap-6 p-6 h-auto">
+    <div className="flex items-center flex-wrap flex-row justify-between gap-6 p-6 h-auto">
       <div
         onClick={handleClickCartItem}
         className="flex-[1] flex items-center justify-center w-[150px] h-[180px] cursor-pointer"
@@ -136,51 +154,53 @@ const CartItem: React.FC<CartProduct> = ({
         />
       </div>
 
-      <div className="flex-[3] flex flex-col gap-6 items-start">
-        <h3
-          onClick={handleClickCartItem}
-          className="font-bold text-sm text-headColor cursor-pointer"
-        >
-          {productName}
-        </h3>
-        <span className="font-bold text-[10px] text-profileLabel capitalize">
-          Get It <span className="text-[#38AE04]">Soon</span>
-        </span>
-        <span className="font-normal text-sm text-[#7E859B] capitalize">
-          Sold By <span className="text-productLabel">{companyName}</span>
-        </span>
-        <QuantitySelector
-          width="190px"
-          quantity={quantityValue}
-          onIncrease={increaseQuantity}
-          onDecrease={decreaseQuantity}
-        />
-      </div>
-
-      <div className="flex-[1] flex flex-col justify-between items-end h-[180px]">
-        <div className="flex flex-col items-end gap-2">
-          <p className="font-bold text-xl text-[#111111]">
-            IQD
-            {formatToTwoDecimals(afterDiscount)}
-          </p>
-          {!!beforeDiscount && !!discountPercentage && (
-            <p className="flex items-center gap-1">
-              <p className="text-xs line-through font-normal text-[#7E859B]">
-                IQD
-                {formatToTwoDecimals(beforeDiscount)}
-              </p>
-              <span className="text-bold text-xs text-main">
-                {formatToTwoDecimals(discountPercentage * 100)}% OFF
-              </span>
-            </p>
-          )}
-        </div>
-        <div className="flex items-center gap-3">
-          <WishlistButton
-            inWishlist={isInWishlist}
-            onToggleWishlist={handleWishlistToggle}
+      <div className="flex flex-col xl:flex-row justify-between gap-6">
+        <div className="flex-[3] flex flex-col gap-6 items-start">
+          <h3
+            onClick={handleClickCartItem}
+            className="font-bold text-sm text-headColor cursor-pointer"
+          >
+            {productName}
+          </h3>
+          <span className="font-bold text-[10px] text-profileLabel capitalize">
+            Get It <span className="text-[#38AE04]">Soon</span>
+          </span>
+          <span className="font-normal text-sm text-[#7E859B] capitalize">
+            Sold By <span className="text-productLabel">{companyName}</span>
+          </span>
+          <QuantitySelector
+            width="190px"
+            quantity={quantityValue}
+            onIncrease={increaseQuantity}
+            onDecrease={decreaseQuantity}
           />
-          <RemoveBtn onClick={handleRemoveFromCart} />
+        </div>
+
+        <div className="flex-[1] flex flex-col justify-between items-end h-[180px]">
+          <div className="flex flex-col items-end gap-2">
+            <p className="font-bold text-xl text-[#111111]">
+              IQD
+              {formatToTwoDecimals(afterDiscount)}
+            </p>
+            {!!beforeDiscount && !!discountPercentage && (
+              <p className="flex items-center gap-1">
+                <p className="text-xs line-through font-normal text-[#7E859B]">
+                  IQD
+                  {formatToTwoDecimals(beforeDiscount)}
+                </p>
+                <span className="text-bold text-xs text-main">
+                  {formatToTwoDecimals(discountPercentage * 100)}% OFF
+                </span>
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <WishlistButton
+              inWishlist={isInWishlist}
+              onToggleWishlist={handleWishlistToggle}
+            />
+            <RemoveBtn onClick={handleRemoveFromCart} />
+          </div>
         </div>
       </div>
     </div>
