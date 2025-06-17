@@ -15,7 +15,8 @@ export interface CartProduct {
   productCover: string;
   rating: number;
   ratingCount: number;
-  companyName: string;
+  companyName?: string;
+  stock: number;
 }
 
 export interface OrderSummary {

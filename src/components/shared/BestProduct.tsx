@@ -8,13 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { addCart, getCarts } from "@/services/cart";
 import { toast } from "sonner";
-import {
-  createFavorite,
-  findAllFavorite,
-  removeFavorite,
-} from "@/services/whishlist";
-import { setWhishlistItems } from "@/redux/whishlistSlice";
+import { createFavorite, removeFavorite } from "@/services/whishlist";
 import { setCarts, setOrderSummery } from "@/redux/cartSlice";
+import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
+import { updateCartAndState } from "@/utils/cartHelpers";
 
 const BestProduct: React.FC<
   AllProductsDocs & {
@@ -85,16 +82,11 @@ const BestProduct: React.FC<
     }
 
     // refresh wishlist after toggle
-    await findAllFavorite({
-      onSuccess: (data) => {
-        dispatch(setWhishlistItems(data));
-      },
-    });
+    updateWishlistAndState({ dispatch });
   };
 
   const handleAddToCart = async () => {
     if (!_id || !groupName) return;
-
     if (!user) {
       router.push("/auth/login");
       return;
@@ -105,8 +97,9 @@ const BestProduct: React.FC<
         productId: _id,
         groupName,
         quantity: 1,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           setIsInCart(true);
+          updateCartAndState({ dispatch });
           toast.success(data);
         },
         onError: (err) => {
@@ -114,12 +107,6 @@ const BestProduct: React.FC<
         },
       });
     }
-    await getCarts({
-      onSuccess: (data) => {
-        dispatch(setCarts(data.docs));
-        dispatch(setOrderSummery(data.orderSummary));
-      },
-    });
   };
 
   return (

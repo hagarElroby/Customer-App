@@ -1,7 +1,7 @@
 "use client";
 import NavigationBar from "@/components/shared/NavigationBar";
 import SectionTitle from "@/components/shared/SectionTitle";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import HrLine from "@/components/shared/HrLine";
 import { formatToTwoDecimals } from "@/utils/formatToTwoDecimals";
@@ -11,39 +11,62 @@ import Coupon from "@/components/cart/Coupon";
 import CheckoutBtn from "@/components/cart/CheckoutBtn";
 import NoYetImg from "@/components/shared/NoYetImg";
 import NoYetText from "@/components/shared/NoYetText";
+import { useEffect, useState } from "react";
+import { updateCartAndState } from "@/utils/cartHelpers";
+import Loading from "@/components/shared/Loading";
 
 const CartPage = () => {
-  const { carts, orderSummery, allItemsQuantity } =
-    useSelector((state: RootState) => state.cart) || [];
+  const dispatch = useDispatch();
+  const cartState = useSelector((state: RootState) => state.cart);
+  const carts = cartState?.carts ?? [];
+  const orderSummery = cartState?.orderSummery ?? {};
+  const allItemsQuantity = cartState?.allItemsQuantity ?? 0;
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      setLoading(true);
+      await updateCartAndState({
+        dispatch,
+      });
+      setLoading(false);
+    };
+
+    fetchCart();
+  }, [dispatch]);
 
   return (
     <main className="pb-7 flex flex-col gap-10 w-full flex-grow bg-homeBg">
       <NavigationBar />
-      {carts.length ? (
-        <div className="flex flex-col lg:flex-row justify-between flex-wrap items-start py-7 px-14 gap-7">
-          <div className="flex flex-[1.8] flex-col gap-4">
+
+      {loading ? (
+        <Loading />
+      ) : carts.length > 0 ? (
+        <div className="flex flex-col md:flex-row justify-between items-start py-5 lg:py-7 px-5 sm:px-8 md:px-10 lg:px-12 xl:px-14 gap-5 lg:gap-7">
+          <div className="flex w-[80vw] mx-auto md:flex-[1.8] flex-col gap-4">
             <SectionTitle
               title="Cart"
               height="auto"
               children={
-                <button className="w-[85px] h-8 rounded-[30px] bg-main p-2 flex items-center justify-center text-white text-xs font-medium">
+                <button className="w-[70px] lg:w-[85px] h-7 lg:h-8 rounded-[30px] bg-main p-2 flex items-center justify-center text-white text-[10px] lg:text-xs font-medium overflow-hidden line-clamp-1">
                   {carts?.length} items
                 </button>
               }
             />
-            <div className="flex flex-col gap-6 bg-white rounded-xl p-6">
-              {carts?.map((cart, index) => (
+            <div className="flex flex-col gap-3 lg:gap-5 xl:gap-6 bg-white rounded-xl">
+              {carts.map((cart, index) => (
                 <>
-                  <CartItem {...cart} />
-                  {carts?.length - 1 !== index && <HrLine />}
+                  <CartItem key={cart._id} {...cart} />
+                  {carts.length - 1 !== index && <HrLine />}
                 </>
               ))}
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <div className="flex-[1] bg-white w-[90vw] md:w-[500px] h-[283px] rounded-xl p-6 flex flex-col gap-3">
-              <h2 className="font-bold text-base text-[#111111]">
+          <div className="flex flex-col gap-2 mx-auto w-[80vw] md:w-[300px] lg:w-[400px] xl:w-[500px]">
+            <div className="flex-[1] bg-white w-full h-[283px] rounded-xl p-6 flex flex-col gap-3">
+              <h2 className="font-bold text-sm lg:text-base text-[#111111]">
                 Order summary
               </h2>
               <SummeryItem
@@ -70,10 +93,7 @@ const CartPage = () => {
                 value={`${formatToTwoDecimals(orderSummery?.grandTotal ?? 0)}`}
               />
             </div>
-            <Coupon
-              //TODO: redirect to Checkout page when it available
-              onClick={() => ""}
-            />
+            <Coupon onClick={() => ""} />
             <CheckoutBtn onClick={() => ""} />
           </div>
         </div>

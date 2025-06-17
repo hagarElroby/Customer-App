@@ -6,7 +6,8 @@ import { svgs } from "../icons/svgs";
 import { useDispatch } from "react-redux";
 import { removeFavorite } from "@/services/whishlist";
 import { AppDispatch } from "@/redux/store";
-import { removeFromList } from "@/redux/whishlistSlice";
+import { toast } from "sonner";
+import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
 
 const FavoriteProduct: React.FC<FavoriteProductResponse> = ({
   productId,
@@ -27,8 +28,17 @@ const FavoriteProduct: React.FC<FavoriteProductResponse> = ({
 
   const handleRemoveFromWishlist = async () => {
     if (!productId || !groupName) return;
-    await removeFavorite({ productId, groupName });
-    dispatch(removeFromList({ productId, groupName }));
+    await removeFavorite({
+      productId,
+      groupName,
+      onSuccess: async (data) => {
+        toast.success(data || "Product removed from wishlist successfully");
+        await updateWishlistAndState({ dispatch });
+      },
+      onError: (e) => {
+        toast.error(e.description || "Failed to remove from wishlist");
+      },
+    });
   };
 
   return (

@@ -38,14 +38,12 @@ export const addCart = async ({
 };
 
 export const removeCart = async ({
-  cartId,
   productId,
   groupName,
   quantityToBeRemoved,
   onSuccess,
   onError,
 }: {
-  cartId: string;
   productId: string;
   groupName: string;
   quantityToBeRemoved: number;
@@ -54,7 +52,7 @@ export const removeCart = async ({
 }) => {
   try {
     const response = await axiosInstance.delete<BaseResponse<string>>(
-      `/cart/remove?cartId=${cartId}`,
+      `/cart/remove`,
       {
         data: {
           productId,
@@ -91,8 +89,19 @@ export const getCarts = async ({
       await axiosInstance.get<BaseResponse<CartBodyResponse>>(`/cart/get`);
     const { status, body } = response.data;
     if (status === 201) {
-      onSuccess?.(body);
-      return body;
+      const fallbackBody: CartBodyResponse = {
+        docs: [],
+        orderSummary: {
+          totalBeforeDiscount: 0,
+          discount: 0,
+          totalAfterDiscount: 0,
+          vat: 0,
+          tax: 0,
+          grandTotal: 0,
+        },
+      };
+      onSuccess?.(body ?? fallbackBody);
+      return body ?? fallbackBody;
     } else {
       throw new Error("failed to get items in cart");
     }
@@ -102,6 +111,8 @@ export const getCarts = async ({
     return null;
   }
 };
+
+//TODO:: remove it if i will not use again
 export const setQuantityCart = async ({
   productId,
   groupName,

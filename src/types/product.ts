@@ -44,6 +44,19 @@ export interface AllProductsDocs {
   campaign?: CampaignObject;
   quantityAndPrice?: QuantityPriceItem;
 }
+export interface BrowsedProduct {
+  productId: string;
+  productName: string;
+  productCover: string;
+  seller: Seller;
+  rating: number;
+  ratingCount: number;
+  PriceBeforeDiscount: number;
+  PriceAfterDiscount: number;
+  groupName: string;
+  inWishlist?: boolean;
+  inCart?: boolean;
+}
 
 export interface AllProductsBody {
   docs: AllProductsDocs[];
