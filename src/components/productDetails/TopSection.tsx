@@ -17,11 +17,18 @@ import { formatToTwoDecimals } from "@/utils/formatToTwoDecimals";
 import { calculatePrices } from "@/utils/priceCalculation";
 import { useRouter } from "next/navigation";
 import { AppDispatch, RootState } from "@/redux/store";
-import { addCart, getCarts, setQuantityCart } from "@/services/cart";
+import {
+  addCart,
+  getCarts,
+  removeCart,
+  setQuantityCart,
+} from "@/services/cart";
 import { toast } from "sonner";
 import { setCarts, setOrderSummery } from "@/redux/cartSlice";
 import { createFavorite, removeFavorite } from "@/services/whishlist";
 import { ResponseError } from "@/types/error-types";
+import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
+import { updateCartAndState } from "@/utils/cartHelpers";
 interface TopSectionProps {
   product: OneProductResponse;
 }
@@ -45,8 +52,6 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
   //   const validQuantity = selectedVariation?.quantityInCart || 0;
   //   setQuantity(validQuantity > 0 ? validQuantity : 1);
   // }, [selectedVariation]);
-
-  console.log("quantity", quantity);
 
   useEffect(() => {
     setIsInWishlist(selectedVariation.inWishlist);
@@ -113,6 +118,7 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
 
       const handleSuccess = (message: string) => {
         updateWishlistState();
+        updateWishlistAndState({ dispatch });
         toast.success(message);
       };
 
@@ -144,36 +150,57 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
       const groupName = selectedVariation?.groupName;
       const stockNum = selectedVariation?.stock;
       if (!productId || !groupName) return;
-      if (quantity > stockNum) {
+      //TODO:: i will check again
+      if (stockNum === 0) {
         toast.info("Stock not have enough quantity");
         return;
       }
 
       setIsDisabled(true); // Disable button before sending request
 
-      await setQuantityCart({
-        productId,
-        groupName,
-        quantity,
-        onSuccess: (data) => {
-          toast.success(data);
-        },
-        onError: (err) => {
-          toast.error(err.description);
-        },
-      });
-
-      await getCarts({
-        onSuccess: (data) => {
-          dispatch(setCarts(data.docs));
-          dispatch(setOrderSummery(data.orderSummary));
-        },
-      });
-
+      // await setQuantityCart({
+      //   productId,
+      //   groupName,
+      //   quantity,
+      //   onSuccess: (data) => {
+      //     toast.success(data);
+      //   },
+      //   onError: (err) => {
+      //     toast.error(err.description);
+      //   },
+      // });
+      if (quantity > selectedVariation.quantityInCart) {
+        await addCart({
+          productId,
+          groupName,
+          //ToDO:: check for enough stock again after backend
+          quantity: quantity - selectedVariation.quantityInCart,
+          onSuccess: async (data) => {
+            toast.success(data);
+            await updateCartAndState({ dispatch });
+          },
+          onError: (err) => {
+            toast.error(err.description);
+          },
+        });
+      } else {
+        await removeCart({
+          productId,
+          groupName,
+          quantityToBeRemoved: selectedVariation.quantityInCart - quantity,
+          onSuccess: async (data) => {
+            toast.success(data);
+            await updateCartAndState({ dispatch });
+          },
+          onError: (err) => {
+            toast.error(err.description);
+          },
+        });
+      }
       // Keep button disabled for 2 seconds after request completes
       setTimeout(() => {
         setIsDisabled(false);
-      }, 1000);
+      }, 2000);
     }
   };
 

@@ -1,23 +1,31 @@
 "use client";
 import { svgs } from "../icons/svgs";
 import { Badge, Dropdown, Flex, Image, MenuProps } from "antd";
-import React, { useEffect } from "react";
 import LogoutButton from "./LogoutButton";
 import { useRouter } from "next/navigation";
 import { UserLoginResponse } from "@/types/user";
-import { getCarts } from "@/services/cart";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { setCarts, setOrderSummery } from "@/redux/cartSlice";
-import { findAllFavorite } from "@/services/whishlist";
-import { setWhishlistItems } from "@/redux/whishlistSlice";
+import { useEffect } from "react";
+import { updateCartAndState } from "@/utils/cartHelpers";
+import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
 
 const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+
+  //Fetch items in cart and wishlist
+  useEffect(() => {
+    if (user) {
+      updateCartAndState({ dispatch });
+      updateWishlistAndState({ dispatch });
+    }
+  }, [user]);
+
   const { carts } = useSelector((state: RootState) => state.cart);
   const { whishlistItems } = useSelector((state: RootState) => state.whishlist);
   const cartItemsCount = carts?.length ?? 0;
+  console.log({ carts });
   const whishlistItemsCount = whishlistItems?.length ?? 0;
 
   const handleClickToLogin = () => {
@@ -47,34 +55,6 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
       key: "1",
     },
   ];
-
-  //fetch items in cart
-  useEffect(() => {
-    const fetchCarts = async () => {
-      if (user) {
-        await getCarts({
-          onSuccess: (data) => {
-            dispatch(setCarts(data.docs));
-            dispatch(setOrderSummery(data.orderSummary));
-          },
-        });
-      }
-    };
-    fetchCarts();
-  }, []);
-
-  useEffect(() => {
-    const fetchWhishlist = async () => {
-      if (user) {
-        await findAllFavorite({
-          onSuccess: (data) => {
-            dispatch(setWhishlistItems(data));
-          },
-        });
-      }
-    };
-    fetchWhishlist();
-  }, []);
 
   return (
     <div className="flex-1 flex items-center justify-end gap-3 lg:gap-4">

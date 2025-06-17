@@ -1,7 +1,7 @@
 import axiosInstance from "./axios/axiosInstance";
 import { BaseResponse, BodyResponse } from "@/types/baseResponse";
 import { ResponseError } from "@/types/error-types";
-import { AllProductsDocs } from "@/types/product";
+import { AllProductsDocs, BrowsedProduct } from "@/types/product";
 
 export const getPreviouslyBrowsed = async ({
   onError,
@@ -11,14 +11,14 @@ export const getPreviouslyBrowsed = async ({
   allowPagination,
 }: {
   onError?: (error: ResponseError) => void;
-  onSuccess?: (data: BodyResponse<AllProductsDocs>) => void;
+  onSuccess?: (data: BodyResponse<BrowsedProduct>) => void;
   page?: number;
   limit?: number;
   allowPagination?: boolean;
 }) => {
   try {
     const response = await axiosInstance.get<
-      BaseResponse<BodyResponse<AllProductsDocs>>
+      BaseResponse<BodyResponse<BrowsedProduct>>
     >("/browses/get-all", {
       params: {
         page,

@@ -4,14 +4,14 @@ import BestProduct from "./BestProduct";
 import useResponsiveItemsPerPage from "@/hooks/useResponsiveItemsPerPage";
 import ArrowInCircle from "./ArrowInCircle";
 import Spinner from "./Spinner";
-import { AllProductsDocs } from "@/types/product";
+import { AllProductsDocs, BrowsedProduct, SortType } from "@/types/product";
 import { getPreviouslyBrowsed } from "@/services/browses";
 
 const PreviouslyBrowsed = () => {
   const [currentOffset, setCurrentOffset] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [browseData, setBrowseData] = useState<AllProductsDocs[]>([]);
+  const [browseData, setBrowseData] = useState<BrowsedProduct[]>([]);
   const [loadingBrowse, setLoadingBrowse] = useState(false);
 
   useEffect(() => {
@@ -100,7 +100,10 @@ const PreviouslyBrowsed = () => {
                   }}
                 >
                   {chunk.map((product, index) => (
-                    <BestProduct key={index} {...product} />
+                    <BestProduct
+                      key={index}
+                      {...{ ...product, _id: product.productId }}
+                    />
                   ))}
                 </div>
               ))
