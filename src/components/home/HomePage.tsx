@@ -5,6 +5,7 @@ import PreviouslyBrowsed from "../shared/PreviouslyBrowsed";
 import ProductSlider from "../shared/ProductSlider";
 import ServicesSection from "../shared/ServicesSection";
 import AdsBanner from "./AdsBanner";
+import AuctionSection from "./AuctionSection";
 
 const HomePage = () => {
   return (
@@ -13,6 +14,7 @@ const HomePage = () => {
       <div className="flex flex-col gap-10 md:px-8">
         <BannerSlider />
         <PopularCategories />
+        <AuctionSection />
         <AdsBanner />
         <ProductSlider title="Best Selling" sortType="BEST_SELLER" />
         <PreviouslyBrowsed />
