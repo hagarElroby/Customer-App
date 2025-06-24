@@ -12,7 +12,7 @@ const ImageGallery = ({
   minimumBid,
 }: {
   images: MediaModel[];
-  minimumBid: number;
+  minimumBid?: number;
 }) => {
   const [selectedImage, setSelectedImage] = useState<MediaModel | null>(null);
   useEffect(() => {
