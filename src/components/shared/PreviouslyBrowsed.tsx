@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import SectionTitle from "./SectionTitle";
 import BestProduct from "./BestProduct";
@@ -6,8 +7,11 @@ import ArrowInCircle from "./ArrowInCircle";
 import Spinner from "./Spinner";
 import { AllProductsDocs, BrowsedProduct, SortType } from "@/types/product";
 import { getPreviouslyBrowsed } from "@/services/browses";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const PreviouslyBrowsed = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -63,6 +67,8 @@ const PreviouslyBrowsed = () => {
   if (browseData.length === 0 && !loadingBrowse) {
     return null;
   }
+
+  if (!user) return;
 
   return (
     <div className="flex flex-col gap-8">

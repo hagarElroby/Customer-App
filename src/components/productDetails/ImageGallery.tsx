@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { svgs } from "../icons/svgs";
 import React, { useState, useRef, useCallback, useEffect } from "react";
 
@@ -6,7 +7,13 @@ interface MediaModel {
   type: string;
 }
 
-const ImageGallery = ({ images }: { images: MediaModel[] }) => {
+const ImageGallery = ({
+  images,
+  minimumBid,
+}: {
+  images: MediaModel[];
+  minimumBid: number;
+}) => {
   const [selectedImage, setSelectedImage] = useState<MediaModel | null>(null);
   useEffect(() => {
     if (images.length > 0) {
@@ -52,23 +59,41 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
   };
 
   return (
-    <div className="flex gap-3 h-[400px] w-full">
-      <div className="flex-[1] flex flex-col gap-6 items-center relative h-full py-3">
-        {canScrollUp && (
-          <button onClick={() => scrollThumbnails("up")}>{svgs.down}</button>
-        )}
-        <div
-          ref={thumbnailRef}
-          style={{ direction: "rtl" }}
-          className="flex flex-col gap-2 overflow-y-auto h-full scrollbar-hide px-2"
-        >
-          {images?.map((img, index) => {
-            if (img.type === "img") {
+    <div className="flex flex-col gap-6 w-full h-full items-center">
+      <div className="flex gap-3 h-[400px] w-full">
+        <div className="flex-[1] flex flex-col gap-6 items-center relative h-full py-3">
+          {canScrollUp && (
+            <button onClick={() => scrollThumbnails("up")}>{svgs.down}</button>
+          )}
+          <div
+            ref={thumbnailRef}
+            style={{ direction: "rtl" }}
+            className="flex flex-col gap-2 overflow-y-auto h-full scrollbar-hide px-2"
+          >
+            {images?.map((img, index) => {
+              if (img.type === "img") {
+                return (
+                  <img
+                    key={index}
+                    src={img.url}
+                    alt={`product image ${index}`}
+                    className={`w-24 h-24 object-cover cursor-pointer border-2 ${
+                      selectedImage === img
+                        ? "border-main"
+                        : "border-homeBorderCard"
+                    }`}
+                    onMouseEnter={() => handleHover(img)}
+                  />
+                );
+              }
+
               return (
-                <img
+                <video
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
                   key={index}
                   src={img.url}
-                  alt={`product image ${index}`}
                   className={`w-24 h-24 object-cover cursor-pointer border-2 ${
                     selectedImage === img
                       ? "border-main"
@@ -77,45 +102,55 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
                   onMouseEnter={() => handleHover(img)}
                 />
               );
-            }
-
-            return (
-              <video
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                key={index}
-                src={img.url}
-                className={`w-24 h-24 object-cover cursor-pointer border-2 ${
-                  selectedImage === img
-                    ? "border-main"
-                    : "border-homeBorderCard"
-                }`}
-                onMouseEnter={() => handleHover(img)}
-              />
-            );
-          })}
+            })}
+          </div>
+          {canScrollDown && (
+            <button onClick={() => scrollThumbnails("down")}>
+              {svgs.down}
+            </button>
+          )}
         </div>
-        {canScrollDown && (
-          <button onClick={() => scrollThumbnails("down")}>{svgs.down}</button>
-        )}
-      </div>
-      <div className="flex-[3.4] w-full h-full border border-homeBorderCard rounded-xl overflow-hidden">
-        {selectedImage?.type === "img" && (
-          <img
-            src={selectedImage.url}
-            alt="selected product"
-            className="w-full h-full object-cover"
-          />
-        )}
+        <div className="flex-[3.4] w-full h-full border border-homeBorderCard rounded-xl overflow-hidden">
+          {selectedImage?.type === "img" && (
+            <img
+              src={selectedImage.url}
+              alt="selected product"
+              className="w-full h-full object-cover"
+            />
+          )}
 
-        {selectedImage?.type === "video" && (
-          <video
-            controls
-            src={selectedImage.url}
-            className="w-full h-full object-cover"
+          {selectedImage?.type === "video" && (
+            <video
+              controls
+              src={selectedImage.url}
+              className="w-full h-full object-cover"
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-[14px] w-[90%] items-center mx-auto">
+        <div className="flex items-center justify-between text-xl text-[#686C84] w-full h-11 rounded-full border border-[#C5C6D0] py-[10px] px-3">
+          <input
+            type="text"
+            className="w-full border-none outline-none text-black"
           />
-        )}
+          <span>IQD</span>
+        </div>
+
+        <Button
+          type="primary"
+          block
+          disabled
+          className="full !h-12 !rounded-full !bg-main !text-base !text-white !w-[412px]"
+          //TODO:: implemen
+          onClick={() => ""}
+        >
+          Place bid
+        </Button>
+        <p className="text-xs text-[#686C84] font-bold">
+          Minimum bid: {minimumBid} IQD. Or enter your own, higher{" "}
+        </p>
       </div>
     </div>
   );

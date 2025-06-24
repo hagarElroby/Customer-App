@@ -224,3 +224,24 @@ export interface ProductGeneralInfo {
 export type TotalProductsNumber = {
   totalProducts: number;
 };
+
+export const flags = [
+  "FRAGILE",
+  "CONTAINS_BATTERY",
+  "HAZARDOUS_MATERIAL",
+  "REQUIRES_REFRIGERATION",
+  "HIGH_VALUE_SHIPMENT",
+  "SIGNATURE_REQUIRED",
+  "LIVE_ANIMAL",
+  "PERISHABLE_GOODS",
+  "DO_NOT_STACK",
+  "SPECIAL_HANDLING_REQUIRED",
+  "CHEMICAL_SUBSTANCE",
+  "HUMIDITY_SENSITIVE",
+  "LIGHT_SENSITIVE",
+  "MUST_BE_KEPT_UPRIGHT",
+  "UNSTABLE_WEIGHT_DISTRIBUTION",
+  "PRESSURIZED_CONTAINER",
+] as const;
+
+export type Flags = (typeof flags)[number];

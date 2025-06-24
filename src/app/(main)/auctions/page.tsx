@@ -1,7 +1,5 @@
-import React from "react";
-
 const AuctionsPage = () => {
-  return <div>Auctions</div>;
+  return <div>Auctions list page</div>;
 };
 
 export default AuctionsPage;
