@@ -59,7 +59,7 @@ const AuctionSection = () => {
           </div>
 
           <div className="flex gap-3 items-center justify-between">
-            {auctionsList.slice(0, 5).map((auction) => (
+            {auctionsList.slice(3, 8).map((auction) => (
               <AuctionCard
                 key={auction._id}
                 id={auction._id}

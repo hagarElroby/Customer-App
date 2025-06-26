@@ -11,6 +11,9 @@ import { svgs } from "../icons/svgs";
 import { Rate } from "antd";
 import BidderInfo from "./BidderInfo";
 import ImageGallery from "./ImageGallery";
+import getTimeAgo from "@/utils/getTimeAgo";
+import BidHistory from "./BidHistory";
+import getTimeRemaining from "@/utils/getTimeRemaining";
 interface TopSectionProps {
   auction: AuctionById;
 }
@@ -47,15 +50,16 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
           />
         )}
       </div>
+
       {/* right section  */}
-      <div className="flex flex-col justify-between items-start gap-3 flex-[1.4] min-w-[250px] max-w-[1000px] h-full  rounded-3xl overflow-y-auto overflow-x-hidden bg-white mx-auto">
+      <div className="flex flex-col justify-between gap-3 flex-[1.4] min-w-[250px] max-w-[1000px] h-full  rounded-3xl overflow-y-auto overflow-x-hidden bg-white mx-auto">
         {/* top  */}
         <div
           className="flex flex-col custom:flex-row items-start justify-between
           gap-3 p-4"
         >
           {/* left  */}
-          <div className="flex-[1] min-w-[230px] max-w-[420px] bg-white p-6 h-full flex flex-col gap-4">
+          <div className="flex-[1.8] min-w-[230px] bg-white p-6 h-full flex flex-col gap-4">
             <p className="font-normal text-xl text-blackTitle">
               {auction.productName}
             </p>
@@ -64,10 +68,6 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
                 title="Category"
                 value={auction?.subCategory?.category?.name}
               />
-              <TitleAndValue title="Sku" value="A264671" />
-            </div>
-            <div className="flex items-center gap-6">
-              <TitleAndValue title="Brand" value="Apple" />
               <TitleAndValue
                 title="Subcategory"
                 value={auction?.subCategory?.name}
@@ -76,55 +76,40 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
 
             <div className="bg-[#F6F6F8] flex my-2 w-full justify-between gap-3 px-5 py-2">
               <div className="flex flex-col items-start gap-[5px]">
-                <span className="text-sm text-[#0E0E10]">current bid:</span>
+                <span className="text-sm text-[#0E0E10]">Current bid:</span>
                 <span className="text-sm font-semibold text-[#097D47]">
-                  00.0 {auction?.auctionDetails?.currentBid} IQD
+                  {!!auction?.auctionDetails?.currentBid
+                    ? `${auction?.auctionDetails?.currentBid} IQD`
+                    : "No Bid Yet"}
                 </span>
               </div>
               <div className="flex flex-col items-start gap-[5px]">
                 <span className="text-sm text-[#0E0E10]">Ends in:</span>
                 <span className="text-sm font-semibold text-[#097D47]">
-                  3 days
-                  <span className="text-[10px] text-[#5A5D74]">
+                  {getTimeRemaining(auction?.auctionDetails?.endDate)}
+                  {/* <span className="text-[10px] text-[#5A5D74]">
                     16 Mar 2025 at 19:37 EET
-                  </span>
+                  </span> */}
                 </span>
               </div>
             </div>
 
-            <div className="flex flex-col items-start gap-[10px]">
-              <p className="text-xs font-medium">
-                Bid history
-                <span className="text-main">( 37 bid )</span>
-              </p>
+            {auction?.bids?.totalBids?.count > 0 && (
+              <div className="flex flex-col items-start gap-[10px]">
+                <p className="text-xs font-medium">
+                  Bid history
+                  <span className="text-main">
+                    ({auction?.bids?.totalBids?.count})
+                  </span>
+                </p>
 
-              <BidderInfo
-                name="Bidder Name"
-                duration="16 h ago"
-                amount="79IQD"
-              />
-              <BidderInfo
-                name="Bidder Name"
-                duration="16 h ago"
-                amount="79IQD"
-              />
-              <BidderInfo
-                name="Bidder Name"
-                duration="16 h ago"
-                amount="79IQD"
-              />
-              <BidderInfo
-                name="Bidder Name"
-                duration="16 h ago"
-                amount="79IQD"
-              />
-              <BidderInfo
-                name="Bidder Name"
-                duration="16 h ago"
-                amount="79IQD"
-              />
-            </div>
+                {auction?.bids?.recentBids && (
+                  <BidHistory bids={auction.bids.recentBids} />
+                )}
+              </div>
+            )}
           </div>
+
           {/* right  */}
           <div className="flex-[1] w-full bg-whit p-6 flex flex-col gap-4 custom:border-l custom:border-lightBorder">
             <div className="flex items-center justify-between">
@@ -137,7 +122,9 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
                     Sold by
                   </span>
                   <a className="font-bold text-sm text-main cursor-pointer underline decoration-main">
-                    Dizzly
+                    {auction?.seller?.firstName +
+                      " " +
+                      auction?.seller?.lastName}
                   </a>
                 </div>
               </div>

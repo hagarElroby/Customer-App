@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Tag } from "antd";
-import daysLeft from "@/utils/dayjs";
+import getTimeRemaining from "@/utils/getTimeRemaining";
 
 interface AuctionCardProps {
   id: string;
@@ -35,13 +35,13 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           </span>
         </Tag>
 
-        {daysLeft(endDate ?? "") > 0 && (
-          <Tag color="#700C18" className="!m-0">
-            <span className="font-[Public-Sans] text-[13px] font-bold leading-[20px] tracking-[0%] text-white">
-              {daysLeft(endDate)} Days
-            </span>
-          </Tag>
-        )}
+        {/* {daysLeft(endDate ?? "") > 0 && ( */}
+        <Tag color="#700C18" className="!m-0">
+          <span className="font-[Public-Sans] text-[13px] font-bold leading-[20px] tracking-[0%] text-white">
+            {getTimeRemaining(endDate)}
+          </span>
+        </Tag>
+        {/* )} */}
       </div>
 
       {/* Product Image */}
