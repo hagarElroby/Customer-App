@@ -29,7 +29,7 @@ export type AuctionById = {
     };
   };
   categoryId: string;
-  seller: string;
+  seller: Seller;
   isActive: boolean;
   auctionStatus: AuctionStatus;
   approvalStatus: AuctionApprovalStatus;
@@ -43,28 +43,19 @@ export type AuctionById = {
       valueName: string;
     }[];
   }[];
-  shipping: {
-    weight: number;
-    length: number;
-    width: number;
-    height: number;
-  };
+  shipping: Shipping;
   auctionDetails: AuctionDetails;
   createdAt: string;
   updatedAt: string;
   __v: number;
-  bids: {
-    totalBids: {
-      count: number;
-    };
-    recentBids: {
-      _id: string;
-      bidAmount: number;
-      createdAt: string;
-      firstName: string;
-      lastName: string;
-    }[];
-  };
+  bids: Bids;
+};
+
+export type Shipping = {
+  weight: number;
+  length: number;
+  width: number;
+  height: number;
 };
 
 export type AuctionListParams = {
@@ -105,7 +96,7 @@ export type AuctionListObject = {
     };
   };
   categoryId: string;
-  seller: string;
+  seller: Seller;
   isActive: boolean;
   auctionStatus: AuctionStatus;
   approvalStatus: AuctionApprovalStatus;
@@ -119,32 +110,12 @@ export type AuctionListObject = {
     width: number;
     height: number;
   };
-  auctionDetails: {
-    startDate: string;
-    endDate: string;
-    startBidFrom: number;
-    minimumBidPerTime: number;
-    buyIfReach: number;
-    securityDeposit: number;
-    currentBid: number;
-    highestBidder: string | null;
-    timezone: string;
-  };
+  auctionDetails: AuctionDetails;
   createdAt: string;
   updatedAt: string;
   __v: number;
-  bids: {
-    totalBids: {
-      count: number;
-    };
-    recentBids: {
-      _id: string;
-      bidAmount: number;
-      createdAt: string;
-      firstName: string;
-      lastName: string;
-    }[];
-  };
+  rejectionReasons: AuctionRejectionReasons[];
+  bids: Bids;
 };
 
 export type AuctionDetails = {
@@ -155,10 +126,43 @@ export type AuctionDetails = {
   buyIfReach?: number;
   securityDeposit?: number;
   currentBid: number;
-  highestBidder?: {
-    _id: string;
-    firstName: string;
-    lastName: string;
-  };
+  highestBidder?: HighestBidder;
   timezone?: string;
+};
+
+export type HighestBidder = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+};
+
+export type RecentBids = {
+  _id: string;
+  bidAmount: number;
+  createdAt: string;
+  firstName: string;
+  lastName: string;
+};
+
+export type TotalBids = {
+  count: 5;
+};
+
+export type Bids = {
+  totalBids: TotalBids;
+  recentBids: RecentBids[];
+};
+
+export type AuctionRejectionReasons =
+  | "INAPPROPRIATE_CONTENT"
+  | "VIOLATION_OF_POLICY"
+  | "INCOMPLETE_INFORMATION"
+  | "MEDIA_ISSUE"
+  | "SPELLING_MISTAKE"
+  | "OTHER";
+
+export type Seller = {
+  _id: string;
+  firstName: string;
+  lastName: string;
 };
