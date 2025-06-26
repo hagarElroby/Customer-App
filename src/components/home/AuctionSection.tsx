@@ -59,19 +59,7 @@ const AuctionSection = () => {
           </div>
 
           <div className="flex gap-3 items-center justify-between">
-            {auctionsList.slice(0, 3).map((auction) => (
-              <AuctionCard
-                key={auction._id}
-                id={auction._id}
-                image={auction.media.productCover}
-                title={auction.productName}
-                seller="STOCKMART"
-                currentBid={auction.auctionDetails.currentBid}
-                endDate={auction.auctionDetails.endDate}
-                onBid={handleClickBid}
-              />
-            ))}
-            {auctionsList.slice(0, 2).map((auction) => (
+            {auctionsList.slice(0, 5).map((auction) => (
               <AuctionCard
                 key={auction._id}
                 id={auction._id}

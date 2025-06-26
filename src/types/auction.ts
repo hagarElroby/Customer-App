@@ -49,21 +49,7 @@ export type AuctionById = {
     width: number;
     height: number;
   };
-  auctionDetails: {
-    startDate: string;
-    endDate: string;
-    startBidFrom: number;
-    minimumBidPerTime: number;
-    buyIfReach: number;
-    securityDeposit: number;
-    currentBid: number;
-    highestBidder: {
-      _id: string;
-      firstName: string;
-      lastName: string;
-    };
-    timezone: string;
-  };
+  auctionDetails: AuctionDetails;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -159,4 +145,20 @@ export type AuctionListObject = {
       lastName: string;
     }[];
   };
+};
+
+export type AuctionDetails = {
+  startDate: string;
+  endDate: string;
+  startBidFrom: number;
+  minimumBidPerTime: number;
+  buyIfReach?: number;
+  securityDeposit?: number;
+  currentBid: number;
+  highestBidder?: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
+  timezone?: string;
 };

@@ -1,5 +1,4 @@
 "use client";
-import ImageGallery from "../productDetails/ImageGallery";
 import TitleAndValue from "../productDetails/TitleAndValue";
 import HrLine from "../shared/HrLine";
 import PaymentMethods from "../productDetails/PaymentMethods";
@@ -11,6 +10,7 @@ import { AuctionById } from "@/types/auction";
 import { svgs } from "../icons/svgs";
 import { Rate } from "antd";
 import BidderInfo from "./BidderInfo";
+import ImageGallery from "./ImageGallery";
 interface TopSectionProps {
   auction: AuctionById;
 }
@@ -29,6 +29,9 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
       >
         {auction && auction.media && (
           <ImageGallery
+            auctionDetails={auction?.auctionDetails}
+            auctionId={auction?._id}
+            deposit={auction?.auctionDetails?.startBidFrom * 0.05}
             minimumBid={auction?.auctionDetails?.minimumBidPerTime}
             images={[
               { url: auction?.media.productCover, type: "img" },
