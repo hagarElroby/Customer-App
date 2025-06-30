@@ -1,6 +1,7 @@
-import React from "react";
+"use client";
 import { Button, Tag } from "antd";
-import getTimeRemaining from "@/utils/getTimeRemaining";
+import { useCountdown } from "@/hooks/useCountDown";
+import { useEffect, useRef } from "react";
 
 interface AuctionCardProps {
   id: string;
@@ -11,6 +12,7 @@ interface AuctionCardProps {
   isLive?: boolean;
   endDate: string;
   onBid: (id: string) => void;
+  refetchAuctions?: () => void;
 }
 
 const AuctionCard: React.FC<AuctionCardProps> = ({
@@ -21,7 +23,16 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   currentBid,
   endDate,
   onBid,
+  refetchAuctions,
 }) => {
+  const timeLeft = useCountdown(endDate);
+
+  useEffect(() => {
+    if (timeLeft === "0 seconds") {
+      refetchAuctions?.();
+    }
+  }, [timeLeft, refetchAuctions]);
+
   return (
     <div
       onClick={() => onBid(id)}
@@ -38,7 +49,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
         {/* {daysLeft(endDate ?? "") > 0 && ( */}
         <Tag color="#700C18" className="!m-0">
           <span className="font-[Public-Sans] text-[13px] font-bold leading-[20px] tracking-[0%] text-white">
-            {getTimeRemaining(endDate)}
+            {timeLeft}
           </span>
         </Tag>
         {/* )} */}

@@ -11,6 +11,7 @@ interface FetchDataState<T> {
   data: T | null;
   loading: boolean;
   error: any | null;
+  refetch?: () => void;
 }
 
 const useFetchData = <T>({
@@ -23,34 +24,34 @@ const useFetchData = <T>({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await apiFunction({
-          ...params,
-          onSuccess: (response: T) => {
-            setData(response);
-            onSuccess?.(response);
-          },
-          onError: (err: any) => {
-            setError(err);
-            onError?.(err);
-          },
-        });
-      } catch (err) {
-        setError(err);
-        onError?.(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await apiFunction({
+        ...params,
+        onSuccess: (response: T) => {
+          setData(response);
+          onSuccess?.(response);
+        },
+        onError: (err: any) => {
+          setError(err);
+          onError?.(err);
+        },
+      });
+    } catch (err) {
+      setError(err);
+      onError?.(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch: fetchData };
 };
 
 export default useFetchData;
