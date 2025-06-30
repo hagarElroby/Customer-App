@@ -1,17 +1,11 @@
 "use client";
 import TitleAndValue from "../productDetails/TitleAndValue";
-import HrLine from "../shared/HrLine";
 import PaymentMethods from "../productDetails/PaymentMethods";
 import StoreInfo from "../productDetails/StoreInfo";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
-import { AppDispatch, RootState } from "@/redux/store";
 import { AuctionById } from "@/types/auction";
 import { svgs } from "../icons/svgs";
 import { Rate } from "antd";
-import BidderInfo from "./BidderInfo";
 import ImageGallery from "./ImageGallery";
-import getTimeAgo from "@/utils/getTimeAgo";
 import BidHistory from "./BidHistory";
 import getTimeRemaining from "@/utils/getTimeRemaining";
 interface TopSectionProps {
@@ -19,10 +13,6 @@ interface TopSectionProps {
 }
 
 const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { user, isLoggedIn } = useSelector((state: RootState) => state.auth);
-
   return (
     <div className="flex items-start justify-between flex-col custom:flex-row flex-wrap gap-3 px-3 py-5 h-[686px] overflow-auto">
       {/* left section  */}
@@ -34,7 +24,7 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
           <ImageGallery
             auctionDetails={auction?.auctionDetails}
             auctionId={auction?._id}
-            deposit={auction?.auctionDetails?.startBidFrom * 0.05}
+            deposit={auction?.auctionDetails?.securityDeposit}
             minimumBid={auction?.auctionDetails?.minimumBidPerTime}
             images={[
               { url: auction?.media.productCover, type: "img" },

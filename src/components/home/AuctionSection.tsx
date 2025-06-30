@@ -13,7 +13,11 @@ import { RootState } from "@/redux/store";
 const AuctionSection = () => {
   const router = useRouter();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { data, loading, error } = useFetchData({
+  const {
+    data,
+    loading,
+    refetch: refetchAuctions,
+  } = useFetchData({
     apiFunction: getAuctionList,
     params: {
       page: 1,
@@ -25,7 +29,6 @@ const AuctionSection = () => {
   const auctionsList = data?.docs || [];
 
   if (auctionsList.length === 0 && !loading) return;
-
   const handleClickBid = (id: string) => {
     if (!user) {
       router.push("/auth/login");
@@ -51,6 +54,7 @@ const AuctionSection = () => {
                   title={auction.productName}
                   seller="STOCKMART"
                   currentBid={auction.auctionDetails.currentBid}
+                  refetchAuctions={refetchAuctions ?? (() => {})}
                   endDate={auction.auctionDetails.endDate}
                   onBid={handleClickBid}
                 />
@@ -69,6 +73,7 @@ const AuctionSection = () => {
                 currentBid={auction.auctionDetails.currentBid}
                 endDate={auction.auctionDetails.endDate}
                 onBid={handleClickBid}
+                refetchAuctions={refetchAuctions ?? (() => {})}
               />
             ))}
           </div>

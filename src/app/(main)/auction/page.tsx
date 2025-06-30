@@ -38,7 +38,6 @@ const page = () => {
     });
   }, [auctionId]);
 
-  console.log({ auctionData });
   return (
     <div className="bg-bgPanel">
       {loading && <Loading />}

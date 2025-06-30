@@ -62,16 +62,14 @@ export type AuctionListParams = {
   page?: number;
   limit?: number;
   allowPagination?: boolean;
-
   startDate?: string;
   endDate?: string;
-
   productType?: ProductType;
   subCategoryId?: string;
   categoryId?: string;
-
   approvalStatus?: AuctionStatus;
   auctionStatus?: AuctionApprovalStatus;
+  productName?: string;
 };
 
 export type AuctionListObject = {
