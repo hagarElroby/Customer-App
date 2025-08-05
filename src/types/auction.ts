@@ -2,11 +2,7 @@ import { Flags, ProductType } from "./product";
 
 export type AuctionStatus = "PENDING" | "ACTIVE" | "ENDED" | "CANCELLED";
 
-export type AuctionApprovalStatus =
-  | "PENDING"
-  | "IN_REVIEW"
-  | "APPROVED"
-  | "REJECTED";
+export type ApprovalStatus = "PENDING" | "IN_REVIEW" | "APPROVED" | "REJECTED";
 
 export type AuctionById = {
   _id: string;
@@ -32,7 +28,7 @@ export type AuctionById = {
   seller: Seller;
   isActive: boolean;
   auctionStatus: AuctionStatus;
-  approvalStatus: AuctionApprovalStatus;
+  approvalStatus: ApprovalStatus;
   productProperties: {
     propertyId: string;
     propertyName: string;
@@ -68,7 +64,7 @@ export type AuctionListParams = {
   subCategoryId?: string;
   categoryId?: string;
   approvalStatus?: AuctionStatus;
-  auctionStatus?: AuctionApprovalStatus;
+  auctionStatus?: ApprovalStatus;
   productName?: string;
 };
 
@@ -97,7 +93,7 @@ export type AuctionListObject = {
   seller: Seller;
   isActive: boolean;
   auctionStatus: AuctionStatus;
-  approvalStatus: AuctionApprovalStatus;
+  approvalStatus: ApprovalStatus;
   productProperties: {
     key: string;
     values: string[];
@@ -163,4 +159,6 @@ export type Seller = {
   _id: string;
   firstName: string;
   lastName: string;
+  companyName?: string;
+  profilePicture?: string;
 };

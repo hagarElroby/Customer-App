@@ -7,7 +7,7 @@ interface AuctionCardProps {
   id: string;
   image: string;
   title: string;
-  seller: string;
+  seller?: string;
   currentBid: number;
   isLive?: boolean;
   endDate: string;
@@ -36,7 +36,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   return (
     <div
       onClick={() => onBid(id)}
-      className="cursor-pointer rounded-xl bg-white p-3 flex flex-col gap-2 relative w-[262px] h-[453px]"
+      className="cursor-pointer rounded-xl bg-white p-3 flex flex-col gap-2 relative w-[262px] h-[455px] overflow-hidden"
     >
       {/* Status Tags */}
       <div className="pt-2 pr-2 flex gap-2 z-10">
@@ -56,8 +56,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
       </div>
 
       {/* Product Image */}
-      <div className="w-full h-[270px] overflow-hidden">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
+      <div className="w-full h-[285px] overflow-hidden">
+        <img src={image} alt={title} className="w-full h-full object-contain" />
       </div>
 
       {/* Place A Bid Button */}
@@ -78,14 +78,20 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
 
       {/* Product Info */}
       <div>
-        <div className="text-[10px] text-[#717171] font-bold uppercase">
+        <span className="text-[10px] text-[#717171] font-bold uppercase line-clamp-1">
           {seller}
+        </span>
+        <div className="h-11">
+          <h3 className="text-[15px] font-bold text-[#040404] line-clamp-2">
+            {title}
+          </h3>
         </div>
-        <h3 className="text-[15px] font-bold text-[#040404]">{title}</h3>
-        <div className="text-[13px] text-[#717171] font-bold">
-          Current bid:{" "}
+        <div className="h-12 line-clamp-2">
+          <span className="text-[13px] text-[#717171] font-bold">
+            Current bid:{" "}
+          </span>
           <span className="text-main font-bold text-base">
-            ${currentBid?.toLocaleString()}
+            IQD{currentBid ?? 0}
           </span>
         </div>
       </div>

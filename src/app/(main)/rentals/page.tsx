@@ -1,16 +1,15 @@
 "use client";
 import AuctionCard from "@/components/auction/AuctionCard";
 import BannerSlider from "@/components/banner/BannerSlider";
-import { svgs } from "@/components/icons/svgs";
+import RentalCard from "@/components/rental/RentalCard";
 import Loading from "@/components/shared/Loading";
 import NavigationBar from "@/components/shared/NavigationBar";
 import PaginationButtons from "@/components/shared/PaginationButtons";
-import RoundedBtnWithIcon from "@/components/shared/RoundedBtnWithIcon";
-import SectionTitle from "@/components/shared/SectionTitle";
-import useFetchData from "@/hooks/useFetchData";
 import { RootState } from "@/redux/store";
 import { getAuctionList } from "@/services/auction";
+import { listRentals } from "@/services/rental";
 import { AuctionListObject } from "@/types/auction";
+import { RentalListObject } from "@/types/rentals";
 import { cleanParams } from "@/utils/filterUndefined";
 import { usePagination } from "@/utils/paginationUtils";
 import { useRouter } from "next/navigation";
@@ -21,7 +20,7 @@ const AuctionsPage = () => {
   const router = useRouter();
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const [auctions, setAuctions] = useState<AuctionListObject[]>([]);
+  const [rentals, setRentals] = useState<RentalListObject[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalDocs, setTotalDocs] = useState<number>(1);
@@ -34,30 +33,18 @@ const AuctionsPage = () => {
     setCurrentPage,
   );
 
-  // const { data, loading, error } = useFetchData({
-  //   apiFunction: getAuctionList,
-  //   params: {
-  //     page: 1,
-  //     limit: 15,
-  //     allowPagination: true,
-  //   },
-  // });
-
-  // const auctionsList = data?.docs || [];
-
   useEffect(() => {
-    const fetchAuctions = async () => {
+    const fetchRentals = async () => {
       const params = cleanParams({
         subCategory: subCatId,
-        // fromAdminPanel: false,
         page: currentPage,
         limit,
         allowPagination: true,
       });
-      await getAuctionList({
+      await listRentals({
         ...params,
         onSuccess: (data) => {
-          setAuctions(data.docs);
+          setRentals(data.docs);
           setTotalPages(data.totalPages ?? 1);
           setTotalDocs(data.totalDocs ?? 1);
           setLoading(false);
@@ -67,17 +54,17 @@ const AuctionsPage = () => {
         },
       });
     };
-    fetchAuctions();
+    fetchRentals();
   }, [currentPage, subCatId]);
 
-  if (auctions.length === 0 && !loading) return;
+  if (rentals.length === 0 && !loading) return;
 
-  const handleClickBid = (id: string) => {
+  const handleClickRental = (id: string) => {
     if (!user) {
       router.push("/auth/login");
       return;
     }
-    router.push(`/auction?id=${id}`);
+    router.push(`/rental?id=${id}`);
   };
 
   return (
@@ -105,19 +92,19 @@ const AuctionsPage = () => {
 
         {loading && <Loading />}
 
-        {!loading && !!auctions.length && (
+        {!loading && !!rentals.length && (
           <>
             <div className="flex flex-wrap gap-3 items-center justify-center">
-              {auctions.map((auction) => (
-                <AuctionCard
-                  key={auction._id}
-                  id={auction._id}
-                  image={auction.media.productCover}
-                  title={auction.productName}
-                  seller="STOCKMART"
-                  currentBid={auction.auctionDetails.currentBid}
-                  endDate={auction.auctionDetails.endDate}
-                  onBid={handleClickBid}
+              {rentals.map((rental) => (
+                <RentalCard
+                  key={rental._id}
+                  id={rental._id}
+                  image={rental.media.productCover}
+                  title={rental.productName}
+                  seller={rental.seller.companyName}
+                  pricePerDay={rental.rentalDetails.pricePerDay}
+                  handleClickItem={handleClickRental}
+                  //   refetchRentals={refetchRentals ?? (() => {})}
                 />
               ))}
             </div>

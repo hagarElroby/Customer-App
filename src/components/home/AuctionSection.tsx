@@ -45,14 +45,14 @@ const AuctionSection = () => {
         <div className="flex flex-col gap-3">
           <div className="flex gap-3 w-full">
             <LiveAuction />
-            <div className="flex-[1.6] flex gap-3 items-center justify-between">
+            <div className="flex-[1.6] flex gap-3 items-center">
               {auctionsList.slice(0, 3).map((auction) => (
                 <AuctionCard
                   key={auction._id}
                   id={auction._id}
                   image={auction.media.productCover}
                   title={auction.productName}
-                  seller="STOCKMART"
+                  seller={auction.seller.companyName}
                   currentBid={auction.auctionDetails.currentBid}
                   refetchAuctions={refetchAuctions ?? (() => {})}
                   endDate={auction.auctionDetails.endDate}
@@ -62,7 +62,7 @@ const AuctionSection = () => {
             </div>
           </div>
 
-          <div className="flex gap-3 items-center justify-between">
+          <div className="flex gap-3 items-center">
             {auctionsList.slice(3, 8).map((auction) => (
               <AuctionCard
                 key={auction._id}

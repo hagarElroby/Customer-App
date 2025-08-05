@@ -17,12 +17,10 @@ const Overview: React.FC<OverviewProps> = ({ description }) => {
   }, [description, isExpanded]);
   return (
     <div
-      className={`flex-[1] w-full h-[446px] overflow-hidden min-w-[250px] max-w-[700px] bg-white rounded-3xl p-8 relative flex
+      className={`flex-[1] w-full h-[446px] overflow-hidden min-w-[250px] max-w-[700px] bg-white rounded-3xl py-5 px-8 relative flex
      flex-col items-start gap-8`}
     >
-      <div
-        className={`w-full border-b border-bgLightMain relative my-4 h-full`}
-      >
+      <div className={`w-full border-b border-bgLightMain relative h-10`}>
         <span className="font-bold text-base text-main border-b-[2px] border-main py-3 absolute left-0 bottom-0">
           Overview
         </span>

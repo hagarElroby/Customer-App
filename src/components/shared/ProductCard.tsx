@@ -22,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <img
             src={src}
             alt={text}
-            className="w-full h-full block object-cover rounded"
+            className="w-full h-full block object-contain rounded"
           />
         </div>
         <div className="flex flex-col justify-between h-full overflow-hidden w-[calc(100%-60px-1rem)]">

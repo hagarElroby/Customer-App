@@ -10,6 +10,7 @@ import ProductSlider from "@/components/shared/ProductSlider";
 import { getOneProduct } from "@/services/product";
 import { OneProductResponse } from "@/types/product";
 import PreviouslyBrowsed from "@/components/shared/PreviouslyBrowsed";
+import MainSection from "@/components/shared/MainSection";
 
 const ProductPage = () => {
   const searchParams = useSearchParams();
@@ -39,7 +40,7 @@ const ProductPage = () => {
   }, [productId]);
 
   return (
-    <main className="pb-28 flex flex-col gap-10 w-full flex-grow bg-homeBg">
+    <MainSection>
       <NavigationBar />
       {loading && <Loading />}
 
@@ -54,7 +55,7 @@ const ProductPage = () => {
       )}
       <PreviouslyBrowsed />
       <ProductSlider title="You may also like" sortType="BEST_SELLER" />
-    </main>
+    </MainSection>
   );
 };
 

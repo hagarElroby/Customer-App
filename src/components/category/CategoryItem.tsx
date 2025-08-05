@@ -23,7 +23,7 @@ const CategoryItem: React.FC<CardProps> = ({ item }) => {
         <img
           src={item?.image ? item.image : "/images/catImg.svg"}
           alt="category"
-          className="block w-full h-full object-cover"
+          className="block w-full h-full object-contain"
         />
       </div>
       <div className="flex flex-col gap-4 hd:gap-[1.1vw] mx-6 hd:mx-[1.66vw] mb-6 hd:mb-[1.66vw]">

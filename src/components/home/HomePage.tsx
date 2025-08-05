@@ -6,6 +6,7 @@ import ProductSlider from "../shared/ProductSlider";
 import ServicesSection from "../shared/ServicesSection";
 import AdsBanner from "./AdsBanner";
 import AuctionSection from "./AuctionSection";
+import RentalSection from "./RentalSection";
 
 const HomePage = () => {
   return (
@@ -16,6 +17,7 @@ const HomePage = () => {
         <PopularCategories />
         <AuctionSection />
         <AdsBanner />
+        <RentalSection />
         <ProductSlider title="Best Selling" sortType="BEST_SELLER" />
         <PreviouslyBrowsed />
         <ProductSlider title="You may also like" />

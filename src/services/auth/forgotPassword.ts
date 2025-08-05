@@ -94,6 +94,7 @@ export const resetPassword = async ({
   onSuccess?: (data: BaseResponse<string>) => void;
   password: string;
 }) => {
+  const forgotPasswordToken = localStorage.getItem("forgotPasswordToken");
   try {
     const res = await axiosInstance.patch<BaseResponse<string>>(
       "/users/forgetPassword/resetPassword",
@@ -102,7 +103,7 @@ export const resetPassword = async ({
       },
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("forgotPasswordToken")}`,
+          Authorization: `Bearer ${forgotPasswordToken}`,
         },
       },
     );
