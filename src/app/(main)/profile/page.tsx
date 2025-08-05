@@ -35,7 +35,7 @@ const Page = () => {
       router.replace("/auth/login");
     }
   }, [router]);
-
+  console.log("Test");
   useEffect(() => {
     const getProfileData = async () => {
       setLoading(true);
