@@ -92,7 +92,7 @@ const BannerSlider = () => {
                   key={index}
                   src={banner?.portalImageUrl}
                   alt={`Portal Banner ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
             ))}
@@ -147,7 +147,7 @@ const BannerSlider = () => {
             <img
               src={banner.imageUrl}
               alt={banner.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </motion.div>
         ))}

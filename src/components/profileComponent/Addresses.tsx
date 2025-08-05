@@ -24,8 +24,9 @@ const Addresses = () => {
         <TitleDesc
           isProfileTitle
           title="Addresses"
-          description="Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+          description="Manage your saved addresses for deliveries and billing. You can add, update, or remove addresses anytime."
         />
+
         {(userProfileData?.addresses ?? []).length < 1 && (
           <CustomButton
             className="uppercase text-sm font-bold"

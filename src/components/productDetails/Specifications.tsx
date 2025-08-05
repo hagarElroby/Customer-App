@@ -38,9 +38,9 @@ const Specifications: React.FC<SpecificationsProps> = ({ specifications }) => {
     <div
       ref={contentRef}
       className={`flex-[1] w-full min-w-[250px] max-w-[700px] h-[446px] ${isExpanded ? "max-h-[1000px]" : "max-h-[446px]"}
-     bg-white rounded-3xl p-8 relative flex flex-col items-start gap-8`}
+     bg-white rounded-3xl py-5 px-8 relative flex flex-col items-start gap-8`}
     >
-      <div className="w-full border-b border-bgLightMain relative my-4">
+      <div className="w-full border-b border-bgLightMain relative h-10">
         <span className="font-bold text-base text-main border-b-[2px] border-main py-3 absolute left-0 bottom-0">
           Specifications
         </span>

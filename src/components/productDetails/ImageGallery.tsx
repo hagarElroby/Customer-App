@@ -52,7 +52,7 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
   };
 
   return (
-    <div className="flex gap-3 h-[400px] w-full">
+    <div className="flex gap-3 h-[464px] w-full">
       <div className="flex-[1] flex flex-col gap-6 items-center relative h-full py-3">
         {canScrollUp && (
           <button onClick={() => scrollThumbnails("up")}>{svgs.down}</button>
@@ -65,34 +65,42 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
           {images?.map((img, index) => {
             if (img.type === "img") {
               return (
-                <img
-                  key={index}
-                  src={img.url}
-                  alt={`product image ${index}`}
-                  className={`w-24 h-24 object-cover cursor-pointer border-2 ${
+                <div
+                  className={`flex h-24 w-24 cursor-pointer items-center justify-center rounded-sm border ${
                     selectedImage === img
                       ? "border-main"
                       : "border-homeBorderCard"
                   }`}
-                  onMouseEnter={() => handleHover(img)}
-                />
+                  key={index}
+                >
+                  <img
+                    src={img.url}
+                    alt={`product image ${index}`}
+                    className={`h-[90%] w-[90%] object-contain`}
+                    onMouseEnter={() => handleHover(img)}
+                  />
+                </div>
               );
             }
 
             return (
-              <video
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                key={index}
-                src={img.url}
-                className={`w-24 h-24 object-cover cursor-pointer border-2 ${
+              <div
+                className={`flex h-24 w-24 cursor-pointer items-center justify-center rounded-sm border ${
                   selectedImage === img
                     ? "border-main"
                     : "border-homeBorderCard"
                 }`}
-                onMouseEnter={() => handleHover(img)}
-              />
+                key={index}
+              >
+                <video
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                  src={img.url}
+                  className={`h-[90%] w-[90%] object-contain`}
+                  onMouseEnter={() => handleHover(img)}
+                />
+              </div>
             );
           })}
         </div>
@@ -100,12 +108,12 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
           <button onClick={() => scrollThumbnails("down")}>{svgs.down}</button>
         )}
       </div>
-      <div className="flex-[3.4] w-full h-full border border-homeBorderCard rounded-xl overflow-hidden">
+      <div className="flex h-[464px] w-full flex-[3.4] items-center justify-center overflow-hidden rounded-xl border border-homeBorderCard">
         {selectedImage?.type === "img" && (
           <img
             src={selectedImage.url}
             alt="selected product"
-            className="w-full h-full object-cover"
+            className="h-[70%] w-[85%] object-contain"
           />
         )}
 
@@ -113,7 +121,7 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
           <video
             controls
             src={selectedImage.url}
-            className="w-full h-full object-cover"
+            className="h-[70%] w-[85%] object-contain"
           />
         )}
       </div>

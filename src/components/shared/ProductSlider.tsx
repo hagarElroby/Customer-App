@@ -70,7 +70,7 @@ const ProductSlider: React.FC<ProductSliderProps> = ({
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-8 w-full h-full">
       <SectionTitle
         title={title}
         children={

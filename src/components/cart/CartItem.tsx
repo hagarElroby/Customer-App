@@ -150,7 +150,7 @@ const CartItem: React.FC<CartProduct> = ({
         <img
           src={productCover}
           alt={groupName}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       </div>
 

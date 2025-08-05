@@ -47,7 +47,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
           />
           <Button type="submit">Submit</Button>
         </form>
-        <div id="recaptcha-container"></div>
       </div>
     </FormContainer>
   );

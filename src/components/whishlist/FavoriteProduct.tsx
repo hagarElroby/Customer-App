@@ -68,7 +68,7 @@ const FavoriteProduct: React.FC<FavoriteProductResponse> = ({
           <img
             src={productCover}
             alt={`${productName} image`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         </div>
         <div className="flex flex-col gap-2 absolute z-10 right-0 bottom-0">

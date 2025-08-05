@@ -156,7 +156,7 @@ const BestProduct: React.FC<
           <img
             src={quantityAndPrice?.productImages[0] || productCover}
             alt={`${productName} image`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         </div>
         <div

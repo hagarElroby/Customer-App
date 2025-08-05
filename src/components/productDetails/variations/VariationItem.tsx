@@ -20,7 +20,7 @@ const VariationItem = ({
         <img
           src={variation.productImages[0]}
           alt="product image"
-          className={`w-full h-full object-cover`}
+          className={`w-full h-full object-contain`}
         />
       </div>
       <div className="flex flex-col gap-1 w-full mt-4">
