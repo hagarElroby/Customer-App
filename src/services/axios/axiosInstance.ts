@@ -21,7 +21,7 @@ let failedRequestsQueue: [] = [];
 axiosInstance.interceptors.request.use(
   (request: any) => {
     const jwtToken = localStorage.getItem("jwtToken");
-    console.log("test");
+
     // Exclude certain paths from attaching the Authorization header
     if (
       !["/login", "/signup", "/users/refreshToken"].includes(request.url) &&
