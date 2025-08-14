@@ -5,13 +5,19 @@ import React, { useState } from "react";
 const { RangePicker } = DatePicker;
 
 interface PickRentalDateProps {
+  endDateRental: string;
+  startDateRental: string;
   onChange?: (dates: {
     startDate: string | null;
     endDate: string | null;
   }) => void;
 }
 
-const PickRentalDate: React.FC<PickRentalDateProps> = ({ onChange }) => {
+const PickRentalDate: React.FC<PickRentalDateProps> = ({
+  startDateRental,
+  endDateRental,
+  onChange,
+}) => {
   const [range, setRange] = useState<[Dayjs | null, Dayjs | null]>([
     null,
     null,

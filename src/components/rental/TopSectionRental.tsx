@@ -21,6 +21,7 @@ interface TopSectionProps {
 const TopSectionRental: React.FC<TopSectionProps> = ({ rental }) => {
   const { profile } = useProfile();
   const [rentalPrice, setRentalPrice] = useState<number>();
+  const [rentalPeriod, setRentalPeriod] = useState<number>();
   const [startDateRequest, setStartDateRequest] = useState("");
   const [endDateRequest, setEndDateRequest] = useState("");
   const handleGetRentalFees = async (startDate: string, endDate: string) => {
@@ -55,6 +56,7 @@ const TopSectionRental: React.FC<TopSectionProps> = ({ rental }) => {
       endDate: endDate,
       onSuccess: (data) => {
         setRentalPrice(data.rentalPrice);
+        setRentalPeriod(data.requestedRentalDurationInDays);
         setStartDateRequest(startDate);
         setEndDateRequest(endDate);
       },
@@ -112,16 +114,26 @@ const TopSectionRental: React.FC<TopSectionProps> = ({ rental }) => {
         )}
 
         <PickRentalDate
+          startDateRental={rental.rentalDetails.startDate}
+          endDateRental={rental.rentalDetails.endDate}
           onChange={({ startDate, endDate }) => {
             handleGetRentalFees(startDate ?? "", endDate ?? "");
           }}
         />
 
-        <div className="flex items-center justify-between text-xl text-[#686C84] w-full h-11 rounded-full border border-[#C5C6D0] py-[10px] px-3">
-          <span className="w-full border-none outline-none text-black">
-            {rentalPrice}
-          </span>
-          <span>IQD</span>
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center justify-between text-xl text-[#686C84] w-[124px] h-11 rounded-full border border-[#C5C6D0] py-[10px] px-3">
+            <span className="w-full border-none outline-none text-black">
+              {rentalPeriod}
+            </span>
+            <span className="text-sm">Days</span>
+          </div>
+          <div className="flex items-center justify-between text-xl text-[#686C84] min-w-[334px] w-full h-11 rounded-full border border-[#C5C6D0] py-[10px] px-3">
+            <span className="w-full border-none outline-none text-black">
+              {rentalPrice}
+            </span>
+            <span>IQD</span>
+          </div>
         </div>
 
         <Button
@@ -165,23 +177,34 @@ const TopSectionRental: React.FC<TopSectionProps> = ({ rental }) => {
               <div className="flex flex-col items-start gap-[5px]">
                 <span className="text-sm text-[#0E0E10]">DAY</span>
                 <span className="text-sm font-semibold text-[#097D47]">
-                  {19} IQD
+                  {rental.rentalDetails?.pricePerDay || "__"} IQD
                 </span>
               </div>
               <Divider type="vertical" style={{ height: 45 }} />
               <div className="flex flex-col items-start gap-[5px]">
-                <span className="text-sm text-[#0E0E10]">3 days</span>
+                <span className="text-sm text-[#0E0E10]">Week</span>
                 <span className="text-sm font-semibold text-[#097D47]">
-                  {19} IQD
+                  {rental.rentalDetails?.pricePerMonth || "__"} IQD
                 </span>
               </div>
               <Divider type="vertical" style={{ height: 45 }} />
               <div className="flex flex-col items-start gap-[5px]">
-                <span className="text-sm text-[#0E0E10]">6 days</span>
+                <span className="text-sm text-[#0E0E10]">Month</span>
                 <span className="text-sm font-semibold text-[#097D47]">
-                  {19} IQD
+                  {rental.rentalDetails?.pricePerMonth || "__"}IQD
                 </span>
               </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <TitleAndValue
+                title="Minimum Rental period"
+                value={rental.rentalDetails.minimumRentalPeriodInDays.toString()}
+              />
+              <TitleAndValue
+                title="Maximum Rental period"
+                value={rental.rentalDetails.maximumRentalPeriodInDays.toString()}
+              />
             </div>
           </div>
 
