@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "sonner";
 import { Inter } from "next/font/google";
+import GlobalErrorBoundary from "@/components/shared/GlobalErrorBoundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,7 +51,7 @@ export default function RootLayout({
             richColors
             closeButton
           />
-          {children}
+          <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
         </Providers>
       </body>
     </html>

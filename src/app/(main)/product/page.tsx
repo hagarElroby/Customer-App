@@ -44,15 +44,7 @@ const ProductPage = () => {
       <NavigationBar />
       {loading && <Loading />}
 
-      {!loading && product !== undefined && (
-        <div className="flex flex-col gap-10 w-full p-9">
-          <TopSection product={product} />
-          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-5">
-            <Overview description={product.productDescription} />
-            <Specifications specifications={product.productProperties} />
-          </div>
-        </div>
-      )}
+      {!loading && product !== undefined && <TopSection product={product} />}
       <PreviouslyBrowsed />
       <ProductSlider title="You may also like" sortType="BEST_SELLER" />
     </MainSection>

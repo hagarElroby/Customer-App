@@ -15,9 +15,9 @@ interface TopSectionProps {
 
 const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
   return (
-    <div className="flex items-start justify-between flex-col custom:flex-row flex-wrap gap-3 px-3 py-5 h-[730px] overflow-auto">
+    <div className="flex items-start justify-center flex-col custom:flex-row flex-wrap gap-3 px-3 py-5 h-[730px] overflow-auto">
       {/* left section  */}
-      <div className="flex-[1] min-w-[250px] max-w-[686px] mx-auto bg-white rounded-3xl p-4 overflow-y-auto overflow-x-hidden h-full">
+      <div className="flex-[1] min-w-[250px] max-w-[550px] mx-auto bg-white rounded-3xl p-4 overflow-y-auto overflow-x-hidden h-full">
         {auction && auction.media && (
           <ImageSection
             auctionDetails={auction?.auctionDetails}
@@ -40,7 +40,7 @@ const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
       </div>
 
       {/* right section  */}
-      <div className="flex flex-col justify-between gap-3 flex-[1.4] min-w-[250px] max-w-[1000px] h-full  rounded-3xl overflow-y-auto overflow-x-hidden bg-white mx-auto">
+      <div className="flex flex-col justify-between gap-3 flex-[1.4] min-w-[250px] max-w-[850px] h-full  rounded-3xl overflow-y-auto overflow-x-hidden bg-white mx-auto">
         {/* top  */}
         <div
           className="flex flex-col custom:flex-row items-start justify-between

@@ -55,7 +55,7 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
     <div className="flex gap-3 h-[464px] w-full">
       <div className="flex-[1] flex flex-col gap-6 items-center relative h-full py-3">
         {canScrollUp && (
-          <button onClick={() => scrollThumbnails("up")}>{svgs.down}</button>
+          <button onClick={() => scrollThumbnails("up")}>{svgs.up}</button>
         )}
         <div
           ref={thumbnailRef}
@@ -83,25 +83,27 @@ const ImageGallery = ({ images }: { images: MediaModel[] }) => {
               );
             }
 
-            return (
-              <div
-                className={`flex h-24 w-24 cursor-pointer items-center justify-center rounded-sm border ${
-                  selectedImage === img
-                    ? "border-main"
-                    : "border-homeBorderCard"
-                }`}
-                key={index}
-              >
-                <video
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                  src={img.url}
-                  className={`h-[90%] w-[90%] object-contain`}
-                  onMouseEnter={() => handleHover(img)}
-                />
-              </div>
-            );
+            if (img.url !== undefined) {
+              return (
+                <div
+                  className={`flex min-h-24 max-h-24 w-24 cursor-pointer items-center justify-center rounded-sm border ${
+                    selectedImage === img
+                      ? "border-main"
+                      : "border-homeBorderCard"
+                  }`}
+                  key={index}
+                >
+                  <video
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                    src={img.url}
+                    className={`h-[90%] w-[90%] object-contain`}
+                    onMouseEnter={() => handleHover(img)}
+                  />
+                </div>
+              );
+            }
           })}
         </div>
         {canScrollDown && (

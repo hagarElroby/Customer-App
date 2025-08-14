@@ -1,25 +1,27 @@
 "use client";
 import React, { useState } from "react";
-import CustomButton from "../shared/CustomButton";
 import { Input, Modal } from "antd";
 import CustomHeaderInModal from "../shared/CustomHeaderInModal";
+import CustomButton from "../shared/CustomButton";
 
 interface OTPPopupProps {
   isOpen: boolean;
   onClose: () => void;
   onOtpEntered: (otp: string) => void;
-  email: string;
+  text: string;
   onResend: () => void;
   resendTimer: number;
+  title: string;
 }
 
 const OTPPopup: React.FC<OTPPopupProps> = ({
   isOpen,
   onClose,
   onOtpEntered,
-  email,
+  text,
   onResend,
   resendTimer,
+  title,
 }) => {
   const [otp, setOtpInput] = useState("");
   const handleVerify = () => {
@@ -39,12 +41,12 @@ const OTPPopup: React.FC<OTPPopupProps> = ({
       closeIcon={false}
       className="flex flex-col items-center justify-between"
     >
-      <CustomHeaderInModal title="Verify E-mail Address" onClose={onClose} />
+      <CustomHeaderInModal title={title} onClose={onClose} />
       <div className="h-[1px] w-full bg-[#700c18]" />
       <div className="flex flex-col items-center justify-center gap-6 p-5">
         <div className="flex flex-col gap-1">
-          <p className="text-sm">To use this address, enter the OTP sent to</p>
-          <p className="text-sm text-[#700c18]">{email}</p>
+          {/* <p className="text-sm">To use this address, enter the OTP sent to</p> */}
+          <p className="text-sm text-[#700c18]">{text}</p>
         </div>
         <Input.OTP size="large" value={otp} onChange={setOtpInput} />
         <div className="flex flex-col items-center">

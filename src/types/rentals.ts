@@ -120,7 +120,14 @@ export type RentalById = {
 export type CreateRentalRequest = {
   renter: string;
   rental: string;
-  seller: string;
-  startDate: Date;
-  endDate: Date;
+  seller?: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type RentalFeesResponseBody = {
+  rentalPrice: number;
+  requestedRentalDurationInDays: number;
+  requestedStartDate: string;
+  requestedEndDate: string;
 };

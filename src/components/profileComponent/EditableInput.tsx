@@ -4,11 +4,19 @@ interface EditableInputProps {
   text: string;
   setText?: (text: string) => void;
   noEdit?: boolean;
+  handleUpdate?: (input: string) => void;
+  isEmail?: boolean;
+  emailStatus?: string;
+  onEmailFieldClicked?: () => void;
 }
 const EditableInput: React.FC<EditableInputProps> = ({
   text,
   setText,
   noEdit,
+  handleUpdate,
+  isEmail,
+  emailStatus,
+  onEmailFieldClicked,
 }) => {
   const [editingText, setEditingText] = useState(text);
   const [isEditing, setIsEditing] = useState(false);
@@ -29,6 +37,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
     if (setText) {
       setText(editingText);
     }
+    handleUpdate?.(editingText);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -38,25 +47,35 @@ const EditableInput: React.FC<EditableInputProps> = ({
   };
 
   return (
-    <div className="flex items-center rounded bg-white border border-[#DADCE3]">
+    <div className="flex w-full items-center rounded border border-[#DADCE3] bg-white px-2">
       <input
         type="text"
         value={editingText}
         onChange={(e) => setEditingText(e.target.value)}
         onKeyDown={handleKeyDown}
-        className={`flex-1 p-2 border-0 bg-transparent focus:outline-none ${noEdit ? "text-[#757575]" : "text-[#404553]"}`}
+        className="flex-1 border-0 bg-transparent p-2 focus:outline-none"
         disabled={!isEditing}
       />
-
-      <button
-        type="button"
-        onClick={isEditing ? handleSave : handleEditClick}
-        className={`px-4 w-14 py-2 text-sm font-semibold ${
-          isEditing ? " text-main " : "text-main opacity-50"
-        }`}
-      >
-        {!noEdit && (isEditing ? "Save" : "Edit")}
-      </button>
+      {!noEdit && !isEmail && (
+        <button
+          type="button"
+          onClick={isEditing ? handleSave : handleEditClick}
+          className={`w-14 px-4 py-2 text-sm font-semibold ${
+            isEditing ? "text-main" : "text-main opacity-50"
+          }`}
+        >
+          {isEditing ? "Save" : "Edit"}
+        </button>
+      )}
+      {isEmail && emailStatus && (
+        <button
+          type="button"
+          onClick={onEmailFieldClicked}
+          className={`} w-14 px-4 py-2 text-sm font-semibold text-main`}
+        >
+          {emailStatus}
+        </button>
+      )}
     </div>
   );
 };

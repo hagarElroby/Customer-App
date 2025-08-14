@@ -22,8 +22,6 @@ const DepositFlowModal = ({
   const handleConfirm = () => {
     onConfirm?.();
     // Call your backend/payment logic here
-    console.log("CVV:", cvv);
-    console.log("Payment method:", paymentMethod);
     onClose();
   };
 

@@ -29,6 +29,8 @@ import { createFavorite, removeFavorite } from "@/services/whishlist";
 import { ResponseError } from "@/types/error-types";
 import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
 import { updateCartAndState } from "@/utils/cartHelpers";
+import Overview from "./Overview";
+import Specifications from "./Specifications";
 interface TopSectionProps {
   product: OneProductResponse;
 }
@@ -48,10 +50,6 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
   );
   const [quantity, setQuantity] = useState<number>(1);
   const [isDisabled, setIsDisabled] = useState(false);
-  // useEffect(() => {
-  //   const validQuantity = selectedVariation?.quantityInCart || 0;
-  //   setQuantity(validQuantity > 0 ? validQuantity : 1);
-  // }, [selectedVariation]);
 
   useEffect(() => {
     setIsInWishlist(selectedVariation.inWishlist);
@@ -214,135 +212,145 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
   const { now, saving, was } = result;
 
   return (
-    <div className="flex items-start justify-between flex-col custom:flex-row flex-wrap gap-3 px-3 py-5">
-      {/* left section  */}
-      <div
-        className="flex-[1] min-w-[250px] max-w-[600px] mx-auto flex flex-col items-center justify-center 
-      gap-4 bg-white rounded-3xl p-4 overflow-y-auto overflow-x-hidden"
-      >
-        <ImageGallery
-          images={[
-            { url: product.productCover, type: "img" },
-            ...selectedVariation.productImages.map((img) => ({
-              url: img,
-              type: "img",
-            })),
-            {
-              url: product.productVideo,
-              type: "video",
-            },
-          ]}
-        />
-        <AddToCartBtn onClick={handleAddToCart} disabled={isDisabled} />
-        <div className="flex gap-1 items-center justify-center w-full">
-          <WishlistButton
-            inWishlist={isInWishlist}
-            onToggleWishlist={() =>
-              handleWishlistToggle(selectedVariation.groupName)
-            }
-          />
-          <QuantitySelector
-            quantity={quantity}
-            onIncrease={increaseQuantity}
-            onDecrease={decreaseQuantity}
-          />
-          <BuyNowBtn
-            //TODO:: navigate to Checkout page on click
-            onClick={() => ""}
-          />
-        </div>
-      </div>
-      {/* right section  */}
-      <div className="flex flex-col justify-between items-start gap-3 flex-[1.4] min-w-[250px] max-w-[1000px] h-auto mx-auto">
-        {/* top  */}
+    <div className="flex flex-col gap-10 w-full p-9">
+      <div className="flex items-start justify-center flex-col custom:flex-row flex-wrap gap-5 px-3 py-5">
+        {/* left section  */}
         <div
-          className="flex flex-col custom:flex-row items-start justify-between
-          gap-3 p-4 bg-white rounded-3xl overflow-y-auto overflow-x-hidden"
+          className="flex-[1] min-w-[250px] max-w-[550px] mx-auto flex flex-col items-center justify-center 
+      gap-4 bg-white rounded-3xl p-4 overflow-y-auto overflow-x-hidden"
         >
-          {/* left  */}
-          <div className="flex-[1] min-w-[230px] max-w-[420px] bg-white p-6 h-full flex flex-col gap-4">
-            <p className="font-normal text-xl text-blackTitle">
-              {product.productName}
-            </p>
-            <div className="flex flex-wrap gap-[6px] items-center">
-              <Rate allowHalf defaultValue={product.rating} disabled />
-              <p className="font-semibold text-sm text-blackTitle">
-                {product.rating} Star Rating
-              </p>
-              <p className="text-xs font-normal text-gray3">
-                ({product.ratingCount} User feedback)
-              </p>
-            </div>
-            <TitleAndValue title="Brand" value="product brand" />
-            <TitleAndValue
-              title="Availability"
-              isGreen
-              value={
-                product?.quantityAndPrice[0]?.stock > 0
-                  ? "In Stock"
-                  : "Out Of Stock"
+          <ImageGallery
+            images={[
+              { url: product.productCover, type: "img" },
+              ...selectedVariation.productImages.map((img) => ({
+                url: img,
+                type: "img",
+              })),
+              {
+                url: product.productVideo,
+                type: "video",
+              },
+            ]}
+          />
+          <AddToCartBtn onClick={handleAddToCart} disabled={isDisabled} />
+          <div className="flex gap-1 items-center justify-center w-full">
+            <WishlistButton
+              inWishlist={isInWishlist}
+              onToggleWishlist={() =>
+                handleWishlistToggle(selectedVariation.groupName)
               }
             />
-            <HrLine className="my-2" />
-            <div className="flex flex-col gap-2 items-start">
-              <div className="flex flex-wrap items-center w-full gap-3">
-                <TitleAndValue isGray title="Was" value={`${was}`} />
-                <div className="w-[90px] h-6 rounded-[2px] py-[2px] px-1 bg-[#FFEBEB] flex items-center justify-center">
-                  <span className="font-medium text-sm text-main">
-                    {formatToTwoDecimals(product?.discount?.percentage)}% OFF
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center w-full gap-3">
-                <TitleAndValue isRed title="Now" value={`${now}`} />
-                {/* <p className="text-sm font-normal text-[#7E859B]">
-                  Inclusive of VAT
-                </p> */}
-              </div>
-              <TitleAndValue title="Saving" value={`${saving}`} />
-            </div>
+            <QuantitySelector
+              quantity={quantity}
+              onIncrease={increaseQuantity}
+              onDecrease={decreaseQuantity}
+            />
+            <BuyNowBtn
+              //TODO:: navigate to Checkout page on click
+              onClick={() => ""}
+            />
           </div>
-          {/* right  */}
-          <div className="flex-[1] w-full bg-whit p-6 flex flex-col gap-4 custom:border-l custom:border-lightBorder">
-            <div className="flex items-center justify-between">
-              {product.companyName && (
-                <div className="flex items-center gap-2">
-                  <div className="border-[0.5px] border-lightBorder h-12 w-12 flex items-center justify-center rounded-md p-[6px]">
-                    {svgs.store}
-                  </div>
-                  <div className="flex flex-col gap-1 items-center">
-                    <span className="font-semibold text-xs text-headColor">
-                      Sold by
-                    </span>
-                    <a className="font-bold text-sm text-main cursor-pointer underline decoration-main">
-                      {product.companyName}
-                    </a>
-                  </div>
-                </div>
-              )}
-              <div className="flex flex-col items-end gap-2">
-                <div className="flex gap-2 items-center">
-                  <p className="font-semibold text-sm text-blackTitle">
-                    {product.rating} Star Rating
-                  </p>
-                  <Rate allowHalf defaultValue={product.rating} disabled />
-                </div>
+        </div>
+        {/* right section  */}
+        <div className="flex flex-col justify-between items-start gap-3 flex-[1.4] min-w-[250px] max-w-[850px] h-auto mx-auto">
+          {/* top  */}
+          <div
+            className="flex flex-col custom:flex-row items-start justify-between
+          gap-3 p-4 bg-white rounded-3xl overflow-y-auto overflow-x-hidden"
+          >
+            {/* left  */}
+            <div className="flex-[1] min-w-[230px] max-w-[420px] bg-white p-6 h-full flex flex-col gap-4">
+              <p className="font-normal text-xl text-blackTitle">
+                {product.productName}
+              </p>
+              <div className="flex flex-wrap gap-[6px] items-center">
+                <Rate allowHalf defaultValue={product.rating} disabled />
+                <p className="font-semibold text-sm text-blackTitle">
+                  {product.rating} Star Rating
+                </p>
                 <p className="text-xs font-normal text-gray3">
                   ({product.ratingCount} User feedback)
                 </p>
               </div>
+              <TitleAndValue title="Brand" value="product brand" />
+              <TitleAndValue
+                title="Availability"
+                isGreen
+                value={
+                  product?.quantityAndPrice[0]?.stock > 0
+                    ? "In Stock"
+                    : "Out Of Stock"
+                }
+              />
+              <HrLine className="my-2" />
+              <div className="flex flex-col gap-2 items-start">
+                <div className="flex flex-wrap items-center w-full gap-3">
+                  <TitleAndValue isGray title="Was" value={`${was}`} />
+                  <div className="w-[90px] h-6 rounded-[2px] py-[2px] px-1 bg-[#FFEBEB] flex items-center justify-center">
+                    <span className="font-medium text-sm text-main">
+                      {formatToTwoDecimals(product?.discount?.percentage)}% OFF
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center w-full gap-3">
+                  <TitleAndValue isRed title="Now" value={`${now}`} />
+                  {/* <p className="text-sm font-normal text-[#7E859B]">
+                  Inclusive of VAT
+                </p> */}
+                </div>
+                <TitleAndValue title="Saving" value={`${saving}`} />
+              </div>
             </div>
-            <StoreInfo />
-            <PaymentMethods />
+            {/* right  */}
+            <div className="flex-[1] w-full bg-whit p-6 flex flex-col gap-4 custom:border-l custom:border-lightBorder">
+              <div className="flex items-center justify-between">
+                {product.companyName && (
+                  <div className="flex items-center gap-2">
+                    <div className="border-[0.5px] border-lightBorder h-12 w-12 flex items-center justify-center rounded-md p-[6px]">
+                      {svgs.store}
+                    </div>
+                    <div className="flex flex-col gap-1 items-center">
+                      <span className="font-semibold text-xs text-headColor">
+                        Sold by
+                      </span>
+                      <a className="font-bold text-sm text-main cursor-pointer underline decoration-main">
+                        {product.companyName}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                <div className="flex flex-col items-end gap-2">
+                  <div className="flex gap-2 items-center">
+                    <p className="font-semibold text-sm text-blackTitle">
+                      {product.rating} Star Rating
+                    </p>
+                    <Rate allowHalf defaultValue={product.rating} disabled />
+                  </div>
+                  <p className="text-xs font-normal text-gray3">
+                    ({product.ratingCount} User feedback)
+                  </p>
+                </div>
+              </div>
+              <StoreInfo />
+              <PaymentMethods />
+            </div>
           </div>
+          {/* bottom  */}
+          <VariationList
+            variations={product.quantityAndPrice}
+            onVariationClick={(qunatityAndPriceObject) =>
+              setSelectedVariation(qunatityAndPriceObject)
+            }
+            selectedVariationName={selectedVariation.groupName}
+          />
         </div>
-        {/* bottom  */}
-        <VariationList
-          variations={product.quantityAndPrice}
-          onVariationClick={(qunatityAndPriceObject) =>
-            setSelectedVariation(qunatityAndPriceObject)
-          }
-          selectedVariationName={selectedVariation.groupName}
+      </div>
+
+      <div className="flex flex-col md:flex-row items-center justify-center w-full gap-5">
+        <Overview description={product.productDescription} />
+        <Specifications
+          specifications={product.productProperties}
+          selectedVariation={selectedVariation}
         />
       </div>
     </div>

@@ -6,6 +6,7 @@ import BirthdayInput from "./BirthdayInput";
 import NationalityDropdown from "./Nationality";
 import { useDispatch, useSelector } from "react-redux";
 import { getChangedFields } from "@/utils/getUpdatedFields";
+import dayjs from "dayjs";
 import OTPPopup from "./OTPPopup";
 import {
   validateEmail,
@@ -22,14 +23,23 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { sendEmailOtp, updateProfile } from "@/services/profile";
 import { updateUser } from "@/redux/authSlice";
 import showPopup from "../shared/ShowPopup";
+import { useProfile } from "@/hooks/userProfile";
+import {
+  updatePhoneNumber,
+  verifyPhoneNumberUpdate,
+} from "@/services/profile/update-phone";
+import { updateEmail, verifyEmailOtp } from "@/services/profile/email";
+import EmailPopup from "./EmailPopup";
 
 const PersonalInfo = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const { profile, loading, refetchProfile } = useProfile();
   const [showOTPPopup, setShowOTPPopup] = useState(false);
-  const [resendTimer, setResendTimer] = useState(0);
   const { userProfileData } = useSelector((state: RootState) => state.profile);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [showEmailOTPPopup, setEmailShowOTPPopup] = useState(false);
+  const [showPhoneOTPPopup, setPhoneShowOTPPopup] = useState(false);
+  const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [formData, setFormData] = useState<Partial<UpdateProfile>>({
     profilePicture: "",
     firstName: "",
@@ -39,6 +49,8 @@ const PersonalInfo = () => {
     dateOfBirth: "",
     nationality: "",
   });
+  const [resendTimer, setResendTimer] = useState(60);
+  const [startCountdown, setStartCountdown] = useState(false);
 
   useEffect(() => {
     if (userProfileData) {
@@ -54,153 +66,218 @@ const PersonalInfo = () => {
     }
   }, [userProfileData]);
 
+  const emailStatus =
+    userProfileData?.email === null || userProfileData?.email === undefined
+      ? "Add Email"
+      : userProfileData?.isEmailVerified === false
+        ? "Verify"
+        : "update";
+
   const handleFieldChange = (field: string, value: string) => {
     setFormData({
       ...formData,
       [field]: value,
     });
   };
-
-  const handlePictureChange = (url: string) => {
-    setFormData((prev) => ({ ...prev, profilePicture: url }));
+  const handlePictureChange = async (url: string) => {
+    if (!url) return;
+    await updateProfile({
+      formData: { profilePicture: url },
+      onSuccess: (res) => {
+        showPopup({
+          text: res.message || "Profile updated successfully!",
+          type: "success",
+        });
+        refetchProfile;
+      },
+      onError: (err) => {
+        toast.error(err.description);
+      },
+    });
   };
 
-  const handleDateOfBirthChange = (value: string) => {
+  const handleUpdateFieldName = async (fieldName: string, value: string) => {
+    await updateProfile({
+      formData: { [fieldName]: value },
+      onSuccess: (res) => {
+        showPopup({
+          text: res.message || "Profile updated successfully!",
+          type: "success",
+        });
+        refetchProfile();
+      },
+      onError: (err) => {
+        toast.error(err.description);
+      },
+    });
+  };
+
+  const handleDateOfBirthChange = async (value: string) => {
     try {
       const trimmedValue = value.trim();
       const date = new Date(trimmedValue);
       if (isNaN(date.getTime())) {
         throw new Error("Invalid date");
       }
-      const isoString = date.toISOString();
+
+      const localISOString = dayjs(date).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+
       setFormData({
         ...formData,
-        dateOfBirth: isoString,
+        dateOfBirth: localISOString,
+      });
+
+      await updateProfile({
+        formData: { dateOfBirth: localISOString },
+        onSuccess: (res) => {
+          showPopup({
+            text: res.message || "Date of birth updated successfully!",
+            type: "success",
+          });
+          refetchProfile();
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
       });
     } catch (error) {
-      toast.error("Invalid date format");
+      toast.error((error as Error).message || "An unexpected error occurred");
     }
   };
 
-  const changedData =
-    userProfileData && getChangedFields(userProfileData, formData);
-  let hasChanges = userProfileData && Object.keys(changedData).length > 0;
-
-  const handleUpdate = async () => {
-    const updatedData = getChangedFields(userProfileData, formData);
-    const fNameError = validateName(formData.firstName || "", "First Name");
-    const lNameError = validateName(formData.lastName || "", "Last Name");
-    const mNameError = validateName(formData.middleName || "", "Middle Name");
-    const emailError = validateEmail(formData.email || "");
-
-    if (fNameError.length > 0) {
-      toast.error(fNameError);
-      return;
-    }
-    if (lNameError.length > 0) {
-      toast.error(lNameError);
-      return;
-    }
-    if (mNameError.length > 0) {
-      toast.error(mNameError);
-      return;
-    }
-    if ("nationality" in updatedData) {
-      const nationalityErr = validateTitle(
-        formData.nationality || "",
-        "Nationality",
-      );
-      if (nationalityErr.length > 0) {
-        toast.error(nationalityErr);
-        return;
-      }
-    }
-
-    if ("email" in updatedData) {
-      if (emailError.length > 0) {
-        toast.error(emailError);
-        return;
-      }
-      if (formData.email && userProfileData?._id) {
-        setLoading(true);
-        await sendEmailOtp({
-          email: formData.email,
-          id: userProfileData?._id,
-          onSuccess: (data) => {
-            toast.success("OTP sent successfully!");
-            setShowOTPPopup(true);
-            setLoading(false);
-          },
-          onError: (err) => {
-            toast.error(err.description);
-            setLoading(false);
-          },
-        });
-        // Stop further execution until OTP is verified
-        return;
-      }
-    }
-
-    // If no email update, directly dispatch profile update
-    setLoading(true);
+  const handleUpdateNationality = async (value: string) => {
+    setFormData({
+      ...formData,
+      nationality: value,
+    });
     await updateProfile({
-      formData: updatedData,
-      onSuccess: (data) => {
-        showPopup({ text: "Profile updated successfully!", type: "success" });
-        dispatch(updateUser(updatedData));
-        // Update localStorage manually
-        const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-        if (storedUser) {
-          const updatedUser = { ...storedUser, ...updatedData };
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-        }
-
-        setLoading(false);
-        setShowOTPPopup(false);
-        router.back();
+      formData: { nationality: value },
+      onSuccess: (res) => {
+        showPopup({
+          text: res.message || "Profile updated successfully!",
+          type: "success",
+        });
+        refetchProfile();
       },
       onError: (err) => {
         toast.error(err.description);
-        setLoading(false);
       },
     });
   };
 
-  const handleOtpEntered = async (otp: string) => {
-    const updatedData = getChangedFields(userProfileData, formData);
-    updatedData.otp = otp;
-    setLoading(true);
-    await updateProfile({
-      formData: updatedData,
-      onSuccess: (data) => {
-        showPopup({ text: "Profile updated successfully!", type: "success" });
-        dispatch(updateUser(updatedData));
-        //Update localStorage manually
-        const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-        if (storedUser) {
-          const updatedUser = { ...storedUser, ...updatedData };
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-        }
+  const handleUpdatePhoneNumber = async (value: string) => {
+    setFormData({
+      ...formData,
+      phoneNumber: value,
+    });
 
-        setLoading(false);
-        setShowOTPPopup(false);
+    if (profile) {
+      await updatePhoneNumber({
+        formData: {
+          id: profile?._id,
+          currentPhoneNumber: profile?.phoneNumber,
+          newPhoneNumber: value,
+          role: "SELLER",
+        },
+        onSuccess: (res) => {
+          toast.success(
+            res.message ||
+              "Phone number updated successfully. Please verify your new phone number and login again",
+          );
+          setPhoneShowOTPPopup(true);
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
+      });
+    }
+  };
+
+  const handleVerfiyPhoneOTP = async (otp: string) => {
+    await verifyPhoneNumberUpdate({
+      phoneNumber: formData?.phoneNumber || "",
+      role: "SELLER",
+      code: otp,
+      onSuccess: (res) => {
+        showPopup({
+          text: res.message || "Phone number updated successfully",
+          type: "success",
+        });
+        setPhoneShowOTPPopup(false);
       },
-      onError: (err) => {
-        toast.error(err.description);
-        setLoading(false);
+      onError: (e) => {
+        showPopup({
+          text: e.description || "failed to verify otp",
+          type: "failed",
+        });
+      },
+    });
+  };
+
+  const handleUpdateEmail = async (value: string) => {
+    // const emailError = validateEmail(formData.email || "");
+    // if (emailError.length > 0) {
+    //   toast.error(emailError);
+    //   return;
+    // }
+
+    setFormData({
+      ...formData,
+      email: value,
+    });
+
+    if (profile) {
+      await updateEmail({
+        formData: {
+          id: profile?._id,
+          ...(profile.email && { currentEmail: profile?.email }),
+          newEmail: value,
+          role: "SELLER",
+        },
+        onSuccess: (res) => {
+          setEmailShowOTPPopup(false);
+          toast.success(res.message || "OTP has been sent to your email");
+          setEmailShowOTPPopup(true);
+          setStartCountdown(true);
+        },
+        onError: (err) => {
+          toast.error(err.description);
+        },
+      });
+    }
+  };
+
+  const handleVerfiyEmailOTP = async (otp: string) => {
+    await verifyEmailOtp({
+      email: formData?.email || "",
+      id: profile?._id || "",
+      code: otp,
+      onSuccess: (res) => {
+        showPopup({
+          text: res.message || "Email updated successfully",
+          type: "success",
+        });
+        setEmailShowOTPPopup(false);
+        localStorage.removeItem("verificationEmail");
+      },
+      onError: (e) => {
+        showPopup({
+          text: e.description || "failed to verify otp",
+          type: "failed",
+        });
       },
     });
   };
 
   const handleResend = async () => {
-    setResendTimer(20); // reset timer
-    if (formData.email && userProfileData?._id) {
+    setResendTimer(60); // reset timer
+    if (formData.email && profile?._id) {
       await sendEmailOtp({
         email: formData.email,
-        id: userProfileData?._id,
-        onSuccess: (data) => {
+        id: profile?._id,
+        onSuccess: (res) => {
           toast.success("OTP sent successfully!");
-          setShowOTPPopup(true);
+          // setEmailShowOTPPopup(true);
         },
         onError: (err) => {
           toast.error(err.description);
@@ -235,46 +312,61 @@ const PersonalInfo = () => {
         <div className="w-full h-[0.5px] bg-main"></div>
       </div>
 
-      <div className="flex flex-col gap-7 w-full">
+      <div className="flex w-full flex-col gap-7">
         <div className="flex items-center gap-6">
-          <div className="flex flex-col items-start gap-2 flex-1">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="First name" />
             <EditableInput
               text={formData.firstName || ""}
               setText={(value) => handleFieldChange("firstName", value)}
+              handleUpdate={(val) => handleUpdateFieldName("firstName", val)}
             />
           </div>
-          <div className="flex flex-col items-start gap-2 flex-1">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="Middle name" />
             <EditableInput
               text={formData.middleName || ""}
               setText={(value) => handleFieldChange("middleName", value)}
+              handleUpdate={(val) => handleUpdateFieldName("middleName", val)}
             />
           </div>
-          <div className="flex flex-col items-start gap-2 flex-1">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="Last name" />
             <EditableInput
               text={formData.lastName || ""}
               setText={(value) => handleFieldChange("lastName", value)}
+              handleUpdate={(val) => handleUpdateFieldName("lastName", val)}
             />
           </div>
         </div>
-        <div className="flex items-center gap-6 w-full">
-          <div className="flex flex-col items-start gap-2 flex-1">
+        <div className="flex w-full items-center gap-6">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="Phone number" />
             <EditableInput
-              text={userProfileData?.phoneNumber || ""}
-              noEdit={true}
+              text={formData.phoneNumber || ""}
+              //TODO:: show edit after confirmation from team
+              handleUpdate={(val) => handleUpdatePhoneNumber(val)}
+              noEdit
             />
           </div>
-          <div className="flex flex-col items-start gap-2 flex-1">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="Email" />
             <EditableInput
               text={formData.email || ""}
               setText={(value) => handleFieldChange("email", value)}
+              isEmail
+              emailStatus={emailStatus}
+              // handleUpdate={handleUpdateEmail}
+              onEmailFieldClicked={() => {
+                if (emailStatus === "Verify") {
+                  handleUpdateEmail(profile?.email || "");
+                } else {
+                  setShowEmailPopup(true);
+                }
+              }}
             />
           </div>
-          <div className="flex flex-col items-start gap-2 flex-1">
+          <div className="flex flex-1 flex-col items-start gap-2">
             <Label label="Birthday" />
             <BirthdayInput
               birthDate={formData.dateOfBirth || ""}
@@ -284,28 +376,27 @@ const PersonalInfo = () => {
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex flex-col items-start gap-2 w-1/3">
+          <div className="flex w-1/3 flex-col items-start gap-2">
             <Label label="Nationality" />
             <NationalityDropdown
               value={formData.nationality || ""}
-              onChange={(value) => handleFieldChange("nationality", value)}
+              onChange={(value) => handleUpdateNationality(value)}
             />
           </div>
-          <CustomButton
-            className="w-[177px] py-3 uppercase"
-            borderRadius="0"
-            onClick={handleUpdate}
-            title="Update profile"
-            disabled={!hasChanges || loading}
-          />
         </div>
       </div>
+      <EmailPopup
+        isOpen={showEmailPopup}
+        onClose={() => setShowEmailPopup(false)}
+        onSubmit={handleUpdateEmail}
+      />
 
       <OTPPopup
-        isOpen={showOTPPopup}
-        onClose={() => setShowOTPPopup(false)}
-        onOtpEntered={handleOtpEntered}
-        email={formData.email || ""}
+        title="Verify E-mail Address"
+        isOpen={showEmailOTPPopup}
+        onClose={() => setEmailShowOTPPopup(false)}
+        onOtpEntered={handleVerfiyEmailOTP}
+        text={formData.email || ""}
         onResend={handleResend}
         resendTimer={resendTimer}
       />

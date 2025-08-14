@@ -46,13 +46,11 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           </span>
         </Tag>
 
-        {/* {daysLeft(endDate ?? "") > 0 && ( */}
         <Tag color="#700C18" className="!m-0">
           <span className="font-[Public-Sans] text-[13px] font-bold leading-[20px] tracking-[0%] text-white">
             {timeLeft}
           </span>
         </Tag>
-        {/* )} */}
       </div>
 
       {/* Product Image */}

@@ -1,12 +1,11 @@
-import { RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
-import TitleDesc from "../shared/TitleDesc";
-import CustomButton from "../shared/CustomButton";
-import { svgs } from "../icons/svgs";
-import DizzlyBalanceCard from "./payment/DizzlyBalanceCard";
+import { svgs } from "@/components/icons/svgs";
+import CustomButton from "@/components/shared/CustomButton";
+import TitleDesc from "@/components/shared/TitleDesc";
+import { useProfile } from "@/hooks/userProfile";
+import DizzlyBalanceCard from "./DizzlyBalanceCard";
 
 const PaymentMethods = () => {
-  const { userProfileData } = useSelector((state: RootState) => state.profile);
+  const { profile } = useProfile();
   return (
     <div className="flex flex-col gap-3 p-6">
       <div className="flex items-center justify-between">
@@ -33,10 +32,10 @@ const PaymentMethods = () => {
       </div>
 
       <div className="flex flex-col gap-3">
-        {userProfileData && (
+        {profile && (
           <DizzlyBalanceCard
-            balance={userProfileData?.walletMoney || 0}
-            available={userProfileData?.walletMoney || 0}
+            balance={profile?.walletMoney || 0}
+            available={profile?.walletMoney || 0}
           />
         )}
       </div>

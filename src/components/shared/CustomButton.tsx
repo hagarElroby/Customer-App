@@ -24,6 +24,8 @@ interface CustomButtonProps {
   mode?: "light" | "dark";
   size?: "small" | "middle" | "large";
   shape?: "circle" | "round";
+  fontSize?: string;
+  fontWight?: string;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -43,6 +45,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   shape = "round",
   bgColor = "#700C18",
   color = "#FFFFFF",
+  fontWight = "400",
+  fontSize = "14px",
   borderColor = "#700C18",
   hoverBgColor = "#FFFFFF",
   hoverColor = "#700C18",
@@ -82,6 +86,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
               : mode === "light"
                 ? "#700c18"
                 : "#FFFFFF"),
+          fontWeight: fontWight,
+          fontSize: fontSize,
           // Pass CSS variables to be used in custom-btn class
           "--hover-bg-color": hoverBgColor,
           "--hover-color": hoverColor,

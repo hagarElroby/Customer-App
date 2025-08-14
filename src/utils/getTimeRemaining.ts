@@ -6,7 +6,7 @@ dayjs.extend(duration);
 dayjs.extend(utc);
 
 export const getTimeRemaining = (endDate: string): string => {
-  const now = dayjs.utc();
+  const now = dayjs.utc().toISOString();
   const end = dayjs.utc(endDate);
 
   const diffMs = end.diff(now);
@@ -15,7 +15,7 @@ export const getTimeRemaining = (endDate: string): string => {
 
   const dur = dayjs.duration(diffMs);
 
-  const days = dur.days();
+  const days = Math.floor(dur.asDays());
   const hours = dur.hours();
   const minutes = dur.minutes();
   const seconds = dur.seconds();

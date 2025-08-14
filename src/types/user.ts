@@ -7,7 +7,7 @@ export type AddressType = "HOME" | "WORK";
 
 export interface Address {
   country?: string;
-  zipCode?: number;
+  zipCode?: string;
   state?: string;
   city?: string;
   streetAddress?: string;
@@ -64,14 +64,14 @@ export interface UpdateProfile {
   lastName: string;
   email?: string;
   profilePicture?: string;
-  siteLocationUrl?: string;
-  licenseUrl?: string;
-  nidUrl?: string;
   otp: string;
   companyName?: string;
   dateOfBirth?: string;
   nationality?: string;
   userStatus?: VendorStatus;
+  phoneNumber?: string;
+  formalPicture?: string;
+  nidUrl?: string;
 }
 
 export type UserLoginResponse = {
@@ -93,4 +93,25 @@ export type UserLoginResponse = {
   siteLocationUrl?: string;
   jwtRefreshToken: string;
   jwtToken: string;
+};
+
+export type BodyUpdateProfile = {
+  status: number;
+  message: string;
+  jwtToken: string;
+  jwtRefreshToken: string;
+};
+
+export type updatePhoneParams = {
+  id: string;
+  currentPhoneNumber: string;
+  newPhoneNumber: string;
+  role: string;
+};
+
+export type updateEmailParams = {
+  id: string;
+  currentEmail: string;
+  newEmail: string;
+  role: string;
 };

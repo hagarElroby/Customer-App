@@ -43,7 +43,7 @@ const Page = () => {
       {!loading && auctionData && (
         <div className="flex flex-col gap-10 w-full p-9">
           <TopSectionAuction auction={auctionData} />
-          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-5">
+          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-5">
             <Overview description={auctionData.productDescription} />
             <Specifications specifications={auctionData.productProperties} />
           </div>

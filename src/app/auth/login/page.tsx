@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/auth/Button";
 import InputField from "@/components/auth/InputField";
 import CheckboxField from "@/components/auth/CheckboxField";
 import TitleDesc from "@/components/auth/TitleDesc";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { toast } from "sonner";
 import FormContainer from "@/components/auth/FormContainer";
 
@@ -15,8 +15,8 @@ import PhoneInput from "@/components/shared/PhoneInput";
 import { validatePassword, validatePhoneNumber } from "@/utils/validationUtils";
 import { login } from "@/services/auth/login";
 import { setUser } from "@/redux/authSlice";
-import { UserLoginResponse } from "@/types/user";
 import withAuthRedirect from "@/utils/withAuthRedirect";
+import { sendFCMToken } from "@/utils/sendFCMToken";
 
 const Page = () => {
   const router = useRouter();
@@ -79,12 +79,13 @@ const Page = () => {
         phoneNumber: formData.phoneNumber,
         password: formData.password,
         role: "USER",
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           if (typeof window !== "undefined") {
             localStorage.setItem("user", JSON.stringify(data));
             localStorage.setItem("jwtRefreshToken", data.jwtRefreshToken);
             localStorage.setItem("jwtToken", data.jwtToken);
             dispatch(setUser(data));
+            await sendFCMToken();
           }
           setLoading(false);
           toast.success("Login Successful");

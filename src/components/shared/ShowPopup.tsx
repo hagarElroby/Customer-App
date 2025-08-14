@@ -6,9 +6,12 @@ interface ShowPopupProps {
   showIcon?: boolean;
   isQuestion?: boolean;
   confirmButtonText?: string;
+  titleError?: string;
   cancelButtonText?: string;
   onConfirm?: () => void;
   onCancel?: () => void;
+  duration?: number;
+  onTimeout?: () => void;
 }
 
 const showPopup = ({
@@ -16,10 +19,13 @@ const showPopup = ({
   type,
   showIcon = true,
   isQuestion = false,
-  // confirmButtonText = 'Continue',
+  confirmButtonText = "Continue",
   cancelButtonText = "Cancel",
+  titleError = "ERROR!",
   onConfirm,
   onCancel,
+  duration,
+  onTimeout,
 }: ShowPopupProps) => {
   let iconSrc = "";
   let title = "";
@@ -34,21 +40,21 @@ const showPopup = ({
       title = "SUCCESS!";
       titleColor = "#008000";
       buttonColor = "#20AE5C";
-      buttonText = "Continue";
+      buttonText = confirmButtonText || "Continue";
       break;
     case "failed":
       iconSrc = "/images/failedIcon.svg";
-      title = "ERROR!";
+      title = titleError;
       titleColor = "#700C18";
       buttonColor = "#700C18";
-      buttonText = "Try Again";
+      buttonText = confirmButtonText || "Try Again";
       break;
     case "info":
       iconSrc = "/images/infoIcon.svg";
       title = "INFO";
       titleColor = "#0056D2";
       buttonColor = "#0056D2";
-      buttonText = "Okay";
+      buttonText = confirmButtonText || "Okay";
       break;
     default:
       throw new Error("Invalid popup type");
@@ -70,9 +76,13 @@ const showPopup = ({
     `,
     background: "#FFF",
     confirmButtonColor: buttonColor,
+    cancelButtonColor: "#D0D5DD",
     showCancelButton: isQuestion,
     confirmButtonText: buttonText,
+    cancelButtonText: cancelButtonText,
     showCloseButton: true,
+    timer: duration ?? undefined,
+    timerProgressBar: !!duration,
     customClass: {
       popup: "custom-popup",
       closeButton: `custom-close-button ${type}`,
@@ -81,8 +91,15 @@ const showPopup = ({
   }).then((result) => {
     if (result.isConfirmed && onConfirm) {
       onConfirm();
-    } else if (result.dismiss === Swal.DismissReason.cancel && onCancel) {
+    } else if (
+      (result.dismiss === Swal.DismissReason.cancel ||
+        result.dismiss === Swal.DismissReason.backdrop ||
+        result.dismiss === Swal.DismissReason.close) &&
+      onCancel
+    ) {
       onCancel();
+    } else if (result.dismiss === Swal.DismissReason.timer && onTimeout) {
+      onTimeout();
     }
   });
 };

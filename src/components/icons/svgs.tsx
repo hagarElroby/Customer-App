@@ -1092,6 +1092,80 @@ export const svgs: Record<string, JSX.Element> = {
       />
     </svg>
   ),
+  up: (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Vertical line from bottom to top */}
+      <path
+        d="M12 20.25L12 3.75"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Arrowhead pointing up */}
+      <path
+        d="M5.25 10.5L12 3.75L18.75 10.5"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  left: (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20.25 12L3.75 12"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.5 18.75L3.75 12L10.5 5.25"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
+  right: (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3.75 12L20.25 12"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M13.5 5.25L20.25 12L13.5 18.75"
+        stroke="#700C18"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  ),
   card: (
     <svg
       width="25"

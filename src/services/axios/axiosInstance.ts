@@ -27,7 +27,6 @@ axiosInstance.interceptors.request.use(
       !["/login", "/signup", "/users/refreshToken"].includes(request.url) &&
       jwtToken
     ) {
-      console.log("jwtToken", jwtToken);
       request.headers["Authorization"] = `Bearer ${jwtToken}`;
     }
     return request;
