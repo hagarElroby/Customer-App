@@ -10,7 +10,7 @@ type Props = {
 
 const InfoCardWithBtn = ({ title, desc, onClick }: Props) => {
   return (
-    <div className="flex-[1] flex flex-col gap-12 items-start w-[536px] h-[453px] bg-white rounded-md pt-[84px] px-12">
+    <div className="flex-[1] max-w-[536px] flex flex-col gap-12 items-start w-[536px] h-[453px] bg-white rounded-md pt-[84px] px-12">
       <span className="uppercase text-[10px] font-bold text-[#717171] leading-3">
         Today’s
       </span>

@@ -25,7 +25,6 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
   const { carts } = useSelector((state: RootState) => state.cart);
   const { whishlistItems } = useSelector((state: RootState) => state.whishlist);
   const cartItemsCount = carts?.length ?? 0;
-  console.log({ carts });
   const whishlistItemsCount = whishlistItems?.length ?? 0;
 
   const handleClickToLogin = () => {
@@ -58,7 +57,7 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
 
   return (
     <div className="flex-1 flex items-center justify-end gap-3 lg:gap-4">
-      <div className="hidden md:flex items-center justify-center gap-2 bg-[#858D9D63] rounded-[39px] p-3 w-[85px] h-[38px]">
+      <div className="hidden md:flex items-center justify-between gap-2 bg-[#858D9D63] rounded-[39px] p-[5px] w-[85px] h-[38px]">
         <span>{svgs.langIcon}</span>
         <span className="text-base font-bold text-[#1C1818]">EN</span>
       </div>

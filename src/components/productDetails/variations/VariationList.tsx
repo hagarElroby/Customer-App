@@ -1,6 +1,7 @@
 import { Variation, type QuantityAndPrice } from "@/types/product";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import VariationItem from "./VariationItem";
+import { svgs } from "@/components/icons/svgs";
 
 const VariationList = ({
   variations,
@@ -45,29 +46,24 @@ const VariationList = ({
   };
 
   return (
-    <div className="bg-white w-[250px] sm:w-[500px] md:w-[700px] lg:w-[56vw] max-w-[1000px] rounded-3xl p-6 flex flex-col gap-3">
+    <div className="bg-white w-[250px] sm:w-[500px] md:w-[700px] lg:w-[56vw] max-w-[850px] rounded-3xl p-6 flex flex-col gap-3">
       <h3 className="text-xl font-normal text-headColor">Item options</h3>
-      <div className="flex items-center gap-2 w-full">
+      <div className="relative flex items-center justify-between w-full">
         {canScrollLeft && (
           <button
             onClick={() => scrollThumbnails("left")}
-            className={`cursor-pointer py-7 px-8 bg-custom-gradientHomeR flex items-center justify-center"}`}
+            className="absolute left-0 z-10 h-full cursor-pointer w-20 
+                     bg-[linear-gradient(to_left,#FFFFFF00,#FFFFFFED,#FFFFFF)]
+                     flex items-center justify-start px-2"
           >
-            <svg width="11" height="20" viewBox="0 0 11 20" fill="none">
-              <path
-                d="M10 1L1 10L10 19"
-                stroke="#700C18"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <span>{svgs.left}</span>
           </button>
         )}
+
         <div
           ref={thumbnailRef}
           style={{ direction: "ltr" }}
-          className="flex gap-2 w-[90vw] mx-auto overflow-x-auto h-full scrollbar-hide px-2"
+          className="flex items-center justify-center gap-2 w-[90vw] mx-auto overflow-x-auto h-full scrollbar-hide px-2"
         >
           {variations.map((variation) => (
             <VariationItem
@@ -78,20 +74,15 @@ const VariationList = ({
             />
           ))}
         </div>
+
         {canScrollRight && (
           <button
             onClick={() => scrollThumbnails("right")}
-            className={`cursor-pointer py-7 px-8 bg-custom-gradientHomeL flex items-center justify-center`}
+            className="absolute right-0 z-10 h-full cursor-pointer w-20 
+                     bg-[linear-gradient(to_right,#FFFFFF00,#FFFFFFED,#FFFFFF)]
+                     flex items-center justify-end px-2"
           >
-            <svg width="11" height="20" viewBox="0 0 11 20" fill="none">
-              <path
-                d="M1 1L10 10L1 19"
-                stroke="#700C18"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <span>{svgs.right}</span>
           </button>
         )}
       </div>

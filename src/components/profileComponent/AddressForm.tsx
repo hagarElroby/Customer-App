@@ -56,7 +56,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
     apartment: initialData?.apartment || "",
     zipCode:
       initialData?.zipCode !== undefined
-        ? Number(initialData.zipCode)
+        ? String(initialData.zipCode)
         : undefined,
     type: initialData?.type || "HOME",
     isDefault: initialData?.isDefault || false,
@@ -106,7 +106,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
             state: state || "",
             city: city || "",
             streetAddress: street || "",
-            zipCode: zip ? Number(zip) : undefined,
+            zipCode: zip ? String(zip) : undefined,
           }));
         }
       });

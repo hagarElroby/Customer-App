@@ -47,7 +47,6 @@ const RentalSection = () => {
       ) : (
         <div className="flex flex-col gap-3">
           <div className="flex gap-3 w-full">
-            {/* //TODO:: change to rental data  */}
             <RentalCardInfo />
             <div className="flex-[1.6] flex gap-3 items-center">
               {rentalsList.slice(0, 3).map((rental) => (

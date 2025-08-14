@@ -1,6 +1,11 @@
 import { BaseResponse } from "@/types/baseResponse";
 import { ResponseError } from "@/types/error-types";
-import { Address, ProfileModel, UpdateProfile } from "@/types/user";
+import {
+  Address,
+  BodyUpdateProfile,
+  ProfileModel,
+  UpdateProfile,
+} from "@/types/user";
 import axiosInstance from "./axios/axiosInstance";
 export const getMyProfile = async ({
   onSuccess,
@@ -36,12 +41,12 @@ export const updateProfile = async ({
   onSuccess,
   onError,
 }: {
-  formData: UpdateProfile;
+  formData: Partial<UpdateProfile>;
   onError?: (error: ResponseError) => void;
-  onSuccess?: (data: string) => void;
+  onSuccess?: (data: BodyUpdateProfile) => void;
 }) => {
   try {
-    const response = await axiosInstance.patch<BaseResponse<string>>(
+    const response = await axiosInstance.patch<BaseResponse<BodyUpdateProfile>>(
       "/users/profileUpdate",
       formData,
     );

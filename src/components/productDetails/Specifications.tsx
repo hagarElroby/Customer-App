@@ -1,11 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { ProductProperty } from "@/types/product";
+import { ProductProperty, QuantityAndPrice } from "@/types/product";
+import { space } from "postcss/lib/list";
 
 interface SpecificationsProps {
   specifications: ProductProperty[];
+  selectedVariation?: QuantityAndPrice;
 }
 
-const Specifications: React.FC<SpecificationsProps> = ({ specifications }) => {
+const Specifications: React.FC<SpecificationsProps> = ({
+  specifications,
+  selectedVariation,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [rowData, setRowData] = useState<{ label: string; value: string }[]>(
@@ -24,15 +29,26 @@ const Specifications: React.FC<SpecificationsProps> = ({ specifications }) => {
   useEffect(() => {
     const rowsData: { label: string; value: string }[] = [];
     specifications.forEach((spec) => {
-      spec.propertyValue.forEach((value) => {
+      const variationMatch = selectedVariation?.variation.find(
+        (p) => p.propertyName === spec.propertyName,
+      );
+
+      if (variationMatch) {
         rowsData.push({
           label: spec.propertyName,
-          value: value.valueName,
+          value: variationMatch.propertyValueName,
         });
-      });
+      } else {
+        spec.propertyValue.forEach((value) => {
+          rowsData.push({
+            label: spec.propertyName,
+            value: value.valueName,
+          });
+        });
+      }
     });
     setRowData(rowsData);
-  }, []);
+  }, [specifications, selectedVariation]);
 
   return (
     <div

@@ -26,7 +26,7 @@ const Page = () => {
     getOneRental({
       rentalId,
       onSuccess: (data) => {
-        setRentalData(data[0]);
+        setRentalData(data);
         setLoading(false);
       },
       onError: (err) => {
@@ -42,7 +42,7 @@ const Page = () => {
       {!loading && rentalData?.rentalDetails && (
         <div className="flex flex-col gap-10 w-full p-9">
           <TopSectionRental rental={rentalData} />
-          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-5">
+          <div className="flex flex-col md:flex-row items-center justify-center w-full gap-5">
             <Overview description={rentalData.productDescription} />
             <Specifications specifications={rentalData.productProperties} />
           </div>

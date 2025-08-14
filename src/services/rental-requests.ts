@@ -9,7 +9,7 @@ import {
 import axiosInstance from "./axios/axiosInstance";
 
 //TODO:: Check response type for each api
-export const createRentalRequests = async ({
+export const createRentalRequest = async ({
   renter,
   rental,
   seller,
@@ -19,11 +19,14 @@ export const createRentalRequests = async ({
   onSuccess,
 }: CreateRentalRequest & {
   onError?: (error: ResponseError) => void;
-  onSuccess?: (data: BodyResponse<RentalListObject>) => void;
+  onSuccess?: (data: { message: string; data: string }) => void;
 }) => {
   try {
     const response = await axiosInstance.post<
-      BaseResponse<BodyResponse<RentalListObject>>
+      BaseResponse<{
+        message: string;
+        data: string;
+      }>
     >("/rental-request/user/create", {
       rental,
       renter,

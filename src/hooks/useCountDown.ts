@@ -6,18 +6,17 @@ export const useCountdown = (endDate: string) => {
 
   useEffect(() => {
     if (!endDate) return;
-    let interval: NodeJS.Timeout;
+
     const update = () => {
       const remaining = getTimeRemaining(endDate);
       setTimeLeft(remaining);
-      if (remaining === "Time's up" && interval) {
+      if (remaining === "Time's up") {
         clearInterval(interval);
       }
     };
 
-    update(); // Set initial value
-
-    interval = setInterval(update, 1000); // Update every second
+    const interval = setInterval(update, 1000);
+    update();
 
     return () => clearInterval(interval);
   }, [endDate]);
