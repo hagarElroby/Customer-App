@@ -285,7 +285,9 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
               <HrLine className="my-2" />
               <div className="flex flex-col gap-2 items-start">
                 <div className="flex flex-wrap items-center w-full gap-3">
-                  <TitleAndValue isGray title="Was" value={`${was}`} />
+                  {now !== was && (
+                    <TitleAndValue isGray title="Was" value={`IQD ${was}`} />
+                  )}
                   <div className="w-[90px] h-6 rounded-[2px] py-[2px] px-1 bg-[#FFEBEB] flex items-center justify-center">
                     <span className="font-medium text-sm text-main">
                       {formatToTwoDecimals(product?.discount?.percentage)}% OFF
@@ -293,12 +295,14 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center w-full gap-3">
-                  <TitleAndValue isRed title="Now" value={`${now}`} />
+                  <TitleAndValue isRed title="Now" value={`IQD ${now}`} />
                   {/* <p className="text-sm font-normal text-[#7E859B]">
                   Inclusive of VAT
                 </p> */}
                 </div>
-                <TitleAndValue title="Saving" value={`${saving}`} />
+                {now !== was && (
+                  <TitleAndValue title="Saving" value={`${saving}`} />
+                )}
               </div>
             </div>
             {/* right  */}

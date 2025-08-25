@@ -63,7 +63,7 @@ const VariationList = ({
         <div
           ref={thumbnailRef}
           style={{ direction: "ltr" }}
-          className="flex items-center justify-center gap-2 w-[90vw] mx-auto overflow-x-auto h-full scrollbar-hide px-2"
+          className="flex items-center justify-start gap-2 w-full overflow-x-auto h-full scrollbar-hide px-2 min-w-0"
         >
           {variations.map((variation) => (
             <VariationItem

@@ -59,6 +59,7 @@ const PersonalInfo = () => {
         firstName: userProfileData.firstName,
         middleName: userProfileData?.middleName,
         lastName: userProfileData.lastName,
+        phoneNumber: userProfileData.phoneNumber,
         email: userProfileData?.email,
         dateOfBirth: userProfileData?.dateOfBirth,
         nationality: userProfileData?.nationality,
@@ -88,7 +89,7 @@ const PersonalInfo = () => {
           text: res.message || "Profile updated successfully!",
           type: "success",
         });
-        refetchProfile;
+        refetchProfile();
       },
       onError: (err) => {
         toast.error(err.description);

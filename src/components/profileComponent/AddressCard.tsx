@@ -31,7 +31,6 @@ const AddressCard = ({ name, address, phone }: AddressData) => {
       },
       onSuccess: async (data) => {
         showPopup({ text: data, type: "success" });
-        // Fetch updated profile data
         refetchProfile();
       },
       onError: (err) => {

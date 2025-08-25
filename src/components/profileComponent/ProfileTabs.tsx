@@ -21,7 +21,7 @@ const ProfileTabs = ({ tabs }: { tabs: string[] }) => {
   };
 
   return (
-    <div>
+    <div className="mb-40">
       <div className="flex border-b border-customBorder items-center justify-center">
         {tabs.map((tab, index) => (
           <button

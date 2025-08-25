@@ -12,6 +12,7 @@ export default function AuthLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  console.log(pathname);
   const isSignUpRoute = ["/auth/signup/"].includes(pathname);
   const isLoginRoute = ["/auth/login/", "/auth/forgot-password/"].includes(
     pathname,
@@ -22,16 +23,17 @@ export default function AuthLayout({
       ? "SIGN UP"
       : "LOGIN";
   const handleButtonClick = () => {
+    console.log(isSignUpRoute);
     if (isSignUpRoute) {
-      router.push("/auth/signup/");
-    } else if (isLoginRoute) {
       router.push("/auth/login/");
+    } else if (isLoginRoute) {
+      router.push("/auth/signup/");
     }
   };
 
   return (
-    <div className="w-full padding-auth-layout flex flex-col min-h-screen layout-container layout-background relative">
-      <header className="flex items-center justify-center md:justify-between">
+    <div className="w-full px-4 md:px-[30px] pt-4 pb-3 flex flex-col h-[100vh] layout-container layout-background relative max-w-[1620px] mx-auto overflow-y-auto">
+      <header className="flex items-center justify-center md:justify-between mb-3">
         <ResponsiveLogo onClick={() => router.push("/")} mode="DARK" />
         <HeaderButton text={buttonText} onClick={handleButtonClick} />
       </header>

@@ -17,6 +17,7 @@ import { usePagination } from "@/utils/paginationUtils";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const limit = 15;
 
@@ -28,7 +29,7 @@ const page = () => {
     (state: RootState) => state.product,
   );
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
   const file = getTempFile();
 
   const { handleNext, handlePrev, handlePageClick } = usePagination(
@@ -74,6 +75,10 @@ const page = () => {
         },
         onError: (err) => {
           setLoading(false);
+          toast.error(err.description || "Failed to fetch products");
+          dispatch(setProducts([]));
+          dispatch(setTotalPages(0));
+          dispatch(setTotalDocs(0));
         },
       });
     };
@@ -152,11 +157,13 @@ const page = () => {
   };
 
   return (
-    <main className=" pb-28 flex flex-col gap-10 w-full flex-grow bg-homeBg">
+    <main className="pb-28 flex flex-col gap-10 w-full flex-grow bg-homeBg">
       <NavigationBar />
       <BannerSlider />
-      {loading && <Loading />}
-      {!!products.length ? (
+
+      {loading ? (
+        <Loading />
+      ) : products.length > 0 ? (
         <div className="flex flex-col gap-10 px-8">
           <SearchResult
             results={products}

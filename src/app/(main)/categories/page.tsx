@@ -30,7 +30,7 @@ const CategoryPage = () => {
       await getCategories({
         isActive: true,
         isHoldSubCategory: true,
-        page: 1,
+        page: currentPage,
         limit,
         allowPagination: true,
         onSuccess: (response) => {

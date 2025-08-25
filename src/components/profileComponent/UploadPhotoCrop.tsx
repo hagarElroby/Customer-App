@@ -3,6 +3,8 @@ import { Upload } from "antd";
 import type { UploadFile } from "antd";
 import ImgCrop from "antd-img-crop";
 import { uploadFileService } from "@/services/media";
+import { toast } from "sonner";
+import { useProfile } from "@/hooks/userProfile";
 
 interface UploadPhotoCropProps {
   picture?: string;
@@ -14,7 +16,7 @@ const UploadPhotoCrop: React.FC<UploadPhotoCropProps> = ({
   onPictureChange,
 }) => {
   const [file, setFile] = useState<UploadFile | null>(null);
-
+  const { refetchProfile } = useProfile();
   useEffect(() => {
     if (picture) {
       setFile({
@@ -31,25 +33,24 @@ const UploadPhotoCrop: React.FC<UploadPhotoCropProps> = ({
     onSuccess: (url: string) => void,
     onError: (err: any) => void,
   ) => {
-    try {
-      await uploadFileService({
-        folderName: "PROFILE_PICTURE",
-        file,
-        onSuccess: (data) => {
-          const uploadedFile: UploadFile = {
-            uid: `${file.name}-${Date.now()}`,
-            name: file.name,
-            status: "done",
-            url: data.results,
-          };
-          setFile(uploadedFile);
-          onPictureChange(data.results);
-          onSuccess(data.results);
-        },
-      });
-    } catch (error) {
-      onError(error);
-    }
+    await uploadFileService({
+      folderName: "PROFILE_PICTURE",
+      file,
+      onSuccess: (data) => {
+        const uploadedFile: UploadFile = {
+          uid: `${file.name}-${Date.now()}`,
+          name: file.name,
+          status: "done",
+          url: data.results,
+        };
+        setFile(uploadedFile);
+        onPictureChange(data.results);
+        onSuccess(data.results);
+      },
+      onError: (err) => {
+        toast.error(err.description || "File upload failed");
+      },
+    });
   };
 
   const onPreview = async (file: UploadFile) => {
