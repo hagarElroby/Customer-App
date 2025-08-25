@@ -10,12 +10,16 @@ interface LayoutProps {
 
 const MainLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="w-full flex flex-col min-h-screen">
-      <GoToTheAppSection />
-      <Header />
-      <main className="flex flex-col w-full flex-grow">{children}</main>
-      <Footer />
-      <FixedFooter />
+    <div className="flex flex-col h-[100vh] w-[100vw]">
+      <div className="mx-auto w-full max-w-[1620px]">
+        <GoToTheAppSection />
+        <Header />
+      </div>
+      <div className="flex flex-grow flex-col w-full h-full overflow-y-auto  max-w-[1620px] mx-auto">
+        <main>{children}</main>
+        <Footer />
+        <FixedFooter />
+      </div>
     </div>
   );
 };

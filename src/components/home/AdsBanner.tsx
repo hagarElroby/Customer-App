@@ -71,7 +71,7 @@ const AdsBanner = () => {
   if (randomAds.length === 0 && !loading) return null;
 
   return (
-    <div className="lg:bg-white rounded-md overflow-hidden cursor-pointer">
+    <div className="lg:bg-white rounded-md overflow-hidden cursor-pointer h-fit">
       {loading && <Loading />}
       {!loading && randomAds.length > 0 && (
         <>

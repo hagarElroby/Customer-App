@@ -168,8 +168,7 @@ const CartItem: React.FC<CartProduct> = ({
 
           <div className="flex flex-col sm:flex-row gap-2">
             <p className="font-bold text-base lg:text-xl text-[#111111]">
-              IQD
-              {formatToTwoDecimals(afterDiscount)}
+              IQD {formatToTwoDecimals(afterDiscount)}
             </p>
             {!!beforeDiscount && !!discountPercentage && (
               <p className="flex items-center gap-1">

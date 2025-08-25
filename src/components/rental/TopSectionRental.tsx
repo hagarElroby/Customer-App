@@ -174,21 +174,21 @@ const TopSectionRental: React.FC<TopSectionProps> = ({ rental }) => {
             </div>
 
             <div className="bg-[#F6F6F8] flex my-2 w-full justify-center items-center gap-3 px-5 py-2 rounded-xl">
-              <div className="flex flex-col items-start gap-[5px]">
+              <div className="flex flex-col items-start gap-[5px] w-[200px]">
                 <span className="text-sm text-[#0E0E10]">DAY</span>
                 <span className="text-sm font-semibold text-[#097D47]">
                   {rental.rentalDetails?.pricePerDay || "__"} IQD
                 </span>
               </div>
               <Divider type="vertical" style={{ height: 45 }} />
-              <div className="flex flex-col items-start gap-[5px]">
+              <div className="flex flex-col items-start gap-[5px] w-[200px]">
                 <span className="text-sm text-[#0E0E10]">Week</span>
                 <span className="text-sm font-semibold text-[#097D47]">
                   {rental.rentalDetails?.pricePerMonth || "__"} IQD
                 </span>
               </div>
               <Divider type="vertical" style={{ height: 45 }} />
-              <div className="flex flex-col items-start gap-[5px]">
+              <div className="flex flex-col items-start gap-[5px] w-[200px]">
                 <span className="text-sm text-[#0E0E10]">Month</span>
                 <span className="text-sm font-semibold text-[#097D47]">
                   {rental.rentalDetails?.pricePerMonth || "__"}IQD

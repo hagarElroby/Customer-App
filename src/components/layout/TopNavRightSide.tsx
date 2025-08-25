@@ -9,16 +9,20 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { updateCartAndState } from "@/utils/cartHelpers";
 import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
+import { useProfile } from "@/hooks/userProfile";
 
-const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
+const TopNavRightSide = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-
-  //Fetch items in cart and wishlist
+  const { refetchProfile } = useProfile();
+  const { userProfileData } = useSelector((state: RootState) => state.profile);
+  const { user } = useSelector((state: RootState) => state.auth);
+  //Fetch items in cart and wishlist and profile data on page load if user is logged in
   useEffect(() => {
     if (user) {
       updateCartAndState({ dispatch });
       updateWishlistAndState({ dispatch });
+      refetchProfile();
     }
   }, [user]);
 
@@ -103,18 +107,18 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
           </div>
         )}
 
-        {user && (
+        {userProfileData && (
           <Dropdown
             menu={{ items }}
             trigger={["click"]}
             className=" hidden md:flex"
           >
             <Flex align="center" gap={8} className="cursor-pointer">
-              {user.profilePicture ? (
+              {userProfileData?.profilePicture ? (
                 <Image
                   preview={false}
                   style={{ borderRadius: "50%" }}
-                  src={user.profilePicture}
+                  src={userProfileData?.profilePicture}
                   alt="user"
                   width={40}
                   height={40}
@@ -124,8 +128,8 @@ const TopNavRightSide = ({ user }: { user: UserLoginResponse | null }) => {
               )}
               <Flex gap={2} justify="center" vertical>
                 <div className="text-[#700C18] text-[14px]">
-                  {user.role === "USER" && "Hi, "}
-                  {user?.firstName}
+                  {userProfileData?.role === "USER" && "Hi, "}
+                  {userProfileData?.firstName}
                 </div>
               </Flex>
               {svgs.downArrow}

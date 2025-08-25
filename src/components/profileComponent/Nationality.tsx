@@ -25,10 +25,8 @@ const NationalityDropdown: React.FC<NationalityDropdownProps> = ({
     <div className="mb-4 relative w-full">
       <div
         ref={dropMenuRef}
-        className="flex items-center justify-between relative gap-[2px] md:gap-1 hd:gap-[0.27vw]
-        hd:rounded-[0.55vw] py-2 px-3 h-10 xxl:h-auto
-        rounded border border-whiteBorder bg-white
-        min-w-[200px] w-full mb-1"
+        className="flex items-center justify-between relative gap-[2px] md:gap-1 py-2 px-2 h-12
+        rounded border border-whiteBorder bg-white min-w-[200px] w-full mb-1"
       >
         <input
           type="text"
@@ -51,7 +49,7 @@ const NationalityDropdown: React.FC<NationalityDropdownProps> = ({
       </div>
       {isDropdownOpen && (
         <div
-          className="absolute top-full left-0 z-10 min-w-[200px] w-full min-h-[60px] max-h-[80px] overflow-y-auto 
+          className="absolute top-full left-0 z-10 min-w-[200px] w-full h-40 overflow-y-auto 
           overflow-x-hidden bg-white border border-lightBorder rounded-lg
           flex flex-col items-start custom-scrollbar"
         >

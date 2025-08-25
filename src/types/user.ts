@@ -16,6 +16,10 @@ export interface Address {
   type?: AddressType;
   geoLocation?: GeoLocation;
   isDefault: boolean;
+  contact?: {
+    phoneNumber: string;
+    isActive?: boolean;
+  };
 }
 
 export interface IRejectionReasons {
