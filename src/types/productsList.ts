@@ -46,6 +46,14 @@ export interface SortOptions {
 }
 export type SortType = SortOptions["sort"];
 
+export type FiltersState = {
+  propertyIds: string[];
+  propertyValueIds: string[];
+  priceStartFrom?: number;
+  priceEndTo?: number;
+  rateFrom?: number;
+};
+
 export interface PriceRange {
   minPrice: number;
   maxPrice: number;

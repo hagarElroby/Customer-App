@@ -51,6 +51,10 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [isDisabled, setIsDisabled] = useState(false);
 
+  const isDiscountEnded = product.discount.endDate
+    ? new Date(product.discount.endDate) < new Date()
+    : false;
+
   useEffect(() => {
     setIsInWishlist(selectedVariation.inWishlist);
     const validQuantity = selectedVariation?.quantityInCart || 0;
@@ -285,22 +289,29 @@ const TopSection: React.FC<TopSectionProps> = ({ product }) => {
               <HrLine className="my-2" />
               <div className="flex flex-col gap-2 items-start">
                 <div className="flex flex-wrap items-center w-full gap-3">
-                  {now !== was && (
+                  {now !== was && !isDiscountEnded && (
                     <TitleAndValue isGray title="Was" value={`IQD ${was}`} />
                   )}
-                  <div className="w-[90px] h-6 rounded-[2px] py-[2px] px-1 bg-[#FFEBEB] flex items-center justify-center">
-                    <span className="font-medium text-sm text-main">
-                      {formatToTwoDecimals(product?.discount?.percentage)}% OFF
-                    </span>
-                  </div>
+                  {now !== was && !isDiscountEnded && (
+                    <div className="w-[90px] h-6 rounded-[2px] py-[2px] px-1 bg-[#FFEBEB] flex items-center justify-center">
+                      <span className="font-medium text-sm text-main">
+                        {formatToTwoDecimals(product?.discount?.percentage)}%
+                        OFF
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-wrap items-center w-full gap-3">
-                  <TitleAndValue isRed title="Now" value={`IQD ${now}`} />
+                  <TitleAndValue
+                    isRed
+                    title={now !== was && !isDiscountEnded ? "now" : "price"}
+                    value={`IQD ${now}`}
+                  />
                   {/* <p className="text-sm font-normal text-[#7E859B]">
                   Inclusive of VAT
                 </p> */}
                 </div>
-                {now !== was && (
+                {now !== was && !isDiscountEnded && (
                   <TitleAndValue title="Saving" value={`${saving}`} />
                 )}
               </div>

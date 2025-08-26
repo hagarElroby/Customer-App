@@ -40,7 +40,7 @@ const RentalCard: React.FC<RentalCardProps> = ({
         </div>
         <div className="flex items-center gap-1 overflow-clip h-6">
           <span className="text-[#2D8653] font-bold text-base">
-            IQD{pricePerDay}
+            IQD {pricePerDay}
           </span>
           <span className="text-xs text-[#717171] font-bold uppercase">
             / Day

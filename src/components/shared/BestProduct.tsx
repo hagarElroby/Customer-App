@@ -202,15 +202,16 @@ const BestProduct: React.FC<
         </span>
 
         <div className="flex flex-col md:flex-row md:gap-2">
-          {PriceAfterDiscount > 0 && (
-            <span className="text-base text-[#2D8653] font-bold">
-              IQD{formatToTwoDecimals(PriceAfterDiscount)}
-            </span>
-          )}
+          {PriceAfterDiscount > 0 &&
+            PriceBeforeDiscount !== PriceAfterDiscount && (
+              <span className="text-base text-[#2D8653] font-bold">
+                IQD {formatToTwoDecimals(PriceAfterDiscount)}
+              </span>
+            )}
           <span
-            className={`text-[13px] lg:text-base font-bold ${PriceAfterDiscount > 0 ? "line-through text-homeText" : "text-[#2D8653]"}`}
+            className={`text-[13px] lg:text-base font-bold ${PriceAfterDiscount > 0 && PriceBeforeDiscount !== PriceAfterDiscount ? "line-through text-homeText" : "text-[#2D8653]"}`}
           >
-            IQD{formatToTwoDecimals(PriceBeforeDiscount)}
+            IQD {formatToTwoDecimals(PriceBeforeDiscount)}
           </span>
         </div>
       </div>

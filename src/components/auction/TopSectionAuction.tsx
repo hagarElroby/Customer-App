@@ -11,15 +11,20 @@ import getTimeRemaining from "@/utils/getTimeRemaining";
 import ImageSection from "./ImageSection";
 interface TopSectionProps {
   auction: AuctionById;
+  onSuccess: () => void;
 }
 
-const TopSectionAuction: React.FC<TopSectionProps> = ({ auction }) => {
+const TopSectionAuction: React.FC<TopSectionProps> = ({
+  auction,
+  onSuccess,
+}) => {
   return (
     <div className="flex items-start justify-center flex-col custom:flex-row flex-wrap gap-3 px-3 py-5 h-[730px] overflow-auto">
       {/* left section  */}
       <div className="flex-[1] min-w-[250px] max-w-[550px] mx-auto bg-white rounded-3xl p-4 overflow-y-auto overflow-x-hidden h-full">
         {auction && auction.media && (
           <ImageSection
+            onSuccess={onSuccess}
             auctionDetails={auction?.auctionDetails}
             auctionId={auction?._id}
             deposit={auction?.auctionDetails?.securityDeposit}
