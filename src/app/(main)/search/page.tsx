@@ -11,11 +11,12 @@ import { setProducts, setTotalDocs, setTotalPages } from "@/redux/product";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getAllProducts } from "@/services/product";
 import { SortType } from "@/types/product";
+import { FiltersState } from "@/types/productsList";
 import { getTempFile, setTempFile } from "@/utils/fileStorage";
 import { cleanParams } from "@/utils/filterUndefined";
 import { usePagination } from "@/utils/paginationUtils";
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
@@ -31,6 +32,11 @@ const page = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const file = getTempFile();
+  const [sortType, setSortType] = useState<SortType>();
+  const [filters, setFilters] = useState<FiltersState>({
+    propertyIds: [],
+    propertyValueIds: [],
+  });
 
   const { handleNext, handlePrev, handlePageClick } = usePagination(
     currentPage,
@@ -53,20 +59,27 @@ const page = () => {
     setCurrentPage(1);
   }, [file, searchTermParams]);
 
-  useEffect(() => {
-    setLoading(true);
-    const fetchProducts = async () => {
-      const payload = cleanParams({
+  const params = useMemo(
+    () =>
+      cleanParams({
         ...(searchTermParams ? { productName: searchTermParams } : {}),
         ...(file ? { sort: "SIMILARITY" } : {}),
-        fromAdminPanel: false,
+        ...(file ? { file } : {}),
         page: currentPage,
         limit,
         allowPagination: true,
-      });
+        fromAdminPanel: false,
+        sort: sortType,
+        ...filters,
+      }),
+    [currentPage, sortType],
+  );
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchProducts = async () => {
       await getAllProducts({
-        ...payload,
-        ...(file ? { file } : {}),
+        ...params,
         onSuccess: (data) => {
           dispatch(setProducts(data.docs));
           dispatch(setTotalPages(data.totalPages ?? 1));
@@ -111,11 +124,13 @@ const page = () => {
       ...previousParamsRef.current,
       ...params,
       fromAdminPanel: false,
-      page: currentPage,
+      page: 1,
       limit,
       allowPagination: true,
       ...(searchTermParams ? { productName: searchTermParams } : {}),
     });
+    setCurrentPage(1);
+    setFilters({ ...filters, ...params });
 
     // Update the ref with the new params
     previousParamsRef.current = mergedParams;
@@ -136,6 +151,7 @@ const page = () => {
   // Sort products
   const handleSort = (sortOption: SortType) => {
     handleApply({ sort: sortOption });
+    setSortType(sortOption);
   };
 
   // Apply filters

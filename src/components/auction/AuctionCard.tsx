@@ -89,7 +89,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             Current bid:{" "}
           </span>
           <span className="text-main font-bold text-base">
-            IQD{currentBid ?? 0}
+            IQD {currentBid ?? 0}
           </span>
         </div>
       </div>

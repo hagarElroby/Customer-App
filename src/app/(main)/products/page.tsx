@@ -1,10 +1,8 @@
 "use client";
 import NavigationBar from "@/components/shared/NavigationBar";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Loading from "@/components/shared/Loading";
-import { SortType } from "@/types/productsList";
+import { FiltersState, SortType } from "@/types/productsList";
 import BannerSlider from "@/components/banner/BannerSlider";
 import PaginationButtons from "@/components/shared/PaginationButtons";
 import { usePagination } from "@/utils/paginationUtils";
@@ -15,7 +13,6 @@ import { Category, SubCategory } from "@/types/category";
 import Spinner from "@/components/shared/Spinner";
 import CategoryCard from "@/components/category/CategoryCard";
 import { bgColors } from "@/constants/colors";
-import { useRouter } from "next/navigation";
 import HrLine from "@/components/shared/HrLine";
 import { cleanParams } from "@/utils/filterUndefined";
 import SectionTitle from "@/components/shared/SectionTitle";
@@ -29,9 +26,8 @@ import { getSubcategoriesHavingProducts } from "@/services/category";
 import CustomHeaderInModal from "@/components/shared/CustomHeaderInModal";
 import { AllProductsDocs } from "@/types/product";
 const limit = 15;
+
 const ProductsPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
   const [products, setProducts] = useState<AllProductsDocs[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -42,8 +38,11 @@ const ProductsPage = () => {
   const [loadingSub, setLoadingSub] = useState<boolean>(false);
   const [sortPopup, setSortPopup] = useState(false);
   const [filterPopup, setFilterPopup] = useState(false);
-  const [selectedNames, setSelectedNames] = useState<string[]>([]);
-
+  const [sortType, setSortType] = useState<SortType>();
+  const [filters, setFilters] = useState<FiltersState>({
+    propertyIds: [],
+    propertyValueIds: [],
+  });
   const [selectedValues, setSelectedValues] = useState<
     Record<string, string[]>
   >({});
@@ -55,7 +54,6 @@ const ProductsPage = () => {
       valueName: string;
     }[]
   >([]);
-  // const [selectedNames, setSelectedNames] = useState<string[]>([]);
 
   //get filter prop names from filter popup to display in tags filter
   const handleSelectedValueNames = (
@@ -91,15 +89,22 @@ const ProductsPage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const params = cleanParams({
+  const params = useMemo(
+    () =>
+      cleanParams({
         subCategory: subCatId,
-        fromAdminPanel: false,
         page: currentPage,
         limit,
         allowPagination: true,
-      });
+        fromAdminPanel: false,
+        sort: sortType,
+        ...filters,
+      }),
+    [subCatId, currentPage, sortType],
+  );
+
+  useEffect(() => {
+    const fetchProducts = async () => {
       await getAllProducts({
         ...params,
         onSuccess: (data) => {
@@ -133,23 +138,27 @@ const ProductsPage = () => {
       ...previousParamsRef.current,
       ...params,
       fromAdminPanel: false,
-      page: currentPage,
+      page: 1,
       limit,
       allowPagination: true,
     });
 
     // Update the ref with the new params
     previousParamsRef.current = mergedParams;
-
+    setFilters({ ...filters, ...params });
+    setCurrentPage(1); // Reset to first page on new filter/sort
+    setLoading(true);
     await getAllProducts({
       ...mergedParams,
       onSuccess: (data) => {
         setProducts(data.docs);
         setTotalPages(data.totalPages ?? 1);
         setTotalDocs(data.totalDocs ?? 1);
+        setLoading(false);
       },
       onError: (err) => {
         setProducts([]);
+        setLoading(false);
       },
     });
   };
@@ -157,6 +166,7 @@ const ProductsPage = () => {
   // Sort products
   const handleSort = (sortOption: SortType) => {
     handleApply({ sort: sortOption });
+    setSortType(sortOption);
   };
 
   // Apply filters
@@ -180,9 +190,6 @@ const ProductsPage = () => {
   const handleTagClose = (valueId: string) => {
     const updatedSelections = selections.filter((s) => s.valueId !== valueId);
     setSelections(updatedSelections);
-    // setSelectedNames(updatedSelections.map((item) => item.valueName));
-    // handleSelectedValuesChange(updatedSelections);
-    // Update selectedValues to remove this valueId
     const updatedSelectedValues: Record<string, string[]> = {};
     updatedSelections.forEach((item) => {
       if (!updatedSelectedValues[item.propertyId]) {
@@ -217,26 +224,6 @@ const ProductsPage = () => {
               onClick={() => setFilterPopup(true)}
             />
           </SectionTitle>
-          {/* {!!selectedNames.length && (
-            <>
-              <HrLine className="border-lightMain1" />
-              <div className="bg-white h-[58px] p-4 flex items-center gap-4 rounded-br-lg rounded-bl-lg">
-                <span className="text-sm font-medium text-gray1">Filters</span>
-                <span className="bg-gray1 w-[0.5px] h-7"></span>
-                {selectedNames?.map((tag, index) => (
-                  <Tag
-                    key={tag}
-                    closable={index !== 0}
-                    className="rounded-full py-[7px] px-[10px] bg-white"
-                  >
-                    <span>
-                      {tag.length > 15 ? `${tag.slice(0, 15)}...` : tag}
-                    </span>
-                  </Tag>
-                ))}
-              </div>
-            </>
-          )} */}
           {!!selections.length && (
             <>
               <HrLine className="border-lightMain1" />

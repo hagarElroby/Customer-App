@@ -9,7 +9,7 @@ import ProductSlider from "@/components/shared/ProductSlider";
 import { getOneAuction } from "@/services/auction";
 import { AuctionById } from "@/types/auction";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const Page = () => {
@@ -21,7 +21,8 @@ const Page = () => {
   if (!auctionId) {
     return <div>No auction ID provided</div>;
   }
-  useEffect(() => {
+
+  const fetchAuctionData = useCallback(async () => {
     setLoading(true);
     getOneAuction({
       auctionId,
@@ -36,13 +37,20 @@ const Page = () => {
     });
   }, [auctionId]);
 
+  useEffect(() => {
+    fetchAuctionData();
+  }, [auctionId]);
+
   return (
     <MainSection>
       {loading && <Loading />}
 
       {!loading && auctionData && (
         <div className="flex flex-col gap-10 w-full p-9">
-          <TopSectionAuction auction={auctionData} />
+          <TopSectionAuction
+            auction={auctionData}
+            onSuccess={() => fetchAuctionData()}
+          />
           <div className="flex flex-col md:flex-row items-center justify-center w-full gap-5">
             <Overview description={auctionData.productDescription} />
             <Specifications specifications={auctionData.productProperties} />

@@ -19,19 +19,27 @@ const ImageSection = ({
   deposit,
   auctionId,
   auctionDetails,
+  onSuccess,
 }: {
   images: MediaModel[];
   minimumBid?: number;
   deposit?: number;
   auctionId: string;
   auctionDetails: AuctionDetails;
+  onSuccess: () => void;
 }) => {
   const [openDepositPopup, setOpenDepositPopup] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [bidAmount, setBidAmount] = useState("");
+
   const [error, setError] = useState<string | null>(null);
-  const [minimumAllowed, setMinimumAllowed] = useState<number>();
+
+  const [minimumAllowed, setMinimumAllowed] = useState<number>(
+    auctionDetails?.currentBid === 0
+      ? auctionDetails?.startBidFrom + auctionDetails?.minimumBidPerTime
+      : auctionDetails?.currentBid + auctionDetails?.minimumBidPerTime,
+  );
+  const [bidAmount, setBidAmount] = useState(minimumAllowed.toString());
   const handleConfirm = async () => {
     setLoading(true);
 
@@ -91,6 +99,7 @@ const ImageSection = ({
               text: data.body || "Bid placed successfully!",
               type: "success",
             });
+            onSuccess();
           },
           onError: (err) => {
             showPopup({
@@ -122,14 +131,6 @@ const ImageSection = ({
             onChange={(e) => {
               const value = e.target.value;
               const numericValue = Number(value);
-
-              // Validation
-              const minimumAllowed =
-                auctionDetails?.currentBid === 0
-                  ? auctionDetails?.startBidFrom +
-                    auctionDetails?.minimumBidPerTime
-                  : auctionDetails?.currentBid +
-                    auctionDetails?.minimumBidPerTime;
 
               if (value === "") {
                 setBidAmount("");
@@ -164,7 +165,7 @@ const ImageSection = ({
           Place bid
         </Button>
         <p className="text-xs text-[#686C84] font-bold">
-          Minimum bid: {minimumBid} IQD. Or enter your own, higher{" "}
+          Minimum bid: {minimumAllowed} IQD. Or enter your own, higher{" "}
         </p>
       </div>
 
