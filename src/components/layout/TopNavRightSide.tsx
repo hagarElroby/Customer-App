@@ -10,6 +10,9 @@ import { useEffect } from "react";
 import { updateCartAndState } from "@/utils/cartHelpers";
 import { updateWishlistAndState } from "@/utils/updateWishlistAndState";
 import { useProfile } from "@/hooks/userProfile";
+import { getUnreadCount } from "@/services/notifications/get-unread-count";
+import { setUnReadCount } from "@/redux/notificationsSlice";
+import NotificationDropdown from "./NotificationDropdown";
 
 const TopNavRightSide = () => {
   const router = useRouter();
@@ -19,11 +22,19 @@ const TopNavRightSide = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   //Fetch items in cart and wishlist and profile data on page load if user is logged in
   useEffect(() => {
-    if (user) {
-      updateCartAndState({ dispatch });
-      updateWishlistAndState({ dispatch });
-      refetchProfile();
-    }
+    const getData = async () => {
+      if (user) {
+        updateCartAndState({ dispatch });
+        updateWishlistAndState({ dispatch });
+        refetchProfile();
+        await getUnreadCount({
+          onSuccess: (data) => {
+            dispatch(setUnReadCount(data));
+          },
+        });
+      }
+    };
+    getData();
   }, [user]);
 
   const { carts } = useSelector((state: RootState) => state.cart);
@@ -68,9 +79,10 @@ const TopNavRightSide = () => {
       {user && (
         <Flex gap={16} align="center" justify="center">
           {/* //TODO: change count based on items length  */}
-          <Badge className="cursor-pointer">
+          {/* <Badge className="cursor-pointer">
             <span>{svgs.notification}</span>
-          </Badge>
+          </Badge> */}
+          <NotificationDropdown />
           <Badge
             count={
               typeof whishlistItemsCount === "number" ? whishlistItemsCount : 0

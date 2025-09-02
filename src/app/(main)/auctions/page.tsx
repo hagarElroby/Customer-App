@@ -34,22 +34,42 @@ const AuctionsPage = () => {
     setCurrentPage,
   );
 
-  // const { data, loading, error } = useFetchData({
-  //   apiFunction: getAuctionList,
-  //   params: {
-  //     page: 1,
-  //     limit: 15,
-  //     allowPagination: true,
-  //   },
-  // });
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleMessage = async (event: MessageEvent) => {
+        console.log("from handler", event.data);
+        if (event.data?.messageType === "push-received") {
+          console.log(event.data.data.eventName);
+          if (event.data.data.eventName === "new_bid_placed")
+            await getAuctionList({
+              page: currentPage,
+              limit,
+              allowPagination: true,
+              onSuccess: (data) => {
+                setAuctions(data.docs);
+                setTotalPages(data.totalPages ?? 1);
+                setTotalDocs(data.totalDocs ?? 1);
+                setLoading(false);
+              },
+              onError: (err) => {
+                setLoading(false);
+              },
+            });
+          console.log("from auction comp", event.data.data);
+        }
+      };
 
-  // const auctionsList = data?.docs || [];
+      navigator.serviceWorker.addEventListener("message", handleMessage);
+
+      return () => {
+        navigator.serviceWorker.removeEventListener("message", handleMessage);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const fetchAuctions = async () => {
       const params = cleanParams({
-        subCategory: subCatId,
-        // fromAdminPanel: false,
         page: currentPage,
         limit,
         allowPagination: true,

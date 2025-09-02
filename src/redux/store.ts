@@ -5,7 +5,7 @@ import productReducer from "./product";
 import cartReducer from "./cartSlice";
 import whishlistReducer from "./whishlistSlice";
 import profileReducer from "./profileSlice";
-
+import notificationReducer from "./notificationsSlice";
 const rootReducer = combineReducers({
   auth: authReducer,
   media: mediaReducer,
@@ -13,6 +13,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   whishlist: whishlistReducer,
   profile: profileReducer,
+  notifications: notificationReducer,
 });
 
 export const store = configureStore({

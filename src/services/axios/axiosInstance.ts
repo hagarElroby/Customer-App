@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 import qs from "qs";
+import { cleanAllUndefined } from "@/utils/filterUndefined";
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   withCredentials: true,
@@ -35,6 +36,18 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
+axiosInstance.interceptors.request.use((config) => {
+  // Only clean plain objects, not FormData or other non-plain types
+  const isPlainObject = (val: unknown) =>
+    val && typeof val === "object" && !(val instanceof FormData);
+
+  if (config.data && isPlainObject(config.data)) {
+    config.data = cleanAllUndefined(config.data);
+  }
+
+  return config;
+});
 
 //Response Interceptor
 axiosInstance.interceptors.response.use(
