@@ -16,7 +16,7 @@ const NationalityDropdown: React.FC<NationalityDropdownProps> = ({
   const dropMenuRef = useRef<HTMLDivElement>(null);
   useClickOutside(dropMenuRef, () => setIsDropdownOpen(false));
 
-  const handleSelect = (item: any) => {
+  const handleSelect = (item: { name: string }) => {
     onChange(item.name);
     setIsDropdownOpen(false);
   };

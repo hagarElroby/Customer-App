@@ -58,7 +58,7 @@ const Page = () => {
     <div className="min-h-screen bg-homeBg">
       {loading && <Loading />}
       {!loading && userProfileData && (
-        <div className="flex flex-col gap-6 mx-12 my-5">
+        <div className="flex flex-col gap-6 mx-12 my-5 h-full">
           <WelcomeText name={userProfileData?.firstName} />
           <ProfileTabs tabs={tabNames} />
         </div>

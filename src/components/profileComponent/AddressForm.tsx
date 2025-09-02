@@ -231,10 +231,10 @@ const AddressForm: React.FC<AddressFormProps> = ({
     await updateAddress({
       formData: {
         ...cleanParams(payload),
-
+        isDefault: formData.isDefault,
         //check if that is first address make it default address
-        isDefault:
-          isFirstAddress === true ? true : (formData.isDefault ?? false),
+        // isDefault:
+        //   isFirstAddress === true ? true : (formData.isDefault ?? false),
       },
       onSuccess: async (data) => {
         onClose();

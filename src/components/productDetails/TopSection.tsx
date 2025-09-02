@@ -24,7 +24,6 @@ import {
   setQuantityCart,
 } from "@/services/cart";
 import { toast } from "sonner";
-import { setCarts, setOrderSummery } from "@/redux/cartSlice";
 import { createFavorite, removeFavorite } from "@/services/whishlist";
 import { ResponseError } from "@/types/error-types";
 import { updateWishlistAndState } from "@/utils/updateWishlistAndState";

@@ -16,9 +16,12 @@ const profileSlice = createSlice({
     setProfileData: (state, action: PayloadAction<ProfileModel>) => {
       state.userProfileData = action.payload;
     },
+    removeProfileData: (state) => {
+      state.userProfileData = null;
+    },
   },
 });
 
-export const { setProfileData } = profileSlice.actions;
+export const { setProfileData, removeProfileData } = profileSlice.actions;
 
 export default profileSlice.reducer;

@@ -1,4 +1,5 @@
 import { clearUser } from "@/redux/authSlice";
+import { removeProfileData } from "@/redux/profileSlice";
 import { logout } from "@/services/auth/logout";
 import { removeFCMToken } from "@/services/fcmToken/remove-fcm-token";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,7 @@ export const useLogout = () => {
             localStorage.removeItem("jwtToken");
             localStorage.removeItem("jwtRefreshToken");
             dispatch(clearUser());
+            dispatch(removeProfileData());
             router.push("/");
           },
         });

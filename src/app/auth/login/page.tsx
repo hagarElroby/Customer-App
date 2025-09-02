@@ -56,12 +56,11 @@ const Page = () => {
     const errors: any = [];
     const tempFormErrors = { ...formErrors };
     const phoneError = validatePhoneNumber(formData.phoneNumber);
-    const passwordError = validatePassword(formData.password);
     if (phoneError) {
       errors.push(phoneError);
     }
-    if (passwordError) {
-      errors.push(passwordError);
+    if (!formData.password) {
+      errors.push("Password is required");
     }
 
     setFormErrors(tempFormErrors);
